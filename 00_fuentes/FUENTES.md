@@ -1,76 +1,71 @@
-# Estado de fuentes (Fase 1 — Reconocimiento)
+# Estado de fuentes (Fase 1 — Reconocimiento) — CONSOLIDADO
 
-Registro del estado de cada fuente oficial. **Ninguna cifra entra al análisis sin
-valor + fuente + URL exacta + fecha de descarga.**
+Verificación real: **2026-09-08**. Ninguna cifra entra al análisis sin
+**valor + fuente + URL exacta + fecha de descarga**.
 
-Leyenda de estado:
-- `ACCESIBLE` — responde y ofrece descarga (CSV/XLSX/API) automatizable.
-- `PARCIAL` — responde pero solo consulta interactiva / descarga limitada.
-- `MANUAL` — requiere descarga manual paso a paso (documentar procedimiento + plantilla vacía).
-- `SIN VERIFICAR` — aún no comprobada.
+Leyenda: `ACCESIBLE` (descarga automatizable) · `PARCIAL` (semiautomatizable / índice
+o tablero) · `MANUAL` (descarga manual) · `PISTA` (secundaria, confirmar contra primaria).
 
-> Estado inicial: todas las fuentes están **SIN VERIFICAR**. Comprobar en la Fase 1
-> antes de cualquier análisis.
-
----
-
-## Verificación previa obligatoria
-
-- [ ] **AURORA → "Warmi Ñan"** (DS 003-2025-MIMP, 2025): confirmar que el portal
-  estadístico sigue en `aurora.gob.pe` y que no cambió estructura/metodología.
-  → Estado: `[NO DISPONIBLE — verificar]`
+Fichas detalladas por dimensión:
+- [`reporte_presupuesto.md`](reporte_presupuesto.md) — presupuestal (MEF).
+- [`reporte_servicios.md`](reporte_servicios.md) — producción de servicios y calidad (Warmi Ñan, Defensoría).
+- [`reporte_violencia_poblacion.md`](reporte_violencia_poblacion.md) — impacto/contexto y población (Observatorio, INEI).
+- [`reporte_institucional.md`](reporte_institucional.md) — gestión institucional (Transparencia, titulares, RENIPED).
 
 ---
 
-## Ficha por fuente
+## 🔴 Dos correcciones críticas al encargo (verificadas)
 
-### 1. MEF – Consulta Amigable
-- URL: https://apps5.mineco.gob.pe/transparencia/
-- Provee: PIA, PIM, devengado por pliego/programa/año.
-- Estado: `SIN VERIFICAR`
-- ¿Descarga automatizable? — `[por verificar]` (riesgo esperado: ASP.NET/ViewState).
-- Procedimiento manual: `[pendiente]`
-- Fecha de verificación: `[pendiente]`
+1. **El dominio AURORA sí cambió.** La nota del spec ("el portal conservaba el dominio
+   `aurora.gob.pe`") quedó **desactualizada**: hoy `*.aurora.gob.pe` redirige **301** a
+   `*.warminan.gob.pe` y el TLS de aurora ya no valida. Rebranding oficializado por
+   **DS 003-2025-MIMP** (~2-may-2025). → **Usar `*.warminan.gob.pe` en todo el proyecto.**
+2. **RENADESPPLE ≠ desapariciones.** RENADESPPLE es el registro de detenidos/sentenciados
+   del **Ministerio Público**, no de Mininter/PNP. El registro real de personas
+   **desaparecidas** es **RENIPED** (PNP). → **Usar RENIPED** como contexto. (Sigue siendo
+   contexto multisectorial, no eficacia del MIMP.)
 
-### 2. MEF – Ley de Presupuesto
-- URL: https://www.mef.gob.pe
-- Provee: presupuesto nacional por año (denominador % del PIA nacional).
-- Estado: `SIN VERIFICAR`
-- Fecha de verificación: `[pendiente]`
+---
 
-### 3. Portal Estadístico Aurora / Warmi Ñan
-- URL: https://portalestadistico.aurora.gob.pe/
-- Provee: atenciones CEM, Línea 100, SAU, CAI, feminicidios registrados.
-- Estado: `SIN VERIFICAR`
-- ¿Descarga automatizable? — `[por verificar]` (riesgo: tablero dinámico).
-- Fecha de verificación: `[pendiente]`
+## Tabla de estado por fuente
 
-### 4. Observatorio Nacional de la Violencia
-- URL: https://observatorioviolencia.pe/
-- Provee: data consolidada MIMP + Salud + PJ + MP + PNP + INEI.
-- Estado: `SIN VERIFICAR`
-- Fecha de verificación: `[pendiente]`
+| Fuente | Dimensión | URL vigente | Estado | ¿Automatizable? |
+|---|---|---|---|---|
+| MEF Datos Abiertos «Devengado Mensual» | Presupuesto | fs.datosabiertos.mef.gob.pe/datastorefiles/ | **ACCESIBLE** | Sí (CSV anual, filtrar PLIEGO='039') |
+| MEF Consulta Amigable web | Presupuesto (verif.) | apps5.mineco.gob.pe/transparencia/ | PARCIAL | No (ASP.NET/Incapsula) → manual |
+| MEF Ley de Presupuesto | Denominador nacional | mef.gob.pe | MANUAL | Alternativa: sumar MONTO_PIA del CSV |
+| Portal Estadístico **Warmi Ñan** | Servicios | portalestadistico.warminan.gob.pe | PARCIAL | Semi (XLSX vía índice de boletines) |
+| Repositorio **Warmi Ñan** | Servicios/docs | repositorio.warminan.gob.pe | MANUAL | No (SPA React) |
+| Defensoría del Pueblo | Calidad | defensoria.gob.pe | **ACCESIBLE** | Sí (PDF directo: Inf. 255/2025, 179/2018) |
+| Observatorio Nacional de la Violencia | Impacto/contexto | observatorioviolencia.pe | MANUAL | No (403 a bots; solo PDF/PNG) |
+| INEI · Proyecciones de población | Denominador (mujeres) | gob.pe/institucion/inei | PARCIAL | Semi (anexo XLSX por click) |
+| INEI · ENDES | Prevalencia (encuesta) | proyectos.inei.gob.pe/endes · /microdatos | PARCIAL | Semi (ZIP/PDF por selección) |
+| PTE Transparencia — MIMP (id 142) | Institucional | transparencia.gob.pe | PARCIAL | No (ASP.NET) → manual |
+| Titulares MIMP 2019–2025 | Institucional | El Peruano (RS) / gob.pe/mimp | PISTA | Confirmar con RS |
+| **RENIPED** (ex "RENADESPPLE" del spec) | Contexto (desapar.) | desaparecidosenperu.policia.gob.pe | MANUAL | No (SSL no valida) |
 
-### 5. INEI – ENDES
-- URL: https://www.inei.gob.pe
-- Provee: prevalencia de violencia (encuesta) y población (denominador de tasas).
-- Estado: `SIN VERIFICAR`
-- Fecha de verificación: `[pendiente]`
+## Verificación de vigencia AURORA → Warmi Ñan
 
-### 6. Portal de Transparencia Estándar – MIMP
-- URL: https://www.transparencia.gob.pe
-- Provee: presupuesto, personal, inversiones, contrataciones.
-- Estado: `SIN VERIFICAR`
-- Fecha de verificación: `[pendiente]`
+- [x] Confirmado: dominio migrado a `warminan.gob.pe` (301 desde aurora). DS 003-2025-MIMP.
+- [x] Estructura/funciones: prensa indica que se mantiene. `SUPUESTO`: serie estadística
+  continua/comparable antes y después; confirmar en "Metodología" del portal.
+- [ ] `[NO DISPONIBLE]` — texto íntegro del DS 003-2025-MIMP (descargar PDF de la norma).
 
-### 7. Repositorio Aurora / Defensoría del Pueblo
-- URL: https://repositorio.aurora.gob.pe · https://www.defensoria.gob.pe
-- Provee: informes de supervisión de CEM y servicios (calidad).
-- Estado: `SIN VERIFICAR`
-- Fecha de verificación: `[pendiente]`
+## Principales `[NO DISPONIBLE]` / pendientes de Fase 2
 
-### 8. Mininter/PNP – RENADESPPLE
-- URL: `[localizar portal PNP/Mininter]`
-- Provee: registro de personas desaparecidas (CONTEXTO multisectorial, no eficacia MIMP).
-- Estado: `SIN VERIFICAR`
-- Fecha de verificación: `[pendiente]`
+- **Presupuesto:** descarga efectiva de los CSV MEF 2019–2025 (~2–2.6 GB c/u, filtrar
+  PLIEGO='039'); N.º de Ley y monto del PIA nacional 2020/2022/2023/2024 (o derivarlo del CSV).
+- **Servicios:** N.º de CEM total/24h/regular por año; mapeo tabla-numerada→indicador en
+  boletines históricos; inventario del Repositorio (SPA, navegador).
+- **Impacto/población:** cifras de prevalencia ENDES, población de mujeres y feminicidios de
+  contexto (todo `[NO DISPONIBLE]` hasta descargar). URLs directas de anexos INEI.
+- **Institucional:** Resoluciones Supremas de designación/cese de cada titular; descargas del
+  PTE (presupuesto/personal/inversiones); estadísticas de RENIPED (consulta manual).
+
+## Plantillas vacías listas en `01_data_cruda/` (11, solo encabezados)
+
+`plantilla_presupuesto_mimp.csv` · `plantilla_presupuesto_nacional.csv` ·
+`plantilla_atenciones_cem.csv` · `plantilla_linea100_sau_cai.csv` ·
+`plantilla_cem_infraestructura.csv` · `plantilla_feminicidios_contexto.csv` ·
+`plantilla_prevalencia_endes.csv` · `plantilla_poblacion_mujeres.csv` ·
+`plantilla_titulares_mimp.csv` · `plantilla_inversiones_mimp.csv` · `plantilla_rrhh_mimp.csv`

@@ -23,9 +23,13 @@ multisectorial** (feminicidios → MP/PJ; violaciones y desapariciones → Minin
 - `SUPUESTO`: periodo de análisis 2019–2025.
 - `SUPUESTO`: pliego 039 incluye programas/UE: Programa **Warmi Ñan** (ex-AURORA),
   INABIF, CONADIS, DGNNA, entre otros.
-- Nota de vigencia: **AURORA se renombró a "Warmi Ñan"** (DS 003-2025-MIMP, 2025); la
-  norma indica que no cambia estructura ni funciones, y el portal estadístico
-  conservaba el dominio `aurora.gob.pe`. **Verificar al inicio de la Fase 1.**
+- Nota de vigencia: **AURORA se renombró a "Warmi Ñan"** (DS 003-2025-MIMP, 2025).
+  ✅ Verificado en Fase 1 (2026-09-08): **el dominio SÍ cambió** — `*.aurora.gob.pe`
+  redirige (301) a `*.warminan.gob.pe` y el TLS de aurora ya no valida. **Usar
+  `*.warminan.gob.pe`** en todo el proyecto. Prensa indica que se mantiene la estructura.
+- ✅ Corrección Fase 1: el spec confunde **RENADESPPLE** (registro de detenidos del
+  Ministerio Público) con desapariciones. El registro real de personas desaparecidas es
+  **RENIPED** (PNP). Se usa RENIPED como contexto. Ver `00_fuentes/FUENTES.md`.
 
 ## Reglas inviolables (resumen)
 
@@ -78,7 +82,7 @@ evaluacion-mimp/
 | Fase | Descripción | Estado |
 |---|---|---|
 | 0 | Setup (estructura + README) | ✅ Hecho |
-| 1 | Reconocimiento de fuentes | ⬜ Pendiente |
+| 1 | Reconocimiento de fuentes | ✅ Hecho (ver `00_fuentes/`) |
 | 2 | Recolección | ⬜ Pendiente |
 | 3 | Procesamiento | ⬜ Pendiente |
 | 4 | Análisis e indicadores | ⬜ Pendiente |
