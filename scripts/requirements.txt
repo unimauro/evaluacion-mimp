@@ -1,0 +1,15 @@
+# Análisis y datos
+pandas
+numpy
+openpyxl
+
+# Gráficos
+matplotlib
+
+# Entregables
+python-docx
+
+# Descarga / scraping (según lo que permitan las fuentes en Fase 1)
+requests
+beautifulsoup4
+lxml

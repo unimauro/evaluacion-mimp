@@ -1,0 +1,16 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Temporales de ofimática (los entregables finales SÍ se versionan)
+~$*.docx
+~$*.xlsx
+
+# Nota: 01_data_cruda/ SÍ se versiona (descargas con fecha, trazabilidad).
