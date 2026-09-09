@@ -123,6 +123,15 @@ h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-
 .sem b{font-size:13px;color:var(--ink)} .sem i{display:block;font-style:normal;font-weight:700;font-size:15px;margin:5px 0 3px}
 .sem.v-no i{color:var(--good)} .sem.v-si i{color:var(--crit)} .sem.v-parc i{color:var(--warn)} .sem.v-pend i{color:var(--muted)}
 .sem small{color:var(--ink-2);font-size:12px;line-height:1.35;display:block}
+.evol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(186px,1fr));gap:12px;margin:20px 0 4px}
+.evol{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px 13px;position:relative;overflow:hidden}
+.evol::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--muted)}
+.evol.up::before{background:var(--good)} .evol.down::before{background:var(--crit)} .evol.flat::before{background:var(--warn)} .evol.info::before{background:var(--accent)}
+.evol .e-lbl{font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:600;line-height:1.25}
+.evol .e-now{font-size:26px;font-weight:700;margin:7px 0 1px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.evol .e-chg{font-size:13px;font-weight:700}
+.evol.up .e-chg{color:var(--good)} .evol.down .e-chg{color:var(--crit)} .evol.flat .e-chg{color:var(--warn)} .evol.info .e-chg{color:var(--accent)}
+.evol .e-from{font-size:12px;color:var(--ink-2);margin-top:3px;font-variant-numeric:tabular-nums}
 
 .note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
 .note b{color:var(--ink)}
@@ -133,6 +142,7 @@ table.norm a{color:var(--accent);text-decoration:none}
 .tablewrap{overflow-x:auto}
 footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12.5px}
 .toggle{position:fixed;top:12px;right:12px;background:var(--panel);border:1px solid var(--line-2);color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:6}
+.menu-btn{display:none;background:var(--ground);border:1px solid var(--line-2);border-radius:9px;width:42px;height:38px;font-size:19px;color:var(--ink);cursor:pointer;line-height:1}
 .chat-fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;box-shadow:0 6px 22px rgba(109,40,217,.42);z-index:20;display:flex;align-items:center;justify-content:center}
 .chat-fab.hide{display:none}
 .chat-panel{position:fixed;bottom:20px;right:20px;width:min(380px,calc(100vw - 28px));height:min(560px,calc(100vh - 40px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 44px rgba(30,15,45,.28);z-index:21;display:none;flex-direction:column;overflow:hidden}
@@ -156,15 +166,18 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
 @media (prefers-reduced-motion:reduce){.typing i{animation:none}}
 @media (max-width:860px){
   .layout{grid-template-columns:1fr;min-height:0}
-  aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:11px 14px}
+  aside{position:sticky;top:0;z-index:12;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:12px 16px}
   aside:empty{display:none}
+  .menu-btn{display:block;position:absolute;top:11px;right:14px}
+  aside .brand{font-size:18px}
   aside .tag{display:none}
-  aside nav{margin-top:10px;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:7px;padding-bottom:3px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-  aside nav::-webkit-scrollbar{display:none}
-  aside nav a{white-space:nowrap;flex-shrink:0;font-size:12.5px;padding:6px 13px;border:1px solid var(--line-2);border-radius:16px}
-  aside nav a.sec{display:none}
+  aside nav{display:none;margin-top:12px;flex-direction:column;gap:1px}
+  aside nav.open{display:flex}
+  aside nav a{font-size:14px;padding:11px 12px;border-radius:8px}
+  aside nav a.sec{display:block;margin-top:10px;pointer-events:none}
   aside .foot{display:none}
   main{padding:22px 16px 64px}
+  .toggle{top:auto;bottom:88px;right:14px}
   h1{font-size:31px}
   .dek{font-size:15.5px}
   .story{grid-template-columns:1fr}
@@ -179,6 +192,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
 <button class="toggle" id="tgl" aria-label="Cambiar tema">◐ Tema</button>
 <div class="layout">
   <aside>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
     <div class="brand">Evaluación <span>MIMP</span></div>
     <div class="tag">Pliego 039 · 2017–2025</div>
     <nav>
@@ -206,6 +220,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       casi al 100%. En el mismo periodo, la prevalencia de violencia de pareja <b>cayó 13 puntos</b>. La pregunta
       no es si gastó bien, sino <b>cuánto de esa mejora es mérito propio</b> y cuánto es un problema multisectorial.</p>
     <p class="src">Fuentes: MEF Datos Abiertos (pliego <code>039</code>), INEI–ENDES, Portal Warmi Ñan, El Peruano · descarga <code>2026-09-08</code> · soles corrientes.</p>
+
+    <div style="margin-top:26px"><span class="eyebrow" style="color:var(--accent-2)">De hace una década a hoy</span></div>
+    <div class="evol-grid" id="evol"></div>
 
     <div class="story">
       <div class="tell">
@@ -354,24 +371,24 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <p><b>La violencia sí bajó en magnitud:</b> la prevalencia ENDES cayó 13 pp (65,4%→52,0%),
         sobre todo psicológica y física. <b>Pero los feminicidios no descienden</b> (130–170/año). La
         parte que cede es multisectorial (el MIMP contribuye, no es mérito exclusivo); lo más extremo resiste.</p></div>
-      <div class="hcard v-parc"><div class="hid">H3 · Presupuesto</div><h4>El presupuesto es bajo y/o se subejecuta</h4>
-        <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p>Subejecución <b>NO</b>: ejecutó 96–99%. PIA <b>+134%</b>. "Bajo" solo como peso del presupuesto
-        nacional (~0,4%), pendiente de cerrar el denominador.</p></div>
-      <div class="hcard v-parc"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
-        <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
-        (5 en 17 meses bajo un gobierno): inestabilidad de conducción frente a continuidad normativa.</p></div>
       <div class="hcard v-parc"><div class="hid">H2 · Servicios</div><h4>La producción de servicios está estancada</h4>
         <span class="verdict v-parc">Se sostiene parcialmente</span>
         <p>Las atenciones CEM crecieron hasta 2019 y se <b>estabilizaron ~165k</b> desde 2021 (la sexual sí subió).
         La <b>red de CEM se estancó en 433</b> desde 2023 y <b>solo 5 operan 24h</b>: la cobertura, no la demanda, es el cuello de botella.</p></div>
+      <div class="hcard v-parc"><div class="hid">H3 · Presupuesto</div><h4>El presupuesto es bajo y/o se subejecuta</h4>
+        <span class="verdict v-parc">Se sostiene parcialmente</span>
+        <p>Subejecución <b>NO</b>: ejecutó 96–99%. PIA <b>+134%</b>. "Bajo" solo como peso del presupuesto
+        nacional (~0,4%), pendiente de cerrar el denominador.</p></div>
       <div class="hcard v-parc"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
         <span class="verdict v-parc">Parcial</span>
         <p>Gasto muy concentrado en Lima (ver territorio); falta cruzar con N.º de CEM e incidencia por región.</p></div>
       <div class="hcard v-pend"><div class="hid">H5 · Calidad</div><h4>Problemas de calidad/idoneidad en la atención</h4>
         <span class="verdict v-pend">Datos en recolección</span>
         <p>Requiere personal por régimen (PTE) e informes de supervisión de CEM (Defensoría 255/179). En curso.</p></div>
+      <div class="hcard v-parc"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
+        <span class="verdict v-parc">Se sostiene parcialmente</span>
+        <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
+        (5 en 17 meses bajo un gobierno): inestabilidad de conducción frente a continuidad normativa.</p></div>
     </div>
   </section>
 
@@ -434,6 +451,27 @@ function build(){
     enTot?['Prevalencia ENDES','<span class="k-dn">−'+cae+' pp</span>',enTot[0]+'% → '+enTot[enTot.length-1]+'%']:['Prevalencia ENDES','—','en proceso'],
     ['Titulares 2016–25','<span class="k-dn">'+TIT.length+'</span>','rotación alta'],
   ].map(k=>`<div class="kpi"><div class="k-label">${k[0]}</div><div class="k-val">${k[1]}</div><div class="k-note">${k[2]}</div></div>`).join('');
+
+  // Tarjetas de evolución "antes → ahora" (datos reales)
+  const nf=x=>x.toLocaleString('es-PE');
+  const cards=[];
+  const card=(kl,lbl,now,chg,from)=>cards.push(`<div class="evol ${kl}"><div class="e-lbl">${lbl}</div><div class="e-now">${now}</div><div class="e-chg">${chg}</div><div class="e-from">${from}</div></div>`);
+  if(enTot){const a0=EN.anios[0],aN=EN.anios[EN.anios.length-1],v0=enTot[0],vN=enTot[enTot.length-1];
+    card('up','Prevalencia de violencia de pareja',vN+'%','▼ '+(v0-vN).toFixed(1)+' pp',a0+': '+v0+'%');}
+  const EMBc=P.embarazo;
+  if(EMBc&&EMBc.total.length){const v0=EMBc.total[0],vN=EMBc.total[EMBc.total.length-1];
+    card('up','Embarazo adolescente (15–19)',vN+'%','▼ '+(v0-vN).toFixed(1)+' pp*',EMBc.periodos[0]+': '+v0+'%');}
+  const FE2=P.feminicidios;
+  if(FE2&&FE2.feminicidios.length){const v0=FE2.feminicidios[0],vN=FE2.feminicidios[FE2.feminicidios.length-1];
+    card('flat','Feminicidios (contexto)',nf(vN),'≈ sin descenso',FE2.anios[0]+': '+nf(v0));}
+  const CE2=P.cem;
+  if(CE2&&CE2.total.length){const v0=CE2.total[0],vN=CE2.total[CE2.total.length-1];
+    card('info','Atenciones CEM / año',nf(vN),'▲ +'+((vN/v0-1)*100).toFixed(0)+'%',CE2.anios[0]+': '+nf(v0));}
+  card('info','Presupuesto PIA',fmtM(pN.pia),'▲ +'+crec.toFixed(0)+'%',p0.anio+': '+fmtM(p0.pia));
+  const CN2=P.cem_num;
+  if(CN2&&CN2.total.length){const v0=CN2.total[0],vN=CN2.total[CN2.total.length-1];
+    card('info','Centros Emergencia Mujer',nf(vN),'▲ +'+((vN/v0-1)*100).toFixed(0)+'%',CN2.anios[0]+': '+nf(v0));}
+  document.getElementById('evol').innerHTML=cards.join('');
 
   // Story: dual axis (excepción consciente: dos historias, gasto vs prevalencia)
   if(enTot){
@@ -552,6 +590,12 @@ const root=document.documentElement;
 document.getElementById('tgl').onclick=()=>{const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   root.setAttribute('data-theme',cur==='dark'?'light':'dark');setTimeout(build,30);};
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!root.getAttribute('data-theme'))build();});
+
+/* ===== Menú hamburguesa (móvil) ===== */
+(function(){const mb=document.getElementById('menuBtn');if(!mb)return;
+  const nv=document.querySelector('aside nav');
+  mb.addEventListener('click',()=>{const o=nv.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.textContent=o?'✕':'☰';});
+  nv.querySelectorAll('a:not(.sec)').forEach(a=>a.addEventListener('click',()=>{nv.classList.remove('open');mb.setAttribute('aria-expanded','false');mb.textContent='☰';}));})();
 
 /* ===== Asistente de datos: gateway ai.tunky.net + respondedor local ===== */
 const CHAT={
