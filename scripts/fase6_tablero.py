@@ -20,6 +20,9 @@ from datetime import date
 from config import DIR_ANALISIS, DIR_ENTREGABLES, DIR_CRUDA, RAIZ
 
 GA_ID = "G-2CVE1EQ2L2"
+# X-Client-Token del gateway ai.tunky.net. Vacío = el chat usa solo el respondedor
+# local (datos del tablero). Pega aquí el token de Carlos para activar la IA generativa.
+TUNKY_TOKEN = ""
 data = json.loads((DIR_ANALISIS / "presupuesto_dashboard.json").read_text(encoding="utf-8"))
 
 
@@ -187,6 +190,26 @@ table.norm a{color:var(--accent);text-decoration:none}
 .tablewrap{overflow-x:auto}
 footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12.5px}
 .toggle{position:fixed;top:12px;right:12px;background:var(--panel);border:1px solid var(--line-2);color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:6}
+.chat-fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;box-shadow:0 6px 22px rgba(109,40,217,.42);z-index:20;display:flex;align-items:center;justify-content:center}
+.chat-fab.hide{display:none}
+.chat-panel{position:fixed;bottom:20px;right:20px;width:min(380px,calc(100vw - 28px));height:min(560px,calc(100vh - 40px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 44px rgba(30,15,45,.28);z-index:21;display:flex;flex-direction:column;overflow:hidden}
+.chat-top{display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--accent);color:#fff}
+.chat-top b{font-size:13.5px;display:block}.chat-top span{font-size:11px;opacity:.85}
+.chat-dot{width:8px;height:8px;border-radius:50%;background:#7cfca0;box-shadow:0 0 0 3px rgba(124,252,160,.3)}
+.chat-x{margin-left:auto;background:none;border:none;color:#fff;font-size:17px;cursor:pointer;line-height:1}
+.chat-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px}
+.msg{max-width:86%;padding:9px 12px;border-radius:13px;font-size:13.4px;line-height:1.45;white-space:pre-wrap}
+.msg.me{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:3px}
+.msg.bot{align-self:flex-start;background:var(--ground);color:var(--ink);border-bottom-left-radius:3px}
+.chat-suggest{display:flex;flex-wrap:wrap;gap:6px}
+.chat-suggest button{font-size:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink-2);border-radius:16px;padding:5px 10px;cursor:pointer;font-family:inherit}
+.chat-form{display:flex;gap:8px;padding:11px;border-top:1px solid var(--line)}
+.chat-form input{flex:1;border:1px solid var(--line-2);border-radius:20px;padding:9px 14px;font-family:inherit;font-size:13.4px;background:var(--surface);color:var(--ink)}
+.chat-form button{background:var(--accent);border:none;border-radius:50%;width:38px;height:38px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.typing i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--muted);margin:0 1px;animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.typing i{animation:none}}
 @media (max-width:860px){.layout{grid-template-columns:1fr}aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
   aside nav{flex-direction:row;flex-wrap:wrap}aside .foot{display:none}main{padding:24px 18px 60px}.story{grid-template-columns:1fr}}
 </style>
@@ -345,6 +368,20 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
   </footer>
 </main></div>
 
+<button class="chat-fab" id="chatFab" aria-label="Abrir asistente de datos">
+  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.4 8.7 8.7 0 0 1-4-.9L3 20l1.1-4.9a8.4 8.4 0 0 1-1-4 8.4 8.4 0 0 1 8.5-8.4 8.4 8.4 0 0 1 8.4 8.3z"/></svg>
+</button>
+<div class="chat-panel" id="chatPanel" hidden>
+  <div class="chat-top"><span class="chat-dot"></span>
+    <div><b>Asistente de la evaluación</b><span>IA · pregunta por las cifras</span></div>
+    <button class="chat-x" id="chatClose" aria-label="Cerrar">✕</button></div>
+  <div class="chat-log" id="chatLog"></div>
+  <form class="chat-form" id="chatForm">
+    <input id="chatInput" type="text" autocomplete="off" placeholder="Ej.: ¿Cuánto ejecutó el MIMP en 2024?" maxlength="500">
+    <button type="submit" aria-label="Enviar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+  </form>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 const P = /*__DATA__*/;
@@ -456,12 +493,75 @@ const root=document.documentElement;
 document.getElementById('tgl').onclick=()=>{const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   root.setAttribute('data-theme',cur==='dark'?'light':'dark');setTimeout(build,30);};
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!root.getAttribute('data-theme'))build();});
+
+/* ===== Asistente de datos: gateway ai.tunky.net + respondedor local ===== */
+const CHAT={
+  endpoint:"https://ai.tunky.net/v1/chat",
+  token:"__TUNKY__",   // X-Client-Token de ai.tunky.net (vacío = solo respondedor local)
+  system:"Eres el asistente de la evaluación de la gestión del MIMP (Ministerio de la Mujer del Perú, pliego 039), 2017-2025. Respondes en español, breve y con cifras. Regla clave: los feminicidios y la violencia son un problema MULTISECTORIAL; el MIMP contribuye pero no se le atribuye en exclusiva. Distingue registro administrativo de prevalencia poblacional (ENDES)."
+};
+const H=[]; let cOpen=false, cBusy=false, cGreet=false;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]));
+const cadd=(role,txt)=>{const l=$("chatLog");const d=document.createElement("div");d.className="msg "+role;d.textContent=txt;l.appendChild(d);l.scrollTop=l.scrollHeight;};
+function cTyping(){const l=$("chatLog");const m=document.createElement("div");m.className="msg bot";m.innerHTML='<span class="typing"><i></i><i></i><i></i></span>';l.appendChild(m);l.scrollTop=l.scrollHeight;return m;}
+function cSug(){const w=document.createElement("div");w.className="chat-suggest";
+  ["¿Cuánto ejecutó en 2024?","¿Bajó la violencia?","¿Cuántas ministras hubo?","¿En qué se gasta?"].forEach(q=>{const b=document.createElement("button");b.textContent=q;b.onclick=()=>{w.remove();cHandle(q);};w.appendChild(b);});
+  $("chatLog").appendChild(w);}
+function cGreetFn(){if(cGreet)return;cGreet=true;
+  cadd("bot","¡Hola! 👋 Soy el asistente de esta evaluación del MIMP. Pregúntame por el presupuesto, la ejecución, la prevalencia de violencia (ENDES) o la rotación de ministras.");cSug();}
+
+function localAnswer(q){
+  const n=q.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const S=D.serie_anual, pN=S[S.length-1], p0=S[0];
+  const m=n.match(/20(1[7-9]|2[0-5])/);
+  const enTot=EN.series&&EN.series['total'];
+  if(/ejecu|devenga|gast[oó]|presupuesto|pia|pim/.test(n)){
+    if(m){const r=S.find(x=>x.anio===m[0]);if(r)return `En ${r.anio} el MIMP tuvo un PIM de S/ ${(r.pim/1e6).toFixed(1)} M y devengó S/ ${(r.devengado/1e6).toFixed(1)} M: ${r.ejecucion_pct.toFixed(1)}% de ejecución. Fuente: MEF Datos Abiertos, pliego 039.`;}
+    return `El presupuesto del MIMP creció de S/ ${(p0.pia/1e6).toFixed(0)} M (${p0.anio}) a S/ ${(pN.pia/1e6).toFixed(0)} M (${pN.anio}), +${((pN.pia/p0.pia-1)*100).toFixed(0)}%. La ejecución fue alta todo el periodo (96–99%): el MIMP NO subejecuta. Fuente: MEF Datos Abiertos.`;
+  }
+  if(/violen|prevalen|endes|feminic|redujo|bajo|disminu/.test(n)){
+    if(enTot)return `Según INEI–ENDES, la prevalencia de violencia de pareja (alguna vez) cayó de ${enTot[0]}% (${EN.anios[0]}) a ${enTot[enTot.length-1]}% (${EN.anios[EN.anios.length-1]}), unos ${(enTot[0]-enTot[enTot.length-1]).toFixed(1)} puntos menos. Es magnitud poblacional, no atenciones. Salvaguarda: la mejora es MULTISECTORIAL, no atribuible solo al MIMP.`;
+    return "La prevalencia de violencia (ENDES) está en el tablero, sección Impacto.";
+  }
+  if(/ministr|titular|rotac|cargo/.test(n))
+    return `Hubo ~${TIT.length} titulares del MIMP entre 2016 y 2025 (con periodos de pocos días). Solo Nancy Tolentino tuvo una gestión larga (~15 meses). Alta rotación = conducción inestable pese a un marco normativo sólido.`;
+  if(/en que|detalle|planilla|personal|cas|contrat/.test(n)){
+    const d=D.por_detalle_gasto.labels.slice(0,3).join(", ");
+    return `Los principales rubros de gasto son: ${d}. El CAS (Contrato Administrativo de Servicios) es el mayor rubro de contratación de personal. Ver secciones "Personal y planilla" y "¿En qué se gasta?".`;
+  }
+  if(/norma|ley|30364|politica/.test(n))
+    return `El MIMP es rector de la Ley 30364 (2015) e impulsó la Política Nacional de Igualdad de Género (2019) y la Estrategia "Mujeres libres de violencia" (2021). Ver la tabla de marco normativo.`;
+  if(/hola|ayuda|puedes|que sabes/.test(n))
+    return "Puedo responderte sobre: presupuesto y ejecución, prevalencia ENDES, rotación de ministras, en qué se gasta y el marco normativo. ¿Qué te interesa?";
+  return "Puedo contarte sobre el presupuesto (96–99% de ejecución), la prevalencia de violencia (ENDES, −13 pp), la rotación de ministras o en qué se gasta. Prueba una de esas.";
+}
+function cPick(d){if(!d)return null;if(typeof d==="string")return d;
+  return d.reply||d.message||d.answer||d.response||d.text||d.content||(d.choices&&d.choices[0]&&((d.choices[0].message&&d.choices[0].message.content)||d.choices[0].text))||null;}
+async function cGateway(text){
+  const res=await fetch(CHAT.endpoint,{method:"POST",headers:{"Content-Type":"application/json","X-Client-Token":CHAT.token},
+    body:JSON.stringify({message:text,messages:H.slice(-12),system:CHAT.system})});
+  const raw=await res.text();let data;try{data=JSON.parse(raw);}catch(e){data=raw;}
+  if(!res.ok)throw new Error((data&&data.error)||"HTTP "+res.status);
+  return cPick(data)||"…";}
+async function cHandle(text){
+  text=(text||"").trim();if(!text||cBusy)return;
+  cadd("me",text);H.push({role:"user",content:text});cBusy=true;$("chatSend");
+  const t=cTyping();let reply;
+  try{ if(CHAT.token&&CHAT.token.indexOf("__")!==0){ try{reply=await cGateway(text);}catch(e){reply=localAnswer(text);} } else reply=localAnswer(text); }
+  catch(e){reply=localAnswer(text);}
+  t.remove();cadd("bot",reply);H.push({role:"assistant",content:reply});cBusy=false;$("chatInput").focus();}
+function cToggle(v){cOpen=v==null?!cOpen:v;$("chatPanel").hidden=!cOpen;$("chatFab").classList.toggle("hide",cOpen);if(cOpen)cGreetFn();}
+$("chatFab").onclick=()=>cToggle(true);
+$("chatClose").onclick=()=>cToggle(false);
+$("chatForm").onsubmit=e=>{e.preventDefault();const v=$("chatInput").value;$("chatInput").value="";cHandle(v);};
 </script>
 </body>
 </html>
 """
 
-salida = HTML.replace("/*__DATA__*/", json.dumps(payload, ensure_ascii=False)).replace("__GA__", GA_ID)
+salida = (HTML.replace("/*__DATA__*/", json.dumps(payload, ensure_ascii=False))
+          .replace("__GA__", GA_ID).replace("__TUNKY__", TUNKY_TOKEN))
 (DIR_ENTREGABLES / "tablero_mimp.html").write_text(salida, encoding="utf-8")
 docs = RAIZ / "docs"
 docs.mkdir(exist_ok=True)
