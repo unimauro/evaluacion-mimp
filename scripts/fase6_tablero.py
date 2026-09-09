@@ -287,6 +287,14 @@ h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-
 .evol.up .e-chg{color:var(--good)} .evol.down .e-chg{color:var(--crit)} .evol.flat .e-chg{color:var(--warn)} .evol.info .e-chg{color:var(--accent)}
 .evol .e-from{font-size:12px;color:var(--ink-2);margin-top:3px;font-variant-numeric:tabular-nums}
 
+.faq details{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq summary{cursor:pointer;padding:15px 46px 15px 18px;font-weight:700;font-size:14.5px;list-style:none;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:18px;top:12px;font-size:21px;color:var(--accent);font-weight:400}
+.faq details[open] summary::after{content:"−"}
+.faq details[open] summary{border-bottom:1px solid var(--line)}
+.faq .fa-body{padding:14px 18px;font-size:13.6px;color:var(--ink-2);line-height:1.58}
+.faq .fa-body b{color:var(--ink)}
 .note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
 .note b{color:var(--ink)}
 table.norm{width:100%;border-collapse:collapse;font-size:13px}
@@ -363,6 +371,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       <a href="#normas">Marco normativo</a>
       <a class="sec">Conclusión</a>
       <a href="#hipotesis">Hipótesis H1–H6</a>
+      <a href="#faq">Preguntas frecuentes</a>
     </nav>
     <div class="foot">Datos oficiales: MEF, INEI–ENDES, Portal Warmi Ñan, El Peruano.<br>Descarga 2026-09-08. Reproducible.</div>
   </aside>
@@ -551,6 +560,52 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
         (5 en 17 meses bajo un gobierno): inestabilidad de conducción frente a continuidad normativa.</p></div>
     </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <h2>Preguntas frecuentes (metodología)</h2>
+    <p class="lead">Por qué algunos datos deben leerse con cuidado — y por qué la "caída" de la violencia no es lo que parece.</p>
+
+    <details open><summary>¿Por qué no confiar en que la violencia "cayó 13 puntos"?</summary>
+      <div class="fa-body">Ese número viene de <b>un solo indicador</b>: la prevalencia total de la encuesta INEI–ENDES
+      (65,4% en 2017 → 52,0% en 2024). Tiene tres problemas: (1) es <b>autorreporte</b> en una encuesta, no hechos
+      registrados; (2) mide violencia sufrida <b>"alguna vez" en la vida</b>, muy sensible a la composición de la muestra;
+      y (3) en <b>2020 el INEI cambió la metodología</b> (de promedios bienales a años simples), creando una ruptura de
+      serie. Además, casi todo el descenso ocurrió en 2017–2019 y desde 2020 <b>se estancó</b> (~52–55%).</div></details>
+
+    <details><summary>¿Qué mide exactamente "violencia de pareja" en la ENDES?</summary>
+      <div class="fa-body">El % de mujeres de <b>15 a 49 años alguna vez unidas</b> que declaran haber sufrido violencia
+      psicológica/verbal, física o sexual ejercida <b>alguna vez por su esposo o compañero</b>. No incluye a mujeres no
+      unidas, no cubre otras formas de violencia de género (acoso, trata, violencia institucional) y depende de que la
+      mujer <b>reconozca y reporte</b> la violencia en la entrevista. Base: Cuadro 11.1, Series Anuales INEI 1986–2024.</div></details>
+
+    <details><summary>Entonces, ¿qué datos son mejores para evaluar el problema?</summary>
+      <div class="fa-body">Los <b>registros de hechos</b>, que no dependen de autorreporte y no muestran mejora:
+      <b>feminicidios</b> estancados en 130–170/año (registro Warmi Ñan), <b>denuncias por violencia sexual</b> que
+      casi se duplicaron (5,7k→10,8k, INEI/PNP) y <b>atenciones CEM</b> estables en ~165k. Cada uno tiene su límite
+      (subregistro, cambios de definición), pero en conjunto pintan un panorama <b>más crudo</b> que la encuesta.</div></details>
+
+    <details><summary>¿Se pueden sumar feminicidios + denuncias + atenciones en un solo número?</summary>
+      <div class="fa-body"><b>No.</b> Son unidades distintas: los feminicidios son <b>muertes</b>, las denuncias son
+      <b>denuncias</b> y las atenciones son <b>casos atendidos</b> (una misma persona puede tener varias). Sumarlos
+      produciría una cifra sin sentido. Por eso se muestran <b>juntos como panel de señales</b>, no como un total.</div></details>
+
+    <details><summary>Más denuncias, ¿es más violencia o más gente denunciando?</summary>
+      <div class="fa-body">No se puede concluir una sola cosa: es la <b>paradoja de los registros</b>. Un alza de denuncias
+      puede reflejar <b>más violencia</b>, <b>más disposición a denunciar</b> (mayor confianza/visibilización), o
+      <b>más oferta de servicios</b> que capta casos antes invisibles. Por eso las denuncias y atenciones se presentan
+      como <b>demanda registrada</b>, no como medida directa de la magnitud del problema.</div></details>
+
+    <details><summary>¿Por qué feminicidios y violaciones son "contexto" y no responsabilidad del MIMP?</summary>
+      <div class="fa-body">Porque son <b>multisectoriales</b>: la investigación la conduce el <b>Ministerio Público</b>, la
+      sanción el <b>Poder Judicial</b>, y las denuncias las registra la <b>PNP/Mininter</b>. El MIMP previene, atiende y
+      articula, pero no controla el resultado penal. Se leen como <b>contribución, no atribución</b>: sirven de contexto,
+      no como nota directa de la eficacia del ministerio.</div></details>
+
+    <details><summary>¿El presupuesto del MIMP es alto o bajo?</summary>
+      <div class="fa-body">En términos absolutos <b>creció mucho</b> (PIA S/ 426 M en 2017 → S/ 996 M en 2025, +134%) y se
+      <b>ejecuta casi al 100%</b>. Pero como parte del presupuesto nacional pesa apenas <b>~0,4%</b>. Ambas cosas son
+      ciertas: el MIMP no subejecuta, pero su escala frente al problema es pequeña.</div></details>
   </section>
 
   <footer>

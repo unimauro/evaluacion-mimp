@@ -55,9 +55,9 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" view
 <text x="70" y="188" font-family="Georgia,serif" font-size="66" font-weight="700" fill="#ffffff">¿Redujo la violencia,</text>
 <text x="70" y="262" font-family="Georgia,serif" font-size="66" font-weight="700" fill="#ffffff">o solo gastó?</text>
 <text x="70" y="360" font-family="Arial" font-size="30" fill="#ede9fe">Presupuesto <tspan font-weight="700" fill="#86efac">+134%</tspan> · Ejecución <tspan font-weight="700" fill="#86efac">99%</tspan></text>
-<text x="70" y="404" font-family="Arial" font-size="30" fill="#ede9fe">Prevalencia ENDES <tspan font-weight="700" fill="#f0abfc">−13 pp</tspan></text>
-<text x="70" y="470" font-family="Arial" font-size="27" font-weight="700" fill="#fca5a5">Pero los feminicidios no ceden →</text>
-<text x="70" y="504" font-family="Arial" font-size="23" fill="#c4b5fd">130–170 casos al año, sin descenso sostenido</text>
+<text x="70" y="404" font-family="Arial" font-size="30" fill="#ede9fe">Denuncias por violencia sexual <tspan font-weight="700" fill="#fca5a5">+90%</tspan></text>
+<text x="70" y="470" font-family="Arial" font-size="27" font-weight="700" fill="#fca5a5">Feminicidios que no ceden →</text>
+<text x="70" y="504" font-family="Arial" font-size="23" fill="#c4b5fd">130–170 casos al año pese al triple de gasto</text>
 <text x="70" y="580" font-family="Arial" font-size="24" fill="#ddd6fe">unimauro.github.io/evaluacion-mimp · Datos oficiales MEF · INEI–ENDES · Warmi Ñan</text>
 <text x="{gx}" y="{gy-24:.0f}" font-family="Arial" font-size="22" font-weight="700" fill="#ede9fe">Feminicidios por año (registro Warmi Ñan)</text>
 <line x1="{gx}" y1="{gy+gh}" x2="{gx+gw}" y2="{gy+gh}" stroke="#7c5cc4" stroke-width="1.5"/>
