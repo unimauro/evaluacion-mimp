@@ -142,6 +142,31 @@ for r in dem_rows:
     if m:
         demuna["anios"].append(r["anio"]); demuna["acreditadas_pct"].append(float(m.group(1)))
 
+# --- Meta PNIG vs real (indicador central de violencia, últimos 12 meses) ---
+mv_rows = leer_csv("violencia_12meses_real_*.csv")
+metaviol = {"anios": [], "real": [], "meta": []}
+for r in mv_rows:
+    metaviol["anios"].append(r["anio"])
+    try:
+        metaviol["real"].append(float(r["valor_pct"]))
+    except (ValueError, KeyError):
+        metaviol["real"].append(None)
+    try:
+        metaviol["meta"].append(float(r["meta_pnig"]))
+    except (ValueError, KeyError):
+        metaviol["meta"].append(None)
+
+# --- Tabla de metas de los planes (solo con meta numérica) ---
+meta_rows = leer_csv("metas_planes_*.csv")
+metas = []
+for r in meta_rows:
+    mv = str(r.get("meta_valor", "")).strip()
+    if not mv or "DISPONIBLE" in mv:
+        continue
+    metas.append({"instrumento": r.get("instrumento", ""), "indicador": r.get("indicador", ""),
+                  "lb": r.get("linea_base_valor", ""), "lb_anio": r.get("linea_base_anio", ""),
+                  "meta": mv, "meta_anio": r.get("meta_anio", ""), "url": r.get("url", "")})
+
 # --- Normas ---
 norm_rows = leer_csv("normas_mimp_*.csv")
 normas = [{"tipo": r.get("tipo", ""), "numero": r.get("numero", ""), "nombre": r.get("nombre", ""),
@@ -150,7 +175,7 @@ normas = [{"tipo": r.get("tipo", ""), "numero": r.get("numero", ""), "nombre": r
 payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas,
            "feminicidios": femi, "cem": cem, "linea100": linea100, "cem_num": cem_num,
            "embarazo": embarazo, "demuna": demuna, "violaciones": violaciones,
-           "generado": date.today().isoformat()}
+           "metaviol": metaviol, "metas": metas, "generado": date.today().isoformat()}
 
 HTML = r"""<!doctype html>
 <html lang="es">
@@ -295,6 +320,15 @@ h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-
 .faq details[open] summary{border-bottom:1px solid var(--line)}
 .faq .fa-body{padding:14px 18px;font-size:13.6px;color:var(--ink-2);line-height:1.58}
 .faq .fa-body b{color:var(--ink)}
+.verdict-card{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--accent-2);border-radius:14px;margin:20px 0 6px;overflow:hidden}
+.verdict-card>summary{cursor:pointer;list-style:none;padding:17px 48px 17px 20px;font-weight:700;font-size:20px;color:var(--ink);position:relative;letter-spacing:-.01em}
+.verdict-card>summary::-webkit-details-marker{display:none}
+.verdict-card>summary::after{content:"−";position:absolute;right:20px;top:15px;font-size:22px;color:var(--accent-2)}
+.verdict-card:not([open])>summary::after{content:"+"}
+.verdict-card .vc-body{padding:2px 20px 18px;color:var(--ink-2);font-size:16px;line-height:1.5;max-width:74ch}
+.verdict-card .vc-body b{color:var(--ink)}
+.verdict-card .vc-body .src{font-size:12.5px;color:var(--muted);margin-top:12px}
+.verdict-card .vc-body .src code{background:var(--ground);padding:1px 5px;border-radius:4px}
 .note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
 .note b{color:var(--ink)}
 table.norm{width:100%;border-collapse:collapse;font-size:13px}
@@ -361,6 +395,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       <a href="#inicio">Resumen</a>
       <a class="sec">Dimensiones</a>
       <a href="#impacto">Impacto: ¿bajó la violencia?</a>
+      <a href="#metas">Meta vs. resultado</a>
       <a href="#servicios">Producción de servicios</a>
       <a href="#ninez">Niñez y adolescencia</a>
       <a href="#presupuesto">Presupuesto y ejecución</a>
@@ -379,12 +414,18 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
   <main id="inicio">
     <div class="eyebrow">Evaluación de la gestión pública</div>
     <h1>¿El MIMP redujo la violencia, o solo gastó?</h1>
-    <p class="dek">Entre 2017 y 2025 el Ministerio de la Mujer <b>casi triplicó su presupuesto</b> y lo ejecuta
-      casi al 100%. Pero los <b>hechos registrados no acompañan</b>: los feminicidios siguen en 130–170 al año y las
-      denuncias por violencia sexual <b>casi se duplicaron</b>. La única "mejora" —la encuesta ENDES— es
-      metodológicamente discutible y se estancó desde 2020. La pregunta no es si gastó bien, sino
-      <b>cuánto cumplió de lo que sus propios planes prometieron</b>.</p>
-    <p class="src">Fuentes: MEF Datos Abiertos (pliego <code>039</code>), INEI–ENDES, Portal Warmi Ñan, El Peruano · descarga <code>2026-09-08</code> · soles corrientes.</p>
+    <details class="verdict-card" open>
+      <summary>La evaluación en corto: no hay mayores mejoras</summary>
+      <div class="vc-body">
+        <p>Entre 2017 y 2025 el Ministerio de la Mujer <b>casi triplicó su presupuesto</b> y lo ejecuta casi al 100%.
+          Pero los <b>hechos registrados no acompañan</b>: los feminicidios siguen en 130–170 al año y las denuncias
+          por violencia sexual <b>casi se duplicaron</b>. La única "mejora" —la encuesta ENDES— es
+          <b>metodológicamente discutible</b> y se estancó desde 2020. La pregunta no es si gastó bien, sino
+          <b>cuánto cumplió de lo que sus propios planes prometieron</b>.</p>
+        <p class="src">Fuentes: MEF Datos Abiertos (pliego <code>039</code>), INEI–ENDES, Portal Warmi Ñan,
+          El Peruano · descarga <code>2026-09-08</code> · soles corrientes.</p>
+      </div>
+    </details>
 
     <div style="margin-top:26px"><span class="eyebrow" style="color:var(--accent-2)">De hace una década a hoy</span></div>
     <div class="evol-grid" id="evol"></div>
@@ -421,7 +462,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <a class="sem v-parc" href="#servicios"><span class="dot"></span><b>H2 · Servicios</b><i>Parcial</i><small>Atenciones estables ~165k; red de CEM estancada en 433, solo 5 en 24h</small></a>
         <a class="sem v-parc" href="#presupuesto"><span class="dot"></span><b>H3 · Presupuesto</b><i>Parcial</i><small>No subejecuta (96–99%); PIA +134%, pero pesa ~0,4% del nacional</small></a>
         <a class="sem v-parc" href="#territorio"><span class="dot"></span><b>H4 · Cobertura</b><i>Parcial</i><small>Gasto muy concentrado en Lima frente a la incidencia nacional</small></a>
-        <a class="sem v-pend" href="#hipotesis"><span class="dot"></span><b>H5 · Calidad</b><i>Sin datos</i><small>Falta personal por régimen y supervisión de CEM (en gestión)</small></a>
+        <a class="sem v-pend" href="#hipotesis"><span class="dot"></span><b>H5 · Calidad</b><i>Sin acceso</i><small>El personal por régimen no es público; requiere solicitud (Ley 27806)</small></a>
         <a class="sem v-parc" href="#gestion"><span class="dot"></span><b>H6 · Gestión</b><i>Parcial</i><small>Marco normativo sólido, pero ~15 titulares en 9 años</small></a>
       </div>
     </div>
@@ -445,6 +486,25 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       (mayor visibilización) — no se puede concluir una sola cosa. Es contexto (PNP/MP), no eficacia directa del MIMP.</div>
     <div class="note" style="margin-top:14px"><b>El dato que incomoda:</b> mientras la prevalencia poblacional bajó 13 pp, los <b>feminicidios no descienden</b> (oscilan 130–170 al año). La magnitud del problema cede, pero su expresión más extrema se mantiene. Feminicidios = contexto (investiga el Ministerio Público), no eficacia directa del MIMP.</div>
     <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
+  </section>
+
+  <section id="metas">
+    <h2>Meta prometida vs. resultado real</h2>
+    <p class="lead">El propio MIMP fijó metas en su Política Nacional de Igualdad de Género (DS 008-2019-MIMP).
+      El indicador central —violencia física/sexual de pareja en los <b>últimos 12 meses</b> (mejor que el
+      "alguna vez")— debía caer a <b>4,8% en 2026</b> y <b>2,4% en 2030</b>. El dato real va muy por encima.</p>
+    <div class="grid">
+      <div class="card full"><h3>Violencia de pareja (últimos 12 meses): meta vs. real</h3>
+        <p class="cap">% mujeres 15+ · meta oficial PNIG vs. ejecución real (ENDES–PPR)</p>
+        <div class="chart-box tall"><canvas id="c_metaviol"></canvas></div></div>
+    </div>
+    <div class="note" style="margin-top:14px"><b>El veredicto más duro:</b> en 2024 el indicador real es <b>7,5%</b>
+      cuando la meta de ese año era <b>6,0%</b> y la de 2026 es <b>4,8%</b>. Salvo 2021, el resultado quedó
+      <b>siempre por encima</b> de la meta y la brecha se amplía. Con el presupuesto triplicado, <b>el MIMP no va
+      camino a cumplir la meta que él mismo se fijó</b>.</div>
+    <div class="card full" style="margin-top:16px"><h3>Otras metas al 2030 de los planes del MIMP</h3>
+      <p class="cap">Línea base → meta · Política Nacional de Igualdad de Género y PEI 2025–2030</p>
+      <div class="tablewrap"><table class="norm" id="t_metas"><thead><tr><th>Instrumento</th><th>Indicador</th><th>Línea base</th><th>Meta</th></tr></thead><tbody></tbody></table></div></div>
   </section>
 
   <section id="servicios">
@@ -553,8 +613,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <span class="verdict v-parc">Parcial</span>
         <p>Gasto muy concentrado en Lima (ver territorio); falta cruzar con N.º de CEM e incidencia por región.</p></div>
       <div class="hcard v-pend"><div class="hid">H5 · Calidad</div><h4>Problemas de calidad/idoneidad en la atención</h4>
-        <span class="verdict v-pend">Datos en recolección</span>
-        <p>Requiere personal por régimen (PTE) e informes de supervisión de CEM (Defensoría 255/179). En curso.</p></div>
+        <span class="verdict v-pend">Sin datos accesibles</span>
+        <p>El número de personal por régimen no está publicado de forma abierta y el Portal de Transparencia no lo
+        expone descargable: requiere <b>solicitud de acceso a la información (Ley 27806)</b> al MIMP. Queda documentado como gap.</p></div>
       <div class="hcard v-parc"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
         <span class="verdict v-parc">Se sostiene parcialmente</span>
         <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
@@ -571,7 +632,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       (65,4% en 2017 → 52,0% en 2024). Tiene tres problemas: (1) es <b>autorreporte</b> en una encuesta, no hechos
       registrados; (2) mide violencia sufrida <b>"alguna vez" en la vida</b>, muy sensible a la composición de la muestra;
       y (3) en <b>2020 el INEI cambió la metodología</b> (de promedios bienales a años simples), creando una ruptura de
-      serie. Además, casi todo el descenso ocurrió en 2017–2019 y desde 2020 <b>se estancó</b> (~52–55%).</div></details>
+      serie. Además, casi todo el descenso ocurrió en 2017–2019 y desde 2020 <b>se estancó</b> (~52–55%). Por eso es un
+      indicador <b>metodológicamente discutible</b>: sirve como contexto, no como prueba de que la violencia bajó —y menos
+      de que bajó por acción del MIMP.</div></details>
 
     <details><summary>¿Qué mide exactamente "violencia de pareja" en la ENDES?</summary>
       <div class="fa-body">El % de mujeres de <b>15 a 49 años alguna vez unidas</b> que declaran haber sufrido violencia
@@ -672,8 +735,6 @@ function build(){
   const nf=x=>x.toLocaleString('es-PE');
   const cards=[];
   const card=(kl,lbl,now,chg,from)=>cards.push(`<div class="evol ${kl}"><div class="e-lbl">${lbl}</div><div class="e-now">${now}</div><div class="e-chg">${chg}</div><div class="e-from">${from}</div></div>`);
-  if(enTot){const a0=EN.anios[0],v0=enTot[0],vN=enTot[enTot.length-1];
-    card('flat','Prevalencia ENDES *',vN+'%','▼ '+(v0-vN).toFixed(1)+' pp (autorreporte)',a0+': '+v0+'% · ruptura 2020');}
   const EMBc=P.embarazo;
   if(EMBc&&EMBc.total.length){const v0=EMBc.total[0],vN=EMBc.total[EMBc.total.length-1];
     card('up','Embarazo adolescente (15–19)',vN+'%','▼ '+(v0-vN).toFixed(1)+' pp*',EMBc.periodos[0]+': '+v0+'%');}
@@ -687,9 +748,6 @@ function build(){
   const VI2=P.violaciones;
   if(VI2&&VI2.total.length){const v0=VI2.total[0],vN=VI2.total[VI2.total.length-1];
     card('down','Denuncias violencia sexual',nf(vN),'▲ +'+((vN/v0-1)*100).toFixed(0)+'%',VI2.anios[0]+': '+nf(v0));}
-  const CN2=P.cem_num;
-  if(CN2&&CN2.total.length){const v0=CN2.total[0],vN=CN2.total[CN2.total.length-1];
-    card('info','Centros Emergencia Mujer',nf(vN),'▲ +'+((vN/v0-1)*100).toFixed(0)+'%',CN2.anios[0]+': '+nf(v0));}
   document.getElementById('evol').innerHTML=cards.join('');
 
   // Story: gasto (barras) vs feminicidios registrados (línea) — dos escalas
@@ -813,6 +871,18 @@ function build(){
   const tb=document.querySelector('#t_normas tbody');
   tb.innerHTML=NOR.map(n=>{const u=(n.url||'').startsWith('http');
     return `<tr><td>${n.tipo}</td><td>${n.numero}</td><td>${n.nombre}</td><td>${n.anio}</td><td>${u?`<a href="${n.url}" target="_blank" rel="noopener">El Peruano ↗</a>`:'<span style="color:var(--muted)">pendiente</span>'}</td></tr>`;}).join('');
+
+  // Meta PNIG vs real
+  const MV=P.metaviol;
+  if(MV&&MV.anios&&MV.anios.length){
+    const o=base();o.scales.y.title.text='% mujeres 15+';o.scales.y.ticks.callback=v=>v+'%';o.scales.y.beginAtZero=true;
+    o.plugins.tooltip.callbacks.label=c=>c.parsed.y==null?null:` ${c.dataset.label}: ${c.parsed.y}%`;
+    charts.push(new Chart(c_metaviol,{data:{labels:MV.anios,datasets:[
+      {type:'line',label:'Meta PNIG (lo prometido)',data:MV.meta,borderColor:css('--good'),borderDash:[6,4],backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.1,spanGaps:true},
+      {type:'line',label:'Real (ENDES 12 meses)',data:MV.real,borderColor:css('--crit'),backgroundColor:'transparent',borderWidth:2.8,pointRadius:4,tension:.2,spanGaps:true}]},options:o}));
+  }
+  const tm=document.querySelector('#t_metas tbody');
+  if(tm)tm.innerHTML=P.metas.map(m=>`<tr><td>${m.instrumento}</td><td>${m.indicador}</td><td>${m.lb!==''?m.lb+' ('+m.lb_anio+')':'—'}</td><td><b>${m.meta}</b> (${m.meta_anio})</td></tr>`).join('');
 }
 build();
 const root=document.documentElement;

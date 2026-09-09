@@ -1,0 +1,14 @@
+anio,valor_pct,meta_pnig,fuente,url,fecha_descarga,nota
+2017,10.6,10.6,PNIG DS 008-2019-MIMP (linea base) / INEI-ENDES,https://elperuano.pe/NormasElperuano/2019/04/04/1757065-1/1757065-1.htm,2026-09-08,Linea base oficial del indicador del Objetivo Prioritario 1 de la PNIG. Violencia fisica y/o sexual de pareja ultimos 12 meses (mujeres 15+).
+2019,10.0,9.0,INEI-ENDES 2024 PPR (real) / PNIG (meta),https://proyectos.inei.gob.pe/endes/2024/ppr2/Indicadores_de_Resultados_de_los_Programas_Presupuestales_ENDES_2024.pdf,2026-09-08,Real de PPR ENDES 2024 (Cuadros 36-38); meta de la trayectoria anualizada de la PNIG.
+2020,8.8,8.4,INEI-ENDES 2024 PPR (real) / PNIG (meta),https://proyectos.inei.gob.pe/endes/2024/ppr2/Indicadores_de_Resultados_de_los_Programas_Presupuestales_ENDES_2024.pdf,2026-09-08,Ano COVID.
+2021,7.6,7.8,INEI-ENDES 2024 PPR (real) / PNIG (meta),https://proyectos.inei.gob.pe/endes/2024/ppr2/Indicadores_de_Resultados_de_los_Programas_Presupuestales_ENDES_2024.pdf,2026-09-08,Unico ano en que el real (7.6) queda cerca/por debajo de la meta (7.8).
+2022,8.6,7.2,INEI-ENDES 2024 PPR (real) / PNIG (meta),https://proyectos.inei.gob.pe/endes/2024/ppr2/Indicadores_de_Resultados_de_los_Programas_Presupuestales_ENDES_2024.pdf,2026-09-08,Repunte: real 8.6 vs meta 7.2 (1.4 pp por encima).
+2023,8.3,6.6,INEI-ENDES 2024 PPR (real) / PNIG (meta),https://proyectos.inei.gob.pe/endes/2024/ppr2/Indicadores_de_Resultados_de_los_Programas_Presupuestales_ENDES_2024.pdf,2026-09-08,Real 8.3 vs meta 6.6 (1.7 pp por encima).
+2024,7.5,6.0,INEI-ENDES 2024 PPR (real) / PNIG (meta),https://proyectos.inei.gob.pe/endes/2024/ppr2/Indicadores_de_Resultados_de_los_Programas_Presupuestales_ENDES_2024.pdf,2026-09-08,Ultimo real publicado: 7.5 vs meta 6.0 (1.5 pp por encima). El MIMP va retrasado respecto de su propia trayectoria.
+2025,,5.4,PNIG DS 008-2019-MIMP (trayectoria),https://elperuano.pe/NormasElperuano/2019/04/04/1757065-1/1757065-1.htm,2026-09-08,Solo meta (real aun no publicado).
+2026,,4.8,PNIG DS 008-2019-MIMP (meta intermedia),https://elperuano.pe/NormasElperuano/2019/04/04/1757065-1/1757065-1.htm,2026-09-08,Meta intermedia PNIG.
+2027,,4.2,PNIG DS 008-2019-MIMP (trayectoria),https://elperuano.pe/NormasElperuano/2019/04/04/1757065-1/1757065-1.htm,2026-09-08,Solo meta.
+2028,,3.6,PNIG DS 008-2019-MIMP (trayectoria),https://elperuano.pe/NormasElperuano/2019/04/04/1757065-1/1757065-1.htm,2026-09-08,Solo meta.
+2029,,3.0,PNIG DS 008-2019-MIMP (trayectoria),https://elperuano.pe/NormasElperuano/2019/04/04/1757065-1/1757065-1.htm,2026-09-08,Solo meta.
+2030,,2.4,PNIG DS 008-2019-MIMP (meta final),https://elperuano.pe/NormasElperuano/2019/04/04/1757065-1/1757065-1.htm,2026-09-08,Meta final 2030.
