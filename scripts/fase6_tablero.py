@@ -322,12 +322,12 @@ h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-
 .faq details[open] summary{border-bottom:1px solid var(--line)}
 .faq .fa-body{padding:14px 18px;font-size:13.6px;color:var(--ink-2);line-height:1.58}
 .faq .fa-body b{color:var(--ink)}
-.verdict-card{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--accent-2);border-radius:14px;margin:20px 0 6px;overflow:hidden}
+.verdict-card{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--accent-2);border-radius:14px;margin:20px 0 6px;overflow:hidden;max-width:860px}
 .verdict-card>summary{cursor:pointer;list-style:none;padding:17px 48px 17px 20px;font-weight:700;font-size:20px;color:var(--ink);position:relative;letter-spacing:-.01em}
 .verdict-card>summary::-webkit-details-marker{display:none}
 .verdict-card>summary::after{content:"−";position:absolute;right:20px;top:15px;font-size:22px;color:var(--accent-2)}
 .verdict-card:not([open])>summary::after{content:"+"}
-.verdict-card .vc-body{padding:2px 22px 20px;color:var(--ink-2);font-size:16px;line-height:1.62;max-width:62ch}
+.verdict-card .vc-body{padding:2px 24px 20px;color:var(--ink-2);font-size:16px;line-height:1.62}
 .verdict-card .vc-body p{margin:0 0 13px}
 .verdict-card .vc-body b{color:var(--ink)}
 .verdict-card .vc-body .src{font-size:12.5px;color:var(--muted);margin-top:12px}
