@@ -242,6 +242,8 @@ aside .tag{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spa
 aside nav{margin-top:22px;display:flex;flex-direction:column;gap:2px}
 aside nav a{font-size:13.5px;color:var(--ink-2);text-decoration:none;padding:8px 10px;border-radius:8px}
 aside nav a:hover{background:var(--ground);color:var(--ink)}
+aside nav a.active{background:var(--ground);color:var(--accent);font-weight:600}
+main>section[hidden]{display:none}
 aside nav a.sec{margin-top:12px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);pointer-events:none;padding-bottom:2px}
 aside .foot{margin-top:24px;font-size:11.5px;color:var(--muted);line-height:1.5}
 main{min-width:0;padding:34px 40px 80px;max-width:1080px}
@@ -408,7 +410,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <div class="brand">Evaluación <span>MIMP</span></div>
     <div class="tag">Pliego 039 · 2017–2025</div>
     <nav>
-      <a href="#inicio">Resumen</a>
+      <a href="#resumen">Resumen</a>
       <a class="sec">Dimensiones</a>
       <a href="#impacto">Impacto: ¿bajó la violencia?</a>
       <a href="#metas">Meta vs. resultado</a>
@@ -429,6 +431,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
   </aside>
 
   <main id="inicio">
+    <section id="resumen">
     <div class="eyebrow">Evaluación de la gestión pública</div>
     <h1>¿El MIMP redujo la violencia, o solo gastó?</h1>
     <details class="verdict-card" open>
@@ -483,12 +486,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <a class="sem v-parc" href="#gestion"><span class="dot"></span><b>H6 · Gestión</b><i>Parcial</i><small>Marco normativo sólido, pero ~15 titulares en 9 años</small></a>
       </div>
     </div>
-  </main>
-</div>
+    </section>
 
-<div class="layout"><aside style="visibility:hidden"></aside><main style="padding-top:0">
-
-  <section id="impacto">
+  <section id="impacto" hidden>
     <h2>Impacto: prevalencia de violencia (ENDES)</h2>
     <p class="lead">Prevalencia de violencia contra la mujer ejercida alguna vez por la pareja (INEI–ENDES, mujeres
       15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp entre 2017 y 2024, pero el grueso del descenso fue <b>2017–2019</b>; desde 2020 se estancó (~52–55%). Fuente: INEI–ENDES, Series Anuales 1986–2024, Cuadro 11.1.</p>
@@ -960,16 +960,38 @@ document.getElementById('tgl').onclick=()=>{const cur=root.getAttribute('data-th
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!root.getAttribute('data-theme'))build();});
 
 /* ===== Menú hamburguesa (móvil) ===== */
+function cerrarMenu(){const nv=document.querySelector('aside nav');const mb=document.getElementById('menuBtn');
+  if(nv)nv.classList.remove('open');if(mb){mb.textContent='☰';mb.setAttribute('aria-expanded','false');}}
 (function(){const mb=document.getElementById('menuBtn');if(!mb)return;
   const nv=document.querySelector('aside nav');
-  mb.addEventListener('click',()=>{const o=nv.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.textContent=o?'✕':'☰';});
-  nv.querySelectorAll('a:not(.sec)').forEach(a=>a.addEventListener('click',()=>{nv.classList.remove('open');mb.setAttribute('aria-expanded','false');mb.textContent='☰';}));})();
+  mb.addEventListener('click',()=>{const o=nv.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.textContent=o?'✕':'☰';});})();
+
+/* ===== Navegación por secciones (cada sección = una página) ===== */
+(function(){
+  const mainEl=document.querySelector('main');
+  const secciones=[...mainEl.querySelectorAll(':scope > section')];
+  const navLinks=[...document.querySelectorAll('aside nav a[href^="#"]')];
+  function show(id){
+    if(!secciones.some(s=>s.id===id)) id='resumen';
+    secciones.forEach(s=>s.hidden=(s.id!==id));
+    navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));
+    try{history.replaceState(null,'','#'+id);}catch(e){}
+    window.scrollTo(0,0);
+    requestAnimationFrame(()=>charts.forEach(c=>{try{c.resize();}catch(e){}}));
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    const id=a.getAttribute('href').slice(1);
+    if(secciones.some(s=>s.id===id))
+      a.addEventListener('click',e=>{e.preventDefault();show(id);cerrarMenu();});
+  });
+  show((location.hash||'#resumen').slice(1));
+})();
 
 /* ===== Asistente de datos: gateway ai.tunky.net + respondedor local ===== */
 const CHAT={
   endpoint:"https://ai.tunky.net/v1/chat",
   token:"__TUNKY__",   // X-Client-Token de ai.tunky.net (vacío = solo respondedor local)
-  system:"Eres el asistente de la evaluación de la gestión del MIMP (Ministerio de la Mujer del Perú, pliego 039), 2017-2025. Respondes en español, breve y con cifras. Regla clave: los feminicidios y la violencia son un problema MULTISECTORIAL; el MIMP contribuye pero no se le atribuye en exclusiva. Distingue registro administrativo de prevalencia poblacional (ENDES)."
+  system:"Eres el asistente de una evaluación CRITICA de la gestion del MIMP (Ministerio de la Mujer del Peru, pliego 039), 2017-2025. Respondes en espanol, breve y con cifras. TESIS CENTRAL: el presupuesto se triplico (+134%) y se ejecuta al 99%, pero NO hay evidencia de impacto real: los feminicidios siguen en 130-170/año, las denuncias por violencia sexual casi se duplicaron (+90%) y el MIMP no cumple su propia meta (violencia de pareja 12 meses: real 7.5% en 2024 vs meta 4.8% a 2026). La UNICA 'mejora' es la encuesta ENDES (autorreporte 'alguna vez'), metodologicamente discutible, con ruptura de serie en 2020 y estancada desde entonces: es casi autoevaluacion complaciente, NO prueba de que la violencia bajo. Salvaguardas: la violencia es MULTISECTORIAL (no atribuir causalidad a un solo actor); distingue registro administrativo de encuesta. No inventes cifras."
 };
 const H=[]; let cOpen=false, cBusy=false, cGreet=false;
 const $=id=>document.getElementById(id);
@@ -977,10 +999,10 @@ const esc=s=>String(s).replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[
 const cadd=(role,txt)=>{const l=$("chatLog");const d=document.createElement("div");d.className="msg "+role;d.textContent=txt;l.appendChild(d);l.scrollTop=l.scrollHeight;};
 function cTyping(){const l=$("chatLog");const m=document.createElement("div");m.className="msg bot";m.innerHTML='<span class="typing"><i></i><i></i><i></i></span>';l.appendChild(m);l.scrollTop=l.scrollHeight;return m;}
 function cSug(){const w=document.createElement("div");w.className="chat-suggest";
-  ["¿Cuánto ejecutó en 2024?","¿Bajó la violencia?","¿Cuántas ministras hubo?","¿En qué se gasta?"].forEach(q=>{const b=document.createElement("button");b.textContent=q;b.onclick=()=>{w.remove();cHandle(q);};w.appendChild(b);});
+  ["¿Bajó la violencia?","¿Cumplió sus metas?","¿Cuánto ejecutó en 2024?","¿Cuántas ministras hubo?"].forEach(q=>{const b=document.createElement("button");b.textContent=q;b.onclick=()=>{w.remove();cHandle(q);};w.appendChild(b);});
   $("chatLog").appendChild(w);}
 function cGreetFn(){if(cGreet)return;cGreet=true;
-  cadd("bot","¡Hola! 👋 Soy el asistente de esta evaluación del MIMP. Pregúntame por el presupuesto, la ejecución, la prevalencia de violencia (ENDES) o la rotación de ministras.");cSug();}
+  cadd("bot","¡Hola! 👋 Soy el asistente de esta evaluación CRÍTICA del MIMP. Pregúntame si la violencia bajó de verdad, por el presupuesto y su ejecución, por las metas incumplidas o la rotación de ministras.");cSug();}
 
 function localAnswer(q){
   const n=q.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
@@ -991,10 +1013,14 @@ function localAnswer(q){
     if(m){const r=S.find(x=>x.anio===m[0]);if(r)return `En ${r.anio} el MIMP tuvo un PIM de S/ ${(r.pim/1e6).toFixed(1)} M y devengó S/ ${(r.devengado/1e6).toFixed(1)} M: ${r.ejecucion_pct.toFixed(1)}% de ejecución. Fuente: MEF Datos Abiertos, pliego 039.`;}
     return `El presupuesto del MIMP creció de S/ ${(p0.pia/1e6).toFixed(0)} M (${p0.anio}) a S/ ${(pN.pia/1e6).toFixed(0)} M (${pN.anio}), +${((pN.pia/p0.pia-1)*100).toFixed(0)}%. La ejecución fue alta todo el periodo (96–99%): el MIMP NO subejecuta. Fuente: MEF Datos Abiertos.`;
   }
-  if(/violen|prevalen|endes|feminic|redujo|bajo|disminu/.test(n)){
-    if(enTot)return `Según INEI–ENDES, la prevalencia de violencia de pareja (alguna vez) cayó de ${enTot[0]}% (${EN.anios[0]}) a ${enTot[enTot.length-1]}% (${EN.anios[EN.anios.length-1]}), unos ${(enTot[0]-enTot[enTot.length-1]).toFixed(1)} puntos menos. Es magnitud poblacional, no atenciones. Salvaguarda: la mejora es MULTISECTORIAL, no atribuible solo al MIMP.`;
-    return "La prevalencia de violencia (ENDES) está en el tablero, sección Impacto.";
+  if(/meta|plan|promet|cumpl|estrateg|pnig/.test(n)){
+    return "El MIMP no va camino a cumplir su propia meta. Su Política Nacional de Igualdad de Género (2019) fijó bajar la violencia física/sexual de pareja (últimos 12 meses) a 4,8% en 2026 y 2,4% en 2030. Pero el dato real de 2024 es 7,5%, por encima de la meta de ese año (6,0%) y lejos de la de 2026. Ver la sección 'Meta vs. resultado'.";
   }
+  if(/violen|prevalen|endes|feminic|redujo|bajo|disminu|impacto|sirve|necesari/.test(n)){
+    return "No de forma demostrable. La encuesta ENDES (autorreporte) bajó de 65% a 52%, pero es un dato metodológicamente discutible, con ruptura de serie en 2020 y estancado desde entonces: casi autoevaluación complaciente. Los HECHOS no acompañan: los feminicidios siguen en 130–170/año y las denuncias por violencia sexual casi se duplicaron (+90%). Y el MIMP no cumple su propia meta. Con las salvaguardas del caso (es multisectorial), no hay evidencia de que su acción esté reduciendo la violencia de género.";
+  }
+  if(/denuncia|sexual|violacion|violación/.test(n))
+    return "Las denuncias por violencia sexual (registro PNP/MININTER, INEI) casi se duplicaron: de 5 683 (2016) a 10 819 (2024), y más de la mitad son contra menores de edad. Paradoja de registros: más denuncias puede ser más violencia o más disposición a denunciar. Es contexto multisectorial, no eficacia directa del MIMP.";
   if(/ministr|titular|rotac|cargo/.test(n))
     return `Hubo ~${TIT.length} titulares del MIMP entre 2016 y 2025 (con periodos de pocos días). Solo Nancy Tolentino tuvo una gestión larga (~15 meses). Alta rotación = conducción inestable pese a un marco normativo sólido.`;
   if(/en que|detalle|planilla|personal|cas|contrat/.test(n)){
@@ -1033,6 +1059,9 @@ $("chatForm").onsubmit=e=>{e.preventDefault();const v=$("chatInput").value;$("ch
 
 salida = (HTML.replace("/*__DATA__*/", json.dumps(payload, ensure_ascii=False))
           .replace("__GA__", GA_ID).replace("__TUNKY__", TUNKY_TOKEN))
+# Cada sección arranca oculta salvo "resumen" (navegación por pestañas, sin flash inicial).
+import re as _hre
+salida = _hre.sub(r'<section id="(?!resumen\b)([a-z0-9]+)"(?! hidden)', r'<section id="\1" hidden', salida)
 (DIR_ENTREGABLES / "tablero_mimp.html").write_text(salida, encoding="utf-8")
 docs = RAIZ / "docs"
 docs.mkdir(exist_ok=True)
