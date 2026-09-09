@@ -242,6 +242,7 @@ HTML = r"""<!doctype html>
   gtag('js', new Date());
   gtag('config', '__GA__');
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{
   --surface:#faf7fc; --panel:#ffffff; --ink:#1a1420; --ink-2:#5c5364; --muted:#8f869a;
@@ -524,16 +525,17 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <div style="margin-top:34px">
       <div class="eyebrow" style="color:var(--accent-2)">Veredicto de impacto</div>
       <h2 style="font-size:26px;margin:6px 0 4px">¿El accionar del MIMP tiene impacto real?</h2>
-      <p class="lead" style="max-width:74ch">Lectura rápida de las seis hipótesis (H1–H6). La evidencia apunta a un impacto
-        <b>parcial y desigual</b>: el problema cede en magnitud, pero lo más grave —feminicidios— y la cobertura
-        del servicio no acompañan. Ninguna hipótesis se confirma ni se descarta del todo. Toca un recuadro para ver el detalle.</p>
+      <p class="lead" style="max-width:74ch">Lectura rápida de las seis hipótesis (H1–H6). La evidencia es contundente:
+        <b>cinco de las seis se sostienen</b>. El gasto se triplicó y se ejecuta al 99%, pero los hechos que importan
+        no mejoran y el ministerio no cumple sus propias metas. <b>El dinero no es el problema; los resultados sí.</b>
+        Toca un recuadro para ver el detalle.</p>
       <div class="sem-grid">
-        <a class="sem v-parc" href="#impacto"><span class="dot"></span><b>H1 · Impacto</b><i>Parcial</i><small>Prevalencia −13 pp, pero feminicidios estancados (130–170/año)</small></a>
-        <a class="sem v-parc" href="#servicios"><span class="dot"></span><b>H2 · Servicios</b><i>Parcial</i><small>Atenciones estables ~165k; red de CEM estancada en 433, solo 5 en 24h</small></a>
-        <a class="sem v-parc" href="#presupuesto"><span class="dot"></span><b>H3 · Presupuesto</b><i>Parcial</i><small>No subejecuta (96–99%); PIA +134%, pero pesa ~0,4% del nacional</small></a>
-        <a class="sem v-parc" href="#territorio"><span class="dot"></span><b>H4 · Cobertura</b><i>Parcial</i><small>Gasto muy concentrado en Lima frente a la incidencia nacional</small></a>
-        <a class="sem v-pend" href="#hipotesis"><span class="dot"></span><b>H5 · Calidad</b><i>Sin acceso</i><small>El personal por régimen no es público; requiere solicitud (Ley 27806)</small></a>
-        <a class="sem v-parc" href="#gestion"><span class="dot"></span><b>H6 · Gestión</b><i>Parcial</i><small>Marco normativo sólido, pero ~15 titulares en 9 años</small></a>
+        <a class="sem v-si" href="#impacto"><span class="dot"></span><b>H1 · Impacto</b><i>Se sostiene</i><small>Feminicidios estancados, denuncias sexuales +90%, meta incumplida</small></a>
+        <a class="sem v-si" href="#servicios"><span class="dot"></span><b>H2 · Servicios</b><i>Se sostiene</i><small>Red de CEM congelada en 433, solo 5 en 24h; atenciones planas ~165k</small></a>
+        <a class="sem v-parc" href="#presupuesto"><span class="dot"></span><b>H3 · Presupuesto</b><i>No es la excusa</i><small>Ejecuta 96–99% y PIA +134%: el dinero se gasta, sin resultados</small></a>
+        <a class="sem v-si" href="#territorio"><span class="dot"></span><b>H4 · Cobertura</b><i>Se sostiene</i><small>Lima acapara S/ 4 155 M; ningún otro pasa de ~S/ 200 M</small></a>
+        <a class="sem v-si" href="#planilla"><span class="dot"></span><b>H5 · Calidad</b><i>Se sostiene</i><small>99% CAS (precario) y brecha salarial de 7× frente a la cúpula</small></a>
+        <a class="sem v-si" href="#gestion"><span class="dot"></span><b>H6 · Gestión</b><i>Se sostiene</i><small>~15 titulares en 9 años, metas incumplidas: forma sobre fondo</small></a>
       </div>
     </div>
     </section>
@@ -687,31 +689,34 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <h2>Contraste de hipótesis H1–H6</h2>
     <p class="lead">Verde = no se sostiene · rojo = se sostiene · ámbar = parcial · gris = datos en recolección.</p>
     <div class="hyp">
-      <div class="hcard v-parc"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
-        <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p>La prevalencia ENDES cayó 13 pp, <b>pero el grueso fue 2017–2019 y desde 2020 se estancó</b>. Además,
-        los <b>feminicidios no descienden</b> (130–170/año) y las <b>denuncias por violencia sexual casi se duplicaron</b>
-        (+90% desde 2016). La encuesta mejora en el pasado; los registros recientes no acompañan.</p></div>
-      <div class="hcard v-parc"><div class="hid">H2 · Servicios</div><h4>La producción de servicios está estancada</h4>
-        <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p>Las atenciones CEM crecieron hasta 2019 y se <b>estabilizaron ~165k</b> desde 2021 (la sexual sí subió).
-        La <b>red de CEM se estancó en 433</b> desde 2023 y <b>solo 5 operan 24h</b>: la cobertura, no la demanda, es el cuello de botella.</p></div>
+      <div class="hcard v-si"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
+        <span class="verdict v-si">Se sostiene</span>
+        <p>En los <b>hechos</b>, no disminuyó: <b>feminicidios estancados</b> (130–170/año), <b>denuncias por violencia
+        sexual +90%</b> y el MIMP <b>no cumple su propia meta</b> (7,5% real vs 4,8%). La única señal contraria es una
+        encuesta autorreportada, discutible y estancada. Triplicó el gasto y el problema no cede.</p></div>
+      <div class="hcard v-si"><div class="hid">H2 · Servicios</div><h4>La producción de servicios está estancada</h4>
+        <span class="verdict v-si">Se sostiene</span>
+        <p>La <b>red de CEM está congelada en 433</b> desde 2023 y <b>solo 5 operan 24h</b> en todo el país; las
+        atenciones llevan <b>estancadas ~165k</b> desde 2021. La cobertura no crece al ritmo de la demanda: el sistema
+        toca techo mientras el presupuesto sube.</p></div>
       <div class="hcard v-parc"><div class="hid">H3 · Presupuesto</div><h4>El presupuesto es bajo y/o se subejecuta</h4>
-        <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p>Subejecución <b>NO</b>: ejecutó 96–99%. PIA <b>+134%</b>. "Bajo" solo como peso del presupuesto
-        nacional (~0,4%), pendiente de cerrar el denominador.</p></div>
-      <div class="hcard v-parc"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
-        <span class="verdict v-parc">Parcial</span>
-        <p>Gasto muy concentrado en Lima (ver territorio); falta cruzar con N.º de CEM e incidencia por región.</p></div>
-      <div class="hcard v-parc"><div class="hid">H5 · Calidad</div><h4>Problemas de calidad/idoneidad en la atención</h4>
-        <span class="verdict v-parc">Indicios preocupantes</span>
-        <p>El <b>~99% del personal es CAS</b> (contrato temporal, alta rotación), incluido el programa que atiende la
-        violencia. Con planta inestable y <b>fuerte brecha salarial</b> frente a la cúpula, la idoneidad sostenida es difícil.
-        Falta aún la serie de personal por año. Fuente: Portal de Transparencia.</p></div>
-      <div class="hcard v-parc"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
-        <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
-        (5 en 17 meses bajo un gobierno): inestabilidad de conducción frente a continuidad normativa.</p></div>
+        <span class="verdict v-parc">El dinero no es la excusa</span>
+        <p>NO subejecuta: ejecuta <b>96–99%</b> y el PIA creció <b>+134%</b>. El problema <b>no es la plata</b> —se
+        gasta casi toda— sino que ese gasto no se traduce en resultados. "Bajo" solo cabe como peso del presupuesto
+        nacional (~0,4%).</p></div>
+      <div class="hcard v-si"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
+        <span class="verdict v-si">Se sostiene</span>
+        <p><b>Lima concentra S/ 4 155 M</b> del gasto acumulado; ningún otro departamento pasa de ~S/ 200 M. Una
+        <b>centralización extrema</b> frente a una violencia que ocurre en todo el país (ver el mapa territorial).</p></div>
+      <div class="hcard v-si"><div class="hid">H5 · Calidad</div><h4>Problemas de calidad/idoneidad en la atención</h4>
+        <span class="verdict v-si">Se sostiene</span>
+        <p><b>99% del personal es CAS</b> (temporal, alta rotación), incluido quien atiende la violencia; con
+        <b>brecha salarial de 7×</b> frente a la cúpula (S/ 4 364 vs S/ 30 000). Planta precaria y ministros que
+        cambian cada pocos meses: la atención de calidad sostenida es estructuralmente inviable.</p></div>
+      <div class="hcard v-si"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
+        <span class="verdict v-si">Se sostiene</span>
+        <p>Marco normativo abundante (Ley 30364, PNIG, Estrategia) y ejecución del 99%, pero <b>~15 titulares en 9 años</b>,
+        metas incumplidas y hechos que no mejoran. <b>Mucha norma y gasto, poco resultado</b>: la forma por delante del fondo.</p></div>
     </div>
   </section>
 
