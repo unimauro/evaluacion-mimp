@@ -356,8 +356,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <div class="eyebrow">Evaluación de la gestión pública</div>
     <h1>¿El MIMP redujo la violencia, o solo gastó?</h1>
     <p class="dek">Entre 2017 y 2025 el Ministerio de la Mujer <b>casi triplicó su presupuesto</b> y lo ejecuta
-      casi al 100%. En el mismo periodo, la prevalencia de violencia de pareja <b>cayó 13 puntos</b>. La pregunta
-      no es si gastó bien, sino <b>cuánto de esa mejora es mérito propio</b> y cuánto es un problema multisectorial.</p>
+      casi al 100%. En el mismo periodo, la prevalencia de violencia de pareja (ENDES) bajó de 65% a 52% —pero
+      <b>casi todo ese descenso ocurrió antes de 2020 y desde entonces se estancó</b>, y los feminicidios no ceden.
+      La pregunta no es si gastó bien, sino <b>cuánto cumplió de lo que sus propios planes prometieron</b>.</p>
     <p class="src">Fuentes: MEF Datos Abiertos (pliego <code>039</code>), INEI–ENDES, Portal Warmi Ñan, El Peruano · descarga <code>2026-09-08</code> · soles corrientes.</p>
 
     <div style="margin-top:26px"><span class="eyebrow" style="color:var(--accent-2)">De hace una década a hoy</span></div>
@@ -368,8 +369,8 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <h2>La historia en tres cifras</h2>
         <p class="big">1 · El presupuesto <b class="up">creció +134%</b> (S/ 426 M → 996 M) y la ejecución fue
           <b class="up">96–99%</b> todos los años: el MIMP <b>no subejecuta</b>.</p>
-        <p class="big">2 · La prevalencia de violencia de pareja <b class="dn">bajó de 65% a 52%</b> (−13 pp, ENDES),
-          pero los <b class="dn">feminicidios no ceden</b> (130–170/año): la magnitud baja, lo extremo resiste.</p>
+        <p class="big">2 · La prevalencia bajó de 65% a 52% (ENDES), pero <b class="dn">el grueso fue en 2017–2019</b>;
+          desde 2020 se <b class="dn">estancó</b> (~52–55%) y los <b class="dn">feminicidios no ceden</b> (130–170/año).</p>
         <p class="big">3 · Pero hubo <b class="dn">~15 ministras/os en 9 años</b>: la conducción es
           <b>inestable</b> pese a un marco normativo sólido.</p>
         <p style="margin-bottom:0"><b>Salvaguarda:</b> la caída de la violencia es multisectorial (contribución, no
@@ -407,7 +408,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
   <section id="impacto">
     <h2>Impacto: prevalencia de violencia (ENDES)</h2>
     <p class="lead">Prevalencia de violencia contra la mujer ejercida alguna vez por la pareja (INEI–ENDES, mujeres
-      15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp.</p>
+      15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp entre 2017 y 2024, pero el grueso del descenso fue <b>2017–2019</b>; desde 2020 se estancó (~52–55%). Fuente: INEI–ENDES, Series Anuales 1986–2024, Cuadro 11.1.</p>
     <div class="grid">
       <div class="card full"><h3>Prevalencia por tipo de violencia</h3><p class="cap">% de mujeres, por año</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
       <div class="card full"><h3>Feminicidios y tentativas (contexto)</h3><p class="cap">Casos registrados por año · registro Warmi Ñan · <b>contexto multisectorial</b></p><div class="chart-box"><canvas id="c_femi"></canvas></div></div>
