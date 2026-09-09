@@ -24,6 +24,8 @@ FECHA_DESCARGA = date.today().isoformat()  # 2026-09-08
 
 BASE = "https://fs.datosabiertos.mef.gob.pe/datastorefiles"
 URLS = {
+    2017: f"{BASE}/2017-Gasto-Devengado.csv",
+    2018: f"{BASE}/2018-Gasto-Devengado.csv",
     2019: f"{BASE}/2019-Gasto-Devengado.csv",
     2020: f"{BASE}/2020-Gasto-Devengado.csv",
     2021: f"{BASE}/2021-Gasto-Devengado.csv",
