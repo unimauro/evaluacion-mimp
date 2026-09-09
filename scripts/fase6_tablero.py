@@ -75,13 +75,67 @@ for r in femi_rows:
         continue  # [NO DISPONIBLE]
     femi["anios"].append(a); femi["feminicidios"].append(fm); femi["tentativas"].append(tt)
 
+# --- Producción de servicios (H2): atenciones CEM por tipo, Línea 100, N.º CEM ---
+def num(x):
+    try:
+        return int(str(x).replace(",", ""))
+    except (ValueError, TypeError):
+        return None
+
+cem_rows = leer_csv("cem_atenciones_por_tipo_*.csv")
+cem = {"anios": [], "total": [], "psicologica": [], "fisica": [], "sexual": [], "economica": []}
+for r in cem_rows:
+    if num(r.get("total_atenciones")) is None:
+        continue
+    cem["anios"].append(r["anio"])
+    for k, col in [("total", "total_atenciones"), ("psicologica", "psicologica"),
+                   ("fisica", "fisica"), ("sexual", "sexual"), ("economica", "economica")]:
+        cem[k].append(num(r.get(col)))
+
+l100_rows = leer_csv("linea100_serie_*.csv")
+linea100 = {"anios": [], "consultas": []}
+for r in l100_rows:
+    v = num(r.get("consultas"))
+    if v is not None:
+        linea100["anios"].append(r["anio"]); linea100["consultas"].append(v)
+
+cemn_rows = leer_csv("cem_numero_serie_*.csv")
+cem_num = {"anios": [], "total": [], "h24": []}
+for r in cemn_rows:
+    v = num(r.get("n_cem_total"))
+    if v is not None:
+        cem_num["anios"].append(r["anio"]); cem_num["total"].append(v); cem_num["h24"].append(num(r.get("n_cem_24h")))
+
+# --- Embarazo adolescente (ENDES, solo ámbito Total; ruptura de serie documentada) ---
+emb_rows = leer_csv("embarazo_adolescente_*.csv")
+embarazo = {"periodos": [], "total": []}
+for r in emb_rows:
+    if r.get("ambito", "").strip().lower() != "total":
+        continue
+    try:
+        v = float(r["valor_pct"])  # valida ANTES de añadir el periodo (evita desalinear NO DISPONIBLE)
+    except (ValueError, KeyError):
+        continue
+    embarazo["periodos"].append(r["anio"]); embarazo["total"].append(v)
+
+# --- DEMUNA % acreditadas (extraído de la nota; atenciones/conciliaciones no publicadas) ---
+import re as _re
+dem_rows = leer_csv("demuna_serie_*.csv")
+demuna = {"anios": [], "acreditadas_pct": []}
+for r in dem_rows:
+    blob = " ".join(str(v) for v in r.values())  # CSV desalineado: buscar en toda la fila
+    m = _re.search(r"([\d.]+)\s*%\s*de DEMUNA acreditadas", blob)
+    if m:
+        demuna["anios"].append(r["anio"]); demuna["acreditadas_pct"].append(float(m.group(1)))
+
 # --- Normas ---
 norm_rows = leer_csv("normas_mimp_*.csv")
 normas = [{"tipo": r.get("tipo", ""), "numero": r.get("numero", ""), "nombre": r.get("nombre", ""),
            "anio": r.get("anio", ""), "url": r.get("url", "")} for r in norm_rows]
 
 payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas,
-           "feminicidios": femi, "generado": date.today().isoformat()}
+           "feminicidios": femi, "cem": cem, "linea100": linea100, "cem_num": cem_num,
+           "embarazo": embarazo, "demuna": demuna, "generado": date.today().isoformat()}
 
 HTML = r"""<!doctype html>
 <html lang="es">
@@ -190,6 +244,17 @@ h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-
 .verdict.v-parc{background:rgba(183,121,26,.16);color:var(--warn)}
 .verdict.v-pend{background:var(--ground);color:var(--muted)}
 .hcard p{margin:0;font-size:13.2px;color:var(--ink-2)}
+.sem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:8px}
+.sem{display:block;text-decoration:none;background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--muted);border-radius:12px;padding:14px 15px;transition:transform .12s}
+.sem:hover{transform:translateY(-2px)}
+.sem.v-no{border-top-color:var(--good)} .sem.v-si{border-top-color:var(--crit)}
+.sem.v-parc{border-top-color:var(--warn)} .sem.v-pend{border-top-color:var(--line-2)}
+.sem .dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--muted);vertical-align:middle;margin-right:7px}
+.sem.v-no .dot{background:var(--good)} .sem.v-si .dot{background:var(--crit)}
+.sem.v-parc .dot{background:var(--warn)} .sem.v-pend .dot{background:var(--line-2)}
+.sem b{font-size:13px;color:var(--ink)} .sem i{display:block;font-style:normal;font-weight:700;font-size:15px;margin:5px 0 3px}
+.sem.v-no i{color:var(--good)} .sem.v-si i{color:var(--crit)} .sem.v-parc i{color:var(--warn)} .sem.v-pend i{color:var(--muted)}
+.sem small{color:var(--ink-2);font-size:12px;line-height:1.35;display:block}
 
 .note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
 .note b{color:var(--ink)}
@@ -235,6 +300,8 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       <a href="#inicio">Resumen</a>
       <a class="sec">Dimensiones</a>
       <a href="#impacto">Impacto: ¿bajó la violencia?</a>
+      <a href="#servicios">Producción de servicios</a>
+      <a href="#ninez">Niñez y adolescencia</a>
       <a href="#presupuesto">Presupuesto y ejecución</a>
       <a href="#planilla">Personal y planilla</a>
       <a href="#gasto">¿En qué se gasta?</a>
@@ -275,6 +342,22 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     </div>
 
     <div class="kpis" id="kpis"></div>
+
+    <div style="margin-top:34px">
+      <div class="eyebrow" style="color:var(--accent-2)">Veredicto de impacto</div>
+      <h2 style="font-size:26px;margin:6px 0 4px">¿El accionar del MIMP tiene impacto real?</h2>
+      <p class="lead" style="max-width:74ch">Lectura rápida de las seis hipótesis (H1–H6). La evidencia apunta a un impacto
+        <b>parcial y desigual</b>: el problema cede en magnitud, pero lo más grave —feminicidios— y la cobertura
+        del servicio no acompañan. Ninguna hipótesis se confirma ni se descarta del todo. Toca un recuadro para ver el detalle.</p>
+      <div class="sem-grid">
+        <a class="sem v-parc" href="#impacto"><span class="dot"></span><b>H1 · Impacto</b><i>Parcial</i><small>Prevalencia −13 pp, pero feminicidios estancados (130–170/año)</small></a>
+        <a class="sem v-parc" href="#servicios"><span class="dot"></span><b>H2 · Servicios</b><i>Parcial</i><small>Atenciones estables ~165k; red de CEM estancada en 433, solo 5 en 24h</small></a>
+        <a class="sem v-parc" href="#presupuesto"><span class="dot"></span><b>H3 · Presupuesto</b><i>Parcial</i><small>No subejecuta (96–99%); PIA +134%, pero pesa ~0,4% del nacional</small></a>
+        <a class="sem v-parc" href="#territorio"><span class="dot"></span><b>H4 · Cobertura</b><i>Parcial</i><small>Gasto muy concentrado en Lima frente a la incidencia nacional</small></a>
+        <a class="sem v-pend" href="#hipotesis"><span class="dot"></span><b>H5 · Calidad</b><i>Sin datos</i><small>Falta personal por régimen y supervisión de CEM (en gestión)</small></a>
+        <a class="sem v-parc" href="#gestion"><span class="dot"></span><b>H6 · Gestión</b><i>Parcial</i><small>Marco normativo sólido, pero ~15 titulares en 9 años</small></a>
+      </div>
+    </div>
   </main>
 </div>
 
@@ -290,6 +373,35 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     </div>
     <div class="note" style="margin-top:14px"><b>El dato que incomoda:</b> mientras la prevalencia poblacional bajó 13 pp, los <b>feminicidios no descienden</b> (oscilan 130–170 al año). La magnitud del problema cede, pero su expresión más extrema se mantiene. Feminicidios = contexto (investiga el Ministerio Público), no eficacia directa del MIMP.</div>
     <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
+  </section>
+
+  <section id="servicios">
+    <h2>Producción de servicios (CEM y Línea 100)</h2>
+    <p class="lead">Atenciones de los Centros Emergencia Mujer por tipo de violencia, número de CEM y consultas
+      de la Línea 100. Registro administrativo (demanda atendida), no comparable con la prevalencia ENDES.</p>
+    <div class="grid">
+      <div class="card full"><h3>Atenciones CEM por tipo de violencia</h3><p class="cap">Casos atendidos, apilado por tipo</p><div class="chart-box tall"><canvas id="c_cem"></canvas></div></div>
+      <div class="card"><h3>N.º de Centros Emergencia Mujer</h3><p class="cap">Acumulado nacional · solo 5 operan 7×24</p><div class="chart-box"><canvas id="c_cemn"></canvas></div></div>
+      <div class="card"><h3>Consultas de la Línea 100</h3><p class="cap">Por año · ver caveat de comparabilidad</p><div class="chart-box"><canvas id="c_l100"></canvas></div></div>
+    </div>
+    <div class="note" style="margin-top:14px"><b>Dos señales:</b> la violencia <b>sexual atendida se duplicó</b>
+      (12,8k en 2018 → 32,2k en 2025), mientras el total se estabiliza en ~165k desde 2021. La red de CEM se
+      estancó en <b>433</b> desde 2023 y <b>solo 5 operan 24 horas</b>. En Línea 100 el rótulo cambia entre años y
+      2024–2025 son cifras de prensa: no comparar linealmente.</div>
+  </section>
+
+  <section id="ninez">
+    <h2>Niñez y adolescencia</h2>
+    <p class="lead">Embarazo adolescente (ENDES) y cobertura de las DEMUNA (rectoría DGNNA-MIMP).
+      Contexto multisectorial (Salud, Educación, MIMP).</p>
+    <div class="grid">
+      <div class="card"><h3>Embarazo adolescente (15–19 años)</h3><p class="cap">% alguna vez embarazadas · ⚠ ruptura de serie</p><div class="chart-box"><canvas id="c_emb"></canvas></div></div>
+      <div class="card"><h3>DEMUNA acreditadas</h3><p class="cap">% del total · registro MIMP (cobertura, no atenciones)</p><div class="chart-box"><canvas id="c_dem"></canvas></div></div>
+    </div>
+    <div class="note" style="margin-top:14px"><b>Vacíos de información:</b> no existe serie nacional pública de
+      <b>atenciones ni conciliaciones DEMUNA</b>, ni de <b>infanticidio</b> (requieren solicitud Ley 27806).
+      <b>Aborto</b>: sin estadística oficial de incidencia (ilegal salvo terapéutico). En embarazo adolescente,
+      hasta 2017-18 son promedios bienales y desde 2020 años simples → la caída no es comparación interanual limpia.</div>
   </section>
 
   <section id="presupuesto">
@@ -365,9 +477,10 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <span class="verdict v-parc">Se sostiene parcialmente</span>
         <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
         (5 en 17 meses bajo un gobierno): inestabilidad de conducción frente a continuidad normativa.</p></div>
-      <div class="hcard v-pend"><div class="hid">H2 · Servicios</div><h4>La producción de servicios está estancada</h4>
-        <span class="verdict v-pend">Datos en recolección</span>
-        <p>Requiere atenciones CEM por tipo y Línea 100 (Portal Warmi Ñan). En curso.</p></div>
+      <div class="hcard v-parc"><div class="hid">H2 · Servicios</div><h4>La producción de servicios está estancada</h4>
+        <span class="verdict v-parc">Se sostiene parcialmente</span>
+        <p>Las atenciones CEM crecieron hasta 2019 y se <b>estabilizaron ~165k</b> desde 2021 (la sexual sí subió).
+        La <b>red de CEM se estancó en 433</b> desde 2023 y <b>solo 5 operan 24h</b>: la cobertura, no la demanda, es el cuello de botella.</p></div>
       <div class="hcard v-parc"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
         <span class="verdict v-parc">Parcial</span>
         <p>Gasto muy concentrado en Lima (ver territorio); falta cruzar con N.º de CEM e incidencia por región.</p></div>
@@ -495,6 +608,42 @@ function build(){
     charts.push(new Chart(c_femi,{data:{labels:FE.anios,datasets:[
       {type:'bar',label:'Feminicidios',data:FE.feminicidios,backgroundColor:sc(7),borderRadius:3,order:2},
       {type:'line',label:'Tentativas',data:FE.tentativas,borderColor:sc(4),backgroundColor:'transparent',borderWidth:2.4,pointRadius:3,tension:.25,order:1}]},options:o}));
+  }
+
+  // Producción de servicios (H2)
+  const CE=P.cem;
+  if(CE&&CE.anios&&CE.anios.length){
+    const tipos=[['psicologica','Psicológica'],['fisica','Física'],['sexual','Sexual'],['economica','Económica']];
+    const o=base({scales:{x:{stacked:true,grid:{display:false},ticks:{color:css('--ink-2')}},
+      y:{stacked:true,grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>v.toLocaleString('es-PE')},title:{display:true,text:'Atenciones',color:css('--muted'),font:{size:11}}}}});
+    o.plugins.tooltip.callbacks.label=c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString('es-PE')}`;
+    charts.push(new Chart(c_cem,{type:'bar',data:{labels:CE.anios,datasets:tipos.map(([k,lb],i)=>({
+      label:lb,data:CE[k],backgroundColor:sc(i),borderRadius:2,borderWidth:1,borderColor:css('--panel')}))},options:o}));
+  }
+  const CN=P.cem_num;
+  if(CN&&CN.anios&&CN.anios.length){
+    const o=base();o.plugins.legend.display=false;o.scales.y.title.text='N.º de CEM';o.scales.y.ticks.callback=v=>v;o.scales.y.beginAtZero=true;
+    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.y} CEM`;
+    charts.push(new Chart(c_cemn,{type:'line',data:{labels:CN.anios,datasets:[{label:'CEM',data:CN.total,borderColor:sc(0),backgroundColor:'transparent',borderWidth:2.4,pointRadius:3,tension:.2,fill:false}]},options:o}));
+  }
+  const L1=P.linea100;
+  if(L1&&L1.anios&&L1.anios.length){
+    const o=base();o.plugins.legend.display=false;o.scales.y.title.text='Consultas';o.scales.y.ticks.callback=v=>v.toLocaleString('es-PE');o.scales.y.beginAtZero=true;
+    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.y.toLocaleString('es-PE')} consultas`;
+    charts.push(new Chart(c_l100,{type:'bar',data:{labels:L1.anios,datasets:[{label:'Línea 100',data:L1.consultas,backgroundColor:sc(5),borderRadius:3}]},options:o}));
+  }
+  // Niñez
+  const EMB=P.embarazo;
+  if(EMB&&EMB.periodos&&EMB.periodos.length){
+    const o=base();o.plugins.legend.display=false;o.scales.y.title.text='% adolescentes';o.scales.y.ticks.callback=v=>v+'%';o.scales.y.beginAtZero=true;
+    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.y}%`;
+    charts.push(new Chart(c_emb,{type:'line',data:{labels:EMB.periodos,datasets:[{label:'Embarazo adolescente',data:EMB.total,borderColor:sc(1),backgroundColor:'transparent',borderWidth:2.4,pointRadius:4,tension:.2,spanGaps:true}]},options:o}));
+  }
+  const DM=P.demuna;
+  if(DM&&DM.anios&&DM.anios.length){
+    const o=base();o.plugins.legend.display=false;o.scales.y.title.text='% acreditadas';o.scales.y.ticks.callback=v=>v+'%';o.scales.y.beginAtZero=true;
+    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.y}% acreditadas`;
+    charts.push(new Chart(c_dem,{type:'bar',data:{labels:DM.anios,datasets:[{label:'DEMUNA acreditadas',data:DM.acreditadas_pct,backgroundColor:sc(2),borderRadius:3}]},options:o}));
   }
 
   // Titulares: días en el cargo
