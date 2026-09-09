@@ -271,8 +271,8 @@ HTML = r"""<!doctype html>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{
-  --surface:#faf7fc; --panel:#ffffff; --ink:#1a1420; --ink-2:#5c5364; --muted:#8f869a;
-  --line:#ece5f2; --line-2:#ddd3e6; --accent:#6d28d9; --accent-2:#c0248f; --ground:#f2ecf7;
+  --surface:#faf7fc; --panel:#ffffff; --ink:#1a1420; --ink-2:#544b60; --muted:#6b6276;
+  --line:#ece5f2; --line-2:#ddd3e6; --accent:#6d28d9; --accent-2:#b31f83; --ground:#f2ecf7;
   --good:#0a7d43; --warn:#b7791a; --crit:#d13b6a;
   --s1:#6d28d9; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#c0248f; --s6:#2a78d6; --s7:#0a7d43; --s8:#d13b3b;
 }
@@ -290,6 +290,14 @@ HTML = r"""<!doctype html>
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.skip-link{position:absolute;left:-999px;top:8px;background:var(--accent);color:#fff;padding:8px 14px;border-radius:8px;z-index:99}
+.skip-link:focus{left:8px}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  .sem:hover{transform:none}
+}
 body{margin:0;background:var(--surface);color:var(--ink);
   font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
@@ -488,13 +496,14 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
 </style>
 </head>
 <body>
-<button class="toggle" id="tgl" aria-label="Cambiar tema">◐ Tema</button>
+<a href="#resumen" class="skip-link">Saltar al contenido</a>
+<button class="toggle" id="tgl" aria-label="Cambiar tema (claro/oscuro)" aria-pressed="false">◐ Tema</button>
 <div class="layout">
   <aside>
-    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">☰</button>
     <div class="brand">Evaluación <span>MIMP</span></div>
     <div class="tag">Pliego 039 · 2017–2025</div>
-    <nav>
+    <nav id="navMenu" aria-label="Secciones de la evaluación">
       <a href="#resumen">Resumen</a>
       <a class="sec">Dimensiones</a>
       <a href="#impacto">Impacto: ¿bajó la violencia?</a>
@@ -877,7 +886,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
 <button class="chat-fab" id="chatFab" aria-label="Abrir asistente de datos">
   <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.4 8.7 8.7 0 0 1-4-.9L3 20l1.1-4.9a8.4 8.4 0 0 1-1-4 8.4 8.4 0 0 1 8.5-8.4 8.4 8.4 0 0 1 8.4 8.3z"/></svg>
 </button>
-<div class="chat-panel" id="chatPanel" hidden>
+<div class="chat-panel" id="chatPanel" role="dialog" aria-modal="true" aria-label="Asistente de la evaluación" hidden>
   <div class="chat-top"><span class="chat-dot"></span>
     <div><b>Asistente de la evaluación</b><span>IA · pregunta por las cifras</span></div>
     <button class="chat-x" id="chatClose" aria-label="Cerrar">✕</button></div>
@@ -1111,10 +1120,18 @@ function build(){
   const eTxt={si:'Cumple',parcial:'En camino',no:'No cumple',sd:'s/d'},eCls={si:'e-si',parcial:'e-parc',no:'e-no',sd:'e-sd'};
   if(tm)tm.innerHTML=P.metas.map(m=>`<tr><td>${m.instrumento}</td><td>${m.indicador}</td><td>${m.lb!==''?m.lb+' ('+m.lb_anio+')':'—'}</td><td><b>${m.meta}</b> (${m.meta_anio})</td><td>${m.real||'—'}</td><td><span class="badge ${eCls[m.estado]||'e-sd'}">${eTxt[m.estado]||'s/d'}</span></td></tr>`).join('');
 }
-build();
+try{build();}catch(e){console.error('build() falló:',e);}
 const root=document.documentElement;
-document.getElementById('tgl').onclick=()=>{const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
-  root.setAttribute('data-theme',cur==='dark'?'light':'dark');setTimeout(build,30);};
+// Restaurar tema guardado
+try{const th=localStorage.getItem('mimp-tema');if(th)root.setAttribute('data-theme',th);}catch(e){}
+function temaActual(){return root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');}
+document.getElementById('tgl').setAttribute('aria-pressed',String(temaActual()==='dark'));
+document.getElementById('tgl').onclick=()=>{const nuevo=temaActual()==='dark'?'light':'dark';
+  root.setAttribute('data-theme',nuevo);document.getElementById('tgl').setAttribute('aria-pressed',String(nuevo==='dark'));
+  try{localStorage.setItem('mimp-tema',nuevo);}catch(e){}setTimeout(()=>{try{build();}catch(e){}},30);};
+// A11y: alternativa textual para cada gráfico
+try{document.querySelectorAll('canvas').forEach(c=>{const card=c.closest('.card');const h=card&&card.querySelector('h3');
+  c.setAttribute('role','img');c.setAttribute('aria-label','Gráfico'+(h?': '+h.textContent.trim():'')+'. Las cifras están en el texto y las notas de la sección.');});}catch(e){}
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!root.getAttribute('data-theme'))build();});
 
 /* ===== Menú hamburguesa (móvil) ===== */
@@ -1122,7 +1139,9 @@ function cerrarMenu(){const nv=document.querySelector('aside nav');const mb=docu
   if(nv)nv.classList.remove('open');if(mb){mb.textContent='☰';mb.setAttribute('aria-expanded','false');}}
 (function(){const mb=document.getElementById('menuBtn');if(!mb)return;
   const nv=document.querySelector('aside nav');
-  mb.addEventListener('click',()=>{const o=nv.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.textContent=o?'✕':'☰';});})();
+  mb.addEventListener('click',()=>{const o=nv.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.textContent=o?'✕':'☰';});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nv.classList.contains('open'))cerrarMenu();});
+  document.addEventListener('click',e=>{if(nv.classList.contains('open')&&!e.target.closest('aside'))cerrarMenu();});})();
 
 /* ===== Navegación por secciones (cada sección = una página) ===== */
 (function(){
@@ -1132,9 +1151,11 @@ function cerrarMenu(){const nv=document.querySelector('aside nav');const mb=docu
   function show(id){
     if(!secciones.some(s=>s.id===id)) id='resumen';
     secciones.forEach(s=>s.hidden=(s.id!==id));
-    navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));
+    navLinks.forEach(a=>{const on=a.getAttribute('href')==='#'+id;a.classList.toggle('active',on);
+      if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
     try{history.replaceState(null,'','#'+id);}catch(e){}
     window.scrollTo(0,0);
+    const sec=document.getElementById(id);if(sec){sec.setAttribute('tabindex','-1');try{sec.focus({preventScroll:true});}catch(e){}}
     requestAnimationFrame(()=>charts.forEach(c=>{try{c.resize();}catch(e){}}));
   }
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
@@ -1252,9 +1273,11 @@ async function cHandle(text){
   catch(e){reply=localAnswer(text);}
   t.remove();cadd("bot",reply);H.push({role:"assistant",content:reply});cBusy=false;
   if(sb)sb.disabled=false;$("chatInput").focus();}
-function cToggle(v){cOpen=v==null?!cOpen:v;$("chatPanel").hidden=!cOpen;$("chatFab").classList.toggle("hide",cOpen);if(cOpen)cGreetFn();}
+function cToggle(v){cOpen=v==null?!cOpen:v;$("chatPanel").hidden=!cOpen;$("chatFab").classList.toggle("hide",cOpen);
+  if(cOpen){cGreetFn();setTimeout(()=>{try{$("chatInput").focus();}catch(e){}},40);}else{try{$("chatFab").focus();}catch(e){}}}
 $("chatFab").onclick=()=>cToggle(true);
 $("chatClose").onclick=()=>cToggle(false);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&cOpen)cToggle(false);});
 $("chatForm").onsubmit=e=>{e.preventDefault();const v=$("chatInput").value;$("chatInput").value="";cHandle(v);};
 </script>
 </body>
