@@ -62,13 +62,26 @@ for r in tit_rows:
     ini, fin = r.get("fecha_inicio", "").strip(), r.get("fecha_fin", "").strip()
     titulares.append({"nombre": r.get("nombre", "").strip(), "inicio": ini, "fin": fin})
 
+# --- Feminicidios y tentativas (registro Warmi Ñan; CONTEXTO multisectorial) ---
+femi_rows = leer_csv("feminicidios_serie_*.csv")
+femi = {"anios": [], "feminicidios": [], "tentativas": []}
+for r in femi_rows:
+    a = r.get("anio", "").strip()
+    if a == "2026":  # preliminar (ene-jul), no comparable
+        continue
+    try:
+        fm = int(r["feminicidios"]); tt = int(r["tentativas"])
+    except (ValueError, KeyError):
+        continue  # [NO DISPONIBLE]
+    femi["anios"].append(a); femi["feminicidios"].append(fm); femi["tentativas"].append(tt)
+
 # --- Normas ---
 norm_rows = leer_csv("normas_mimp_*.csv")
 normas = [{"tipo": r.get("tipo", ""), "numero": r.get("numero", ""), "nombre": r.get("nombre", ""),
            "anio": r.get("anio", ""), "url": r.get("url", "")} for r in norm_rows]
 
 payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas,
-           "generado": date.today().isoformat()}
+           "feminicidios": femi, "generado": date.today().isoformat()}
 
 HTML = r"""<!doctype html>
 <html lang="es">
@@ -249,8 +262,8 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <h2>La historia en tres cifras</h2>
         <p class="big">1 · El presupuesto <b class="up">creció +134%</b> (S/ 426 M → 996 M) y la ejecución fue
           <b class="up">96–99%</b> todos los años: el MIMP <b>no subejecuta</b>.</p>
-        <p class="big">2 · La prevalencia de violencia de pareja <b class="dn">bajó de 65% a 52%</b> (−13 pp, INEI–ENDES):
-          el problema <b>sí cede</b>, sobre todo la psicológica.</p>
+        <p class="big">2 · La prevalencia de violencia de pareja <b class="dn">bajó de 65% a 52%</b> (−13 pp, ENDES),
+          pero los <b class="dn">feminicidios no ceden</b> (130–170/año): la magnitud baja, lo extremo resiste.</p>
         <p class="big">3 · Pero hubo <b class="dn">~15 ministras/os en 9 años</b>: la conducción es
           <b>inestable</b> pese a un marco normativo sólido.</p>
         <p style="margin-bottom:0"><b>Salvaguarda:</b> la caída de la violencia es multisectorial (contribución, no
@@ -316,7 +329,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp.</p>
     <div class="grid">
       <div class="card full"><h3>Prevalencia por tipo de violencia</h3><p class="cap">% de mujeres, por año</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
+      <div class="card full"><h3>Feminicidios y tentativas (contexto)</h3><p class="cap">Casos registrados por año · registro Warmi Ñan · <b>contexto multisectorial</b></p><div class="chart-box"><canvas id="c_femi"></canvas></div></div>
     </div>
+    <div class="note" style="margin-top:14px"><b>El dato que incomoda:</b> mientras la prevalencia poblacional bajó 13 pp, los <b>feminicidios no descienden</b> (oscilan 130–170 al año). La magnitud del problema cede, pero su expresión más extrema se mantiene. Feminicidios = contexto (investiga el Ministerio Público), no eficacia directa del MIMP.</div>
     <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
   </section>
 
@@ -338,10 +353,11 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <h2>Contraste de hipótesis H1–H6</h2>
     <p class="lead">Verde = no se sostiene · rojo = se sostiene · ámbar = parcial · gris = datos en recolección.</p>
     <div class="hyp">
-      <div class="hcard v-no"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
-        <span class="verdict v-no">No se sostiene (en prevalencia)</span>
-        <p>La prevalencia ENDES <b>cayó 13 pp</b> (65,4%→52,0%, 2017→2024), sobre todo psicológica y física.
-        Pendiente: feminicidios de contexto. La mejora es multisectorial (contribución).</p></div>
+      <div class="hcard v-parc"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
+        <span class="verdict v-parc">Se sostiene parcialmente</span>
+        <p><b>La violencia sí bajó en magnitud:</b> la prevalencia ENDES cayó 13 pp (65,4%→52,0%),
+        sobre todo psicológica y física. <b>Pero los feminicidios no descienden</b> (130–170/año). La
+        parte que cede es multisectorial (el MIMP contribuye, no es mérito exclusivo); lo más extremo resiste.</p></div>
       <div class="hcard v-parc"><div class="hid">H3 · Presupuesto</div><h4>El presupuesto es bajo y/o se subejecuta</h4>
         <span class="verdict v-parc">Se sostiene parcialmente</span>
         <p>Subejecución <b>NO</b>: ejecutó 96–99%. PIA <b>+134%</b>. "Bajo" solo como peso del presupuesto
@@ -470,6 +486,16 @@ function build(){
     const o=base();o.scales.y.title.text='% de mujeres';o.scales.y.suggestedMin=0;o.scales.y.ticks.callback=v=>v+'%';
     o.plugins.tooltip.callbacks.label=c=>` ${c.dataset.label}: ${c.parsed.y}%`;
     charts.push(new Chart(c_endes,{type:'line',data:{labels:EN.anios,datasets:ds},options:o}));
+  }
+
+  // Feminicidios y tentativas (contexto)
+  const FE=P.feminicidios;
+  if(FE&&FE.anios&&FE.anios.length){
+    const o=base();o.scales.y.title.text='Casos';o.scales.y.ticks.callback=v=>v;o.scales.y.beginAtZero=true;
+    o.plugins.tooltip.callbacks.label=c=>` ${c.dataset.label}: ${c.parsed.y} casos`;
+    charts.push(new Chart(c_femi,{data:{labels:FE.anios,datasets:[
+      {type:'bar',label:'Feminicidios',data:FE.feminicidios,backgroundColor:sc(7),borderRadius:3,order:2},
+      {type:'line',label:'Tentativas',data:FE.tentativas,borderColor:sc(4),backgroundColor:'transparent',borderWidth:2.4,pointRadius:3,tension:.25,order:1}]},options:o}));
   }
 
   // Titulares: días en el cargo
