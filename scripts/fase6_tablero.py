@@ -75,6 +75,20 @@ for r in femi_rows:
         continue  # [NO DISPONIBLE]
     femi["anios"].append(a); femi["feminicidios"].append(fm); femi["tentativas"].append(tt)
 
+# --- Violencia sexual: denuncias (INEI/MININTER-PNP; CONTEXTO, paradoja de registros) ---
+viol_rows = leer_csv("violaciones_serie_*.csv")
+violaciones = {"anios": [], "total": [], "menores": []}
+for r in viol_rows:
+    try:
+        t = int(str(r["denuncias_violacion"]).replace(",", ""))
+    except (ValueError, KeyError):
+        continue
+    violaciones["anios"].append(r["anio"]); violaciones["total"].append(t)
+    try:
+        violaciones["menores"].append(int(str(r["victimas_menores"]).replace(",", "")))
+    except (ValueError, KeyError):
+        violaciones["menores"].append(None)
+
 # --- Producción de servicios (H2): atenciones CEM por tipo, Línea 100, N.º CEM ---
 def num(x):
     try:
@@ -135,7 +149,8 @@ normas = [{"tipo": r.get("tipo", ""), "numero": r.get("numero", ""), "nombre": r
 
 payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas,
            "feminicidios": femi, "cem": cem, "linea100": linea100, "cem_num": cem_num,
-           "embarazo": embarazo, "demuna": demuna, "generado": date.today().isoformat()}
+           "embarazo": embarazo, "demuna": demuna, "violaciones": violaciones,
+           "generado": date.today().isoformat()}
 
 HTML = r"""<!doctype html>
 <html lang="es">
@@ -356,9 +371,10 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <div class="eyebrow">Evaluación de la gestión pública</div>
     <h1>¿El MIMP redujo la violencia, o solo gastó?</h1>
     <p class="dek">Entre 2017 y 2025 el Ministerio de la Mujer <b>casi triplicó su presupuesto</b> y lo ejecuta
-      casi al 100%. En el mismo periodo, la prevalencia de violencia de pareja (ENDES) bajó de 65% a 52% —pero
-      <b>casi todo ese descenso ocurrió antes de 2020 y desde entonces se estancó</b>, y los feminicidios no ceden.
-      La pregunta no es si gastó bien, sino <b>cuánto cumplió de lo que sus propios planes prometieron</b>.</p>
+      casi al 100%. Pero los <b>hechos registrados no acompañan</b>: los feminicidios siguen en 130–170 al año y las
+      denuncias por violencia sexual <b>casi se duplicaron</b>. La única "mejora" —la encuesta ENDES— es
+      metodológicamente discutible y se estancó desde 2020. La pregunta no es si gastó bien, sino
+      <b>cuánto cumplió de lo que sus propios planes prometieron</b>.</p>
     <p class="src">Fuentes: MEF Datos Abiertos (pliego <code>039</code>), INEI–ENDES, Portal Warmi Ñan, El Peruano · descarga <code>2026-09-08</code> · soles corrientes.</p>
 
     <div style="margin-top:26px"><span class="eyebrow" style="color:var(--accent-2)">De hace una década a hoy</span></div>
@@ -377,8 +393,8 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
           atribución); los registros administrativos no se comparan con la prevalencia poblacional.</p>
       </div>
       <div class="viz">
-        <h3>Gasto que sube, violencia que baja</h3>
-        <p class="cap">Devengado del MIMP (millones S/) vs. prevalencia ENDES (%). Dos escalas, dos historias.</p>
+        <h3>Gasto que se triplica, feminicidios que no ceden</h3>
+        <p class="cap">Devengado del MIMP (millones S/) vs. feminicidios registrados (casos). Dos escalas.</p>
         <div class="chart-box"><canvas id="c_story"></canvas></div>
       </div>
     </div>
@@ -410,9 +426,14 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <p class="lead">Prevalencia de violencia contra la mujer ejercida alguna vez por la pareja (INEI–ENDES, mujeres
       15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp entre 2017 y 2024, pero el grueso del descenso fue <b>2017–2019</b>; desde 2020 se estancó (~52–55%). Fuente: INEI–ENDES, Series Anuales 1986–2024, Cuadro 11.1.</p>
     <div class="grid">
-      <div class="card full"><h3>Prevalencia por tipo de violencia</h3><p class="cap">% de mujeres, por año</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
+      <div class="card full"><h3>Prevalencia por tipo de violencia (ENDES)</h3><p class="cap">% de mujeres · <b>autorreporte</b> de "alguna vez" · ⚠ ruptura metodológica en 2020 (INEI cambió de promedios bienales a años simples)</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
       <div class="card full"><h3>Feminicidios y tentativas (contexto)</h3><p class="cap">Casos registrados por año · registro Warmi Ñan · <b>contexto multisectorial</b></p><div class="chart-box"><canvas id="c_femi"></canvas></div></div>
+      <div class="card full"><h3>Denuncias por violencia sexual (contexto)</h3><p class="cap">Registro PNP/MININTER (INEI) · total y víctimas menores de edad</p><div class="chart-box"><canvas id="c_viol"></canvas></div></div>
     </div>
+    <div class="note" style="margin-top:14px"><b>La otra cara del registro:</b> las denuncias por violencia sexual
+      <b>casi se duplicaron</b> (5,7k en 2016 → 10,8k en 2024), y más de la mitad son contra <b>menores de edad</b>.
+      <b>Paradoja de registros:</b> más denuncias puede reflejar más violencia <i>o</i> más disposición a denunciar
+      (mayor visibilización) — no se puede concluir una sola cosa. Es contexto (PNP/MP), no eficacia directa del MIMP.</div>
     <div class="note" style="margin-top:14px"><b>El dato que incomoda:</b> mientras la prevalencia poblacional bajó 13 pp, los <b>feminicidios no descienden</b> (oscilan 130–170 al año). La magnitud del problema cede, pero su expresión más extrema se mantiene. Feminicidios = contexto (investiga el Ministerio Público), no eficacia directa del MIMP.</div>
     <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
   </section>
@@ -508,9 +529,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <div class="hyp">
       <div class="hcard v-parc"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
         <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p><b>La violencia sí bajó en magnitud:</b> la prevalencia ENDES cayó 13 pp (65,4%→52,0%),
-        sobre todo psicológica y física. <b>Pero los feminicidios no descienden</b> (130–170/año). La
-        parte que cede es multisectorial (el MIMP contribuye, no es mérito exclusivo); lo más extremo resiste.</p></div>
+        <p>La prevalencia ENDES cayó 13 pp, <b>pero el grueso fue 2017–2019 y desde 2020 se estancó</b>. Además,
+        los <b>feminicidios no descienden</b> (130–170/año) y las <b>denuncias por violencia sexual casi se duplicaron</b>
+        (+90% desde 2016). La encuesta mejora en el pasado; los registros recientes no acompañan.</p></div>
       <div class="hcard v-parc"><div class="hid">H2 · Servicios</div><h4>La producción de servicios está estancada</h4>
         <span class="verdict v-parc">Se sostiene parcialmente</span>
         <p>Las atenciones CEM crecieron hasta 2019 y se <b>estabilizaron ~165k</b> desde 2021 (la sexual sí subió).
@@ -596,8 +617,8 @@ function build(){
   const nf=x=>x.toLocaleString('es-PE');
   const cards=[];
   const card=(kl,lbl,now,chg,from)=>cards.push(`<div class="evol ${kl}"><div class="e-lbl">${lbl}</div><div class="e-now">${now}</div><div class="e-chg">${chg}</div><div class="e-from">${from}</div></div>`);
-  if(enTot){const a0=EN.anios[0],aN=EN.anios[EN.anios.length-1],v0=enTot[0],vN=enTot[enTot.length-1];
-    card('up','Prevalencia de violencia de pareja',vN+'%','▼ '+(v0-vN).toFixed(1)+' pp',a0+': '+v0+'%');}
+  if(enTot){const a0=EN.anios[0],v0=enTot[0],vN=enTot[enTot.length-1];
+    card('flat','Prevalencia ENDES *',vN+'%','▼ '+(v0-vN).toFixed(1)+' pp (autorreporte)',a0+': '+v0+'% · ruptura 2020');}
   const EMBc=P.embarazo;
   if(EMBc&&EMBc.total.length){const v0=EMBc.total[0],vN=EMBc.total[EMBc.total.length-1];
     card('up','Embarazo adolescente (15–19)',vN+'%','▼ '+(v0-vN).toFixed(1)+' pp*',EMBc.periodos[0]+': '+v0+'%');}
@@ -608,22 +629,26 @@ function build(){
   if(CE2&&CE2.total.length){const v0=CE2.total[0],vN=CE2.total[CE2.total.length-1];
     card('info','Atenciones CEM / año',nf(vN),'▲ +'+((vN/v0-1)*100).toFixed(0)+'%',CE2.anios[0]+': '+nf(v0));}
   card('info','Presupuesto PIA',fmtM(pN.pia),'▲ +'+crec.toFixed(0)+'%',p0.anio+': '+fmtM(p0.pia));
+  const VI2=P.violaciones;
+  if(VI2&&VI2.total.length){const v0=VI2.total[0],vN=VI2.total[VI2.total.length-1];
+    card('down','Denuncias violencia sexual',nf(vN),'▲ +'+((vN/v0-1)*100).toFixed(0)+'%',VI2.anios[0]+': '+nf(v0));}
   const CN2=P.cem_num;
   if(CN2&&CN2.total.length){const v0=CN2.total[0],vN=CN2.total[CN2.total.length-1];
     card('info','Centros Emergencia Mujer',nf(vN),'▲ +'+((vN/v0-1)*100).toFixed(0)+'%',CN2.anios[0]+': '+nf(v0));}
   document.getElementById('evol').innerHTML=cards.join('');
 
-  // Story: dual axis (excepción consciente: dos historias, gasto vs prevalencia)
-  if(enTot){
+  // Story: gasto (barras) vs feminicidios registrados (línea) — dos escalas
+  const FEs=P.feminicidios;
+  if(FEs&&FEs.anios&&FEs.anios.length){
     const o=base();o.plugins.legend.display=true;o.interaction.mode='index';
     o.scales.y.title.text='Devengado (M S/)';
-    o.scales.y1={position:'right',grid:{drawOnChartArea:false},ticks:{color:css('--accent-2'),callback:v=>v+'%'},
-      title:{display:true,text:'Prevalencia (%)',color:css('--accent-2'),font:{size:11}},suggestedMin:40,suggestedMax:70};
-    o.plugins.tooltip.callbacks.label=c=>c.dataset.yAxisID==='y1'?` ${c.dataset.label}: ${c.parsed.y}%`:` ${c.dataset.label}: ${fmtM(c.parsed.y*1e6)}`;
+    o.scales.y1={position:'right',grid:{drawOnChartArea:false},ticks:{color:css('--accent-2')},
+      title:{display:true,text:'Feminicidios (casos)',color:css('--accent-2'),font:{size:11}},beginAtZero:true,suggestedMax:200};
+    o.plugins.tooltip.callbacks.label=c=>c.dataset.yAxisID==='y1'?` ${c.dataset.label}: ${c.parsed.y} casos`:` ${c.dataset.label}: ${fmtM(c.parsed.y*1e6)}`;
     charts.push(new Chart(c_story,{data:{labels:anios,datasets:[
       {type:'bar',label:'Devengado',data:S.map(r=>M(r.devengado)),backgroundColor:sc(0),borderRadius:3,order:2},
-      {type:'line',label:'Prevalencia ENDES',yAxisID:'y1',data:anios.map(a=>{const i=EN.anios.indexOf(a);return i>=0?enTot[i]:null;}),
-        borderColor:css('--accent-2'),backgroundColor:'transparent',borderWidth:2.4,pointRadius:3,tension:.25,spanGaps:true,order:1}]},options:o}));
+      {type:'line',label:'Feminicidios',yAxisID:'y1',data:anios.map(a=>{const i=FEs.anios.indexOf(a);return i>=0?FEs.feminicidios[i]:null;}),
+        borderColor:css('--accent-2'),backgroundColor:'transparent',borderWidth:2.6,pointRadius:3,tension:.2,spanGaps:true,order:1}]},options:o}));
   }
 
   charts.push(new Chart(c_serie,{type:'bar',data:{labels:anios,datasets:[
@@ -671,6 +696,15 @@ function build(){
     charts.push(new Chart(c_femi,{data:{labels:FE.anios,datasets:[
       {type:'bar',label:'Feminicidios',data:FE.feminicidios,backgroundColor:sc(7),borderRadius:3,order:2},
       {type:'line',label:'Tentativas',data:FE.tentativas,borderColor:sc(4),backgroundColor:'transparent',borderWidth:2.4,pointRadius:3,tension:.25,order:1}]},options:o}));
+  }
+  // Denuncias por violencia sexual (contexto)
+  const VI=P.violaciones;
+  if(VI&&VI.anios&&VI.anios.length){
+    const o=base();o.scales.y.title.text='Denuncias';o.scales.y.ticks.callback=v=>v.toLocaleString('es-PE');o.scales.y.beginAtZero=true;
+    o.plugins.tooltip.callbacks.label=c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString('es-PE')}`;
+    charts.push(new Chart(c_viol,{type:'line',data:{labels:VI.anios,datasets:[
+      {label:'Total denuncias',data:VI.total,borderColor:sc(7),backgroundColor:'transparent',borderWidth:2.6,pointRadius:3,tension:.2},
+      {label:'Víctimas menores',data:VI.menores,borderColor:sc(4),backgroundColor:'transparent',borderWidth:2,pointRadius:3,tension:.2,spanGaps:true}]},options:o}));
   }
 
   // Producción de servicios (H2)
