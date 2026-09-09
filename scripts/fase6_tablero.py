@@ -181,6 +181,21 @@ norm_rows = leer_csv("normas_mimp_*.csv")
 normas = [{"tipo": r.get("tipo", ""), "numero": r.get("numero", ""), "nombre": r.get("nombre", ""),
            "anio": r.get("anio", ""), "url": r.get("url", "")} for r in norm_rows]
 
+# --- Violencia por departamento (para el mapa coroplético) ---
+dep_rows = leer_csv("violencia_por_departamento_*.csv")
+mapa_dep = {}
+for r in dep_rows:
+    d = r.get("departamento", "").strip()
+    if not d or d == "TOTAL_NACIONAL":
+        continue
+    def _gi(k):
+        try:
+            return int(str(r.get(k, "")).replace(",", ""))
+        except (ValueError, TypeError):
+            return None
+    mapa_dep[d] = {"feminicidios": _gi("feminicidios"), "denuncias": _gi("denuncias_violencia_sexual"),
+                   "atenciones": _gi("atenciones_cem")}
+
 # --- Personal (Portal de Transparencia vía repo peru-transparente) ---
 pers_rows = leer_csv("personal_mimp_pte_*.csv")
 _agg = {}
@@ -211,6 +226,7 @@ for u, a in _agg.items():
 personal["unidades"].sort(key=lambda x: -x["n"])
 
 payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas, "personal": personal,
+           "mapa_dep": mapa_dep,
            "feminicidios": femi, "cem": cem, "linea100": linea100, "cem_num": cem_num,
            "embarazo": embarazo, "demuna": demuna, "violaciones": violaciones,
            "metaviol": metaviol, "metas": metas, "generado": date.today().isoformat()}
@@ -220,6 +236,8 @@ HTML = r"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self' data:; connect-src 'self' https://ai.tunky.net https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-src 'none'">
 <title>¿El MIMP redujo la violencia?</title>
 <meta name="description" content="Evaluación de la gestión del MIMP (pliego 039) 2017-2025: triplicó su presupuesto y lo ejecuta al 99%, pero los feminicidios no ceden y las denuncias por violencia sexual casi se duplicaron. ¿Impacto real o solo gasto?">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236d28d9'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%E2%99%80%3C/text%3E%3C/svg%3E">
@@ -410,6 +428,14 @@ table.norm a{color:var(--accent);text-decoration:none}
 .badge.e-parc{background:rgba(183,121,26,.18);color:var(--warn)}
 .badge.e-si{background:rgba(10,125,67,.15);color:var(--good)}
 .badge.e-sd{background:var(--ground);color:var(--muted)}
+.mapa-tabs{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 12px}
+.mapa-tabs button{font-size:12.5px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink-2);border-radius:16px;padding:6px 13px;cursor:pointer;font-family:inherit}
+.mapa-tabs button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.leaflet-container{background:var(--ground)!important;font-family:inherit}
+.leaflet-tooltip{background:var(--panel);color:var(--ink);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.2);font-size:12.5px}
+.leaflet-tooltip b{color:var(--ink)}
+.mapa-leyenda{background:var(--panel);padding:8px 10px;border-radius:8px;border:1px solid var(--line);font-size:11.5px;color:var(--ink-2);line-height:1.7}
+.mapa-leyenda i{display:inline-block;width:14px;height:14px;margin-right:6px;border-radius:3px;vertical-align:middle}
 footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12.5px}
 .toggle{position:fixed;top:12px;right:12px;background:var(--panel);border:1px solid var(--line-2);color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:6}
 .menu-btn{display:none;background:var(--ground);border:1px solid var(--line-2);border-radius:9px;width:42px;height:38px;font-size:19px;color:var(--ink);cursor:pointer;line-height:1}
@@ -673,6 +699,18 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <h2>Distribución territorial del gasto</h2>
     <p class="lead">Devengado acumulado 2017–2025 por departamento (departamento de la meta). Insumo para brechas
       de cobertura frente a la incidencia (H4).</p>
+    <div class="card full" style="margin-bottom:18px">
+      <h3>Mapa: gasto vs. violencia por departamento</h3>
+      <p class="cap">Elige la capa. El gasto se concentra en Lima; la violencia ocurre en todo el país.</p>
+      <div class="mapa-tabs" id="mapaTabs">
+        <button data-capa="gasto" class="active">Gasto acumulado</button>
+        <button data-capa="feminicidios">Feminicidios 2025</button>
+        <button data-capa="denuncias">Denuncias sexuales 2024</button>
+        <button data-capa="atenciones">Atenciones CEM 2025</button>
+      </div>
+      <div id="mapa" style="height:520px;border-radius:12px;overflow:hidden;background:var(--ground)"></div>
+      <p class="cap" style="margin-top:8px">Coropletas por departamento. <b>Nota:</b> mezcla de años (denuncias 2024; feminicidios y CEM 2025) y "Lima" combina Lima Metropolitana + Región Lima. Contexto multisectorial, no eficacia directa del MIMP.</p>
+    </div>
     <div class="grid"><div class="card full"><h3>Devengado por departamento</h3><p class="cap">Acumulado, millones S/ (top 15)</p><div class="chart-box" style="height:440px"><canvas id="c_dept"></canvas></div></div></div>
   </section>
 
@@ -754,8 +792,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       </div>
     </div>
     <div class="note" style="margin-top:16px;border-left-color:var(--crit)">
-      <b>La interpretación:</b> el único indicador que "mejora" es una encuesta autorreportada, débil y estancada, que
-      el propio sector usa para medirse —lo que se parece a una <b>autoevaluación complaciente</b>. En los hechos que sus
+      <b>La interpretación:</b> el único indicador que "mejora" es una encuesta autorreportada, débil y estancada. La
+      ENDES la produce el <b>INEI</b> (encuesta independiente, estándar internacional): el problema no es el número, sino
+      que <b>el sector destaque el indicador que le favorece</b> y no los hechos. En los hechos que sus
       leyes definen como violencia de género, <b>no hay evidencia de mejora</b> pese a triplicar el presupuesto. Con las
       salvaguardas del caso (la violencia es multisectorial y no se puede atribuir causalidad a un solo actor), lo honesto
       es decir que <b>no está demostrado que el MIMP haya reducido la violencia de género</b>: ni cumple sus propias metas
@@ -778,9 +817,9 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <details><summary>¿El ministerio se evalúa con el dato más cómodo?</summary>
       <div class="fa-body">Es una lectura razonable. El sector destaca la caída de la prevalencia ENDES —una encuesta de
       autorreporte que da la foto más favorable— mientras los <b>registros de hechos</b> (los que sus propias leyes definen
-      como violencia: física, psicológica, sexual, económica) no acompañan. Medirse con la encuesta y no con los hechos se
-      parece a una <b>autoevaluación complaciente</b>. Un indicador robusto de gestión debería anclarse en hechos y en el
-      cumplimiento de sus metas, no en percepciones autorreportadas.</div></details>
+      como violencia: física, psicológica, sexual, económica) no acompañan. La ENDES la produce el INEI de forma
+      independiente; la crítica no es a la encuesta sino a que <b>el sector se apoye en el indicador que le favorece</b> en
+      vez de en los hechos y en el cumplimiento de sus propias metas.</div></details>
 
     <details><summary>¿Por qué no confiar en que la violencia "cayó 13 puntos"?</summary>
       <div class="fa-body">Ese número viene de <b>un solo indicador</b>: la prevalencia total de la encuesta INEI–ENDES
@@ -846,6 +885,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
   </form>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 const P = /*__DATA__*/;
@@ -1096,8 +1136,52 @@ function cerrarMenu(){const nv=document.querySelector('aside nav');const mb=docu
     if(secciones.some(s=>s.id===id))
       a.addEventListener('click',e=>{e.preventDefault();show(id);cerrarMenu();});
   });
+  window.__show=show;
   show((location.hash||'#resumen').slice(1));
 })();
+
+/* ===== Mapa coroplético (Leaflet) ===== */
+let __mapa=null, __capaLayer=null, __capaSel='gasto';
+const normDep=s=>s.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace('PROVINCIA CONSTITUCIONAL DEL ','').replace(' METROPOLITANA','').trim();
+function valorCapa(nombre){
+  const n=normDep(nombre), md=P.mapa_dep||{}, dep=D.por_departamento;
+  if(__capaSel==='gasto'){
+    const lbl=(dep.labels||[]).find(l=>normDep(l)===n);
+    return lbl?anios.reduce((s,a)=>s+((dep.por_anio[a]||{})[lbl]||0),0)/1e6:0;
+  }
+  const k=Object.keys(md).find(x=>normDep(x)===n);
+  return k&&md[k][__capaSel]!=null?md[k][__capaSel]:0;
+}
+function pintarMapa(gj){
+  if(__capaLayer)__mapa.removeLayer(__capaLayer);
+  const vals=gj.features.map(f=>valorCapa(f.properties.NOMBDEP)).filter(v=>v>0);
+  const max=Math.max(1,...vals);
+  const ac=css('--accent');
+  const col=v=>{if(!v)return 'var(--line)'.trim()||'#eee';const t=Math.sqrt(v/max);
+    return `rgba(109,40,217,${(0.12+t*0.8).toFixed(2)})`;};
+  const fmt=v=>__capaSel==='gasto'?('S/ '+Math.round(v).toLocaleString('es-PE')+' M'):(v.toLocaleString('es-PE'));
+  const lblCapa={gasto:'Devengado acumulado',feminicidios:'Feminicidios 2025',denuncias:'Denuncias sexuales 2024',atenciones:'Atenciones CEM 2025'};
+  __capaLayer=L.geoJSON(gj,{style:f=>({fillColor:col(valorCapa(f.properties.NOMBDEP)),weight:1,color:css('--line'),fillOpacity:.9}),
+    onEachFeature:(f,layer)=>{const nm=f.properties.NOMBDEP,v=valorCapa(nm);
+      layer.bindTooltip('<b>'+nm+'</b><br>'+lblCapa[__capaSel]+': '+fmt(v),{sticky:true});
+      layer.on('mouseover',()=>layer.setStyle({weight:2.5,color:ac}));
+      layer.on('mouseout',()=>__capaLayer.resetStyle(layer));}}).addTo(__mapa);
+}
+let __gj=null;
+function initMapa(){
+  if(!window.L||__mapa)return;
+  __mapa=L.map('mapa',{zoomControl:true,attributionControl:false,scrollWheelZoom:false}).setView([-9.8,-74.5],4.6);
+  fetch('peru-departamentos.geojson').then(r=>r.json()).then(gj=>{__gj=gj;pintarMapa(gj);
+    try{__mapa.fitBounds(__capaLayer.getBounds(),{padding:[8,8]});}catch(e){}}).catch(()=>{});
+  document.querySelectorAll('#mapaTabs button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#mapaTabs button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');__capaSel=b.dataset.capa;if(__gj)pintarMapa(__gj);}));
+}
+// Inicializar/refrescar el mapa al entrar a Territorio
+const __origShow=window.__show;
+if(__origShow){window.__show=function(id){__origShow(id);if(id==='territorio'){initMapa();setTimeout(()=>{try{__mapa&&__mapa.invalidateSize();}catch(e){}},60);}};}
+document.querySelectorAll('a[href="#territorio"]').forEach(a=>a.addEventListener('click',()=>{setTimeout(()=>{initMapa();try{__mapa&&__mapa.invalidateSize();}catch(e){}},80);}));
+if(location.hash==='#territorio'){initMapa();}
 
 /* ===== Asistente de datos: gateway ai.tunky.net + respondedor local ===== */
 const CHAT={
@@ -1129,7 +1213,7 @@ function localAnswer(q){
     return "El MIMP no va camino a cumplir su propia meta. Su Política Nacional de Igualdad de Género (2019) fijó bajar la violencia física/sexual de pareja (últimos 12 meses) a 4,8% en 2026 y 2,4% en 2030. Pero el dato real de 2024 es 7,5%, por encima de la meta de ese año (6,0%) y lejos de la de 2026. Ver la sección 'Meta vs. resultado'.";
   }
   if(/violen|prevalen|endes|feminic|redujo|bajo|disminu|impacto|sirve|necesari/.test(n)){
-    return "No de forma demostrable. La encuesta ENDES (autorreporte) bajó de 65% a 52%, pero es un dato metodológicamente discutible, con ruptura de serie en 2020 y estancado desde entonces: casi autoevaluación complaciente. Los HECHOS no acompañan: los feminicidios siguen en 130–170/año y las denuncias por violencia sexual casi se duplicaron (+90%). Y el MIMP no cumple su propia meta. Con las salvaguardas del caso (es multisectorial), no hay evidencia de que su acción esté reduciendo la violencia de género.";
+    return "No hay evidencia consistente. La encuesta ENDES (autorreporte, la produce el INEI) bajó de 65% a 52%, pero es un indicador discutible, con ruptura de serie en 2020 y estancado desde entonces. Los HECHOS no acompañan: los feminicidios siguen en 130–170/año y las denuncias por violencia sexual casi se duplicaron (+90%). Y el MIMP no cumple su propia meta. Con las salvaguardas del caso (es multisectorial), no hay evidencia de que su acción esté reduciendo la violencia de género.";
   }
   if(/denuncia|sexual|violacion|violación/.test(n))
     return "Las denuncias por violencia sexual (registro PNP/MININTER, INEI) casi se duplicaron: de 5 683 (2016) a 10 819 (2024), y más de la mitad son contra menores de edad. Paradoja de registros: más denuncias puede ser más violencia o más disposición a denunciar. Es contexto multisectorial, no eficacia directa del MIMP.";
@@ -1154,12 +1238,14 @@ async function cGateway(text){
   if(!res.ok)throw new Error((data&&data.error)||"HTTP "+res.status);
   return cPick(data)||"…";}
 async function cHandle(text){
-  text=(text||"").trim();if(!text||cBusy)return;
-  cadd("me",text);H.push({role:"user",content:text});cBusy=true;$("chatSend");
+  text=(text||"").trim().slice(0,500);if(!text||cBusy)return;
+  cadd("me",text);H.push({role:"user",content:text});cBusy=true;
+  const sb=document.querySelector('#chatForm button[type=submit]');if(sb)sb.disabled=true;
   const t=cTyping();let reply;
   try{ if(CHAT.token&&CHAT.token.indexOf("__")!==0){ try{reply=await cGateway(text);}catch(e){reply=localAnswer(text);} } else reply=localAnswer(text); }
   catch(e){reply=localAnswer(text);}
-  t.remove();cadd("bot",reply);H.push({role:"assistant",content:reply});cBusy=false;$("chatInput").focus();}
+  t.remove();cadd("bot",reply);H.push({role:"assistant",content:reply});cBusy=false;
+  if(sb)sb.disabled=false;$("chatInput").focus();}
 function cToggle(v){cOpen=v==null?!cOpen:v;$("chatPanel").hidden=!cOpen;$("chatFab").classList.toggle("hide",cOpen);if(cOpen)cGreetFn();}
 $("chatFab").onclick=()=>cToggle(true);
 $("chatClose").onclick=()=>cToggle(false);
