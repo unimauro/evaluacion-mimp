@@ -165,7 +165,16 @@ for r in meta_rows:
         continue
     metas.append({"instrumento": r.get("instrumento", ""), "indicador": r.get("indicador", ""),
                   "lb": r.get("linea_base_valor", ""), "lb_anio": r.get("linea_base_anio", ""),
-                  "meta": mv, "meta_anio": r.get("meta_anio", ""), "url": r.get("url", "")})
+                  "meta": mv, "meta_anio": r.get("meta_anio", ""), "url": r.get("url", ""),
+                  "real": "", "estado": "sd"})
+
+# Cruce con nuestras series: real reciente + juicio (solo donde hay dato verificable).
+for m in metas:
+    ind = m["indicador"].lower()
+    if "violencia fisica y/o sexual" in ind or "violencia física y/o sexual" in ind:
+        m["real"] = "7.5% (2024)"; m["estado"] = "no"      # real muy por encima de una meta que debe bajar
+    elif "embarazo adolescente" in ind:
+        m["real"] = "8.4% (2024)"; m["estado"] = "parcial"  # bajó de 13.4 pero sigue sobre la meta 7.2 (ruptura de serie)
 
 # --- Normas ---
 norm_rows = leer_csv("normas_mimp_*.csv")
@@ -347,6 +356,18 @@ h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-
 .vs-hard li::before{content:"▲";color:var(--crit);font-size:11px;top:10px}
 .vs-col li b{color:var(--ink)}
 @media (max-width:720px){.vs-grid{grid-template-columns:1fr}}
+.vh-card{border:1px solid var(--line);border-left:5px solid var(--crit);border-radius:14px;padding:18px 22px;background:var(--panel)}
+.vh-card.vh-good{border-left-color:var(--good)}
+.vh-tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--crit);margin-bottom:12px}
+.vh-card.vh-good .vh-tag{color:var(--good)}
+.vh-row{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;margin-bottom:14px}
+.vh-metric{display:flex;flex-direction:column}
+.vh-big{font-size:42px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.vh-sub{font-size:11.5px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.04em}
+.vh-vs{font-size:15px;color:var(--muted);align-self:center;font-weight:600;padding-bottom:6px}
+.vh-card p{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.55}
+.vh-card p b{color:var(--ink)}
+@media (max-width:560px){.vh-big{font-size:34px}.vh-row{gap:16px}}
 .note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
 .note b{color:var(--ink)}
 table.norm{width:100%;border-collapse:collapse;font-size:13px}
@@ -354,6 +375,11 @@ table.norm th,table.norm td{text-align:left;padding:8px 10px;border-bottom:1px s
 table.norm th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
 table.norm a{color:var(--accent);text-decoration:none}
 .tablewrap{overflow-x:auto}
+.badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:12px;white-space:nowrap;display:inline-block}
+.badge.e-no{background:rgba(207,59,57,.16);color:var(--crit)}
+.badge.e-parc{background:rgba(183,121,26,.18);color:var(--warn)}
+.badge.e-si{background:rgba(10,125,67,.15);color:var(--good)}
+.badge.e-sd{background:var(--ground);color:var(--muted)}
 footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12.5px}
 .toggle{position:fixed;top:12px;right:12px;background:var(--panel);border:1px solid var(--line-2);color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:6}
 .menu-btn{display:none;background:var(--ground);border:1px solid var(--line-2);border-radius:9px;width:42px;height:38px;font-size:19px;color:var(--ink);cursor:pointer;line-height:1}
@@ -524,13 +550,21 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
         <p class="cap">% mujeres 15+ · meta oficial PNIG vs. ejecución real (ENDES–PPR)</p>
         <div class="chart-box tall"><canvas id="c_metaviol"></canvas></div></div>
     </div>
-    <div class="note" style="margin-top:14px"><b>El veredicto más duro:</b> en 2024 el indicador real es <b>7,5%</b>
-      cuando la meta de ese año era <b>6,0%</b> y la de 2026 es <b>4,8%</b>. Salvo 2021, el resultado quedó
-      <b>siempre por encima</b> de la meta y la brecha se amplía. Con el presupuesto triplicado, <b>el MIMP no va
-      camino a cumplir la meta que él mismo se fijó</b>.</div>
+    <div class="vh-card" style="margin-top:16px">
+      <div class="vh-tag">El veredicto más duro · gestión que no cumple lo suyo</div>
+      <div class="vh-row">
+        <div class="vh-metric"><span class="vh-big" style="color:var(--crit)">7,5%</span><span class="vh-sub">Real 2024</span></div>
+        <div class="vh-vs">vs.</div>
+        <div class="vh-metric"><span class="vh-big" style="color:var(--good)">6,0%</span><span class="vh-sub">Meta 2024</span></div>
+        <div class="vh-metric"><span class="vh-big" style="color:var(--good)">4,8%</span><span class="vh-sub">Meta 2026</span></div>
+        <div class="vh-metric"><span class="vh-big" style="color:var(--accent)">+134%</span><span class="vh-sub">Presupuesto 17→25</span></div>
+      </div>
+      <p>Salvo 2021, el resultado quedó <b>siempre por encima</b> de la meta y la brecha se amplía. Con el
+      presupuesto triplicado, <b>el MIMP no va camino a cumplir la meta que él mismo se fijó</b>.</p>
+    </div>
     <div class="card full" style="margin-top:16px"><h3>Otras metas al 2030 de los planes del MIMP</h3>
       <p class="cap">Línea base → meta · Política Nacional de Igualdad de Género y PEI 2025–2030</p>
-      <div class="tablewrap"><table class="norm" id="t_metas"><thead><tr><th>Instrumento</th><th>Indicador</th><th>Línea base</th><th>Meta</th></tr></thead><tbody></tbody></table></div></div>
+      <div class="tablewrap"><table class="norm" id="t_metas"><thead><tr><th>Instrumento</th><th>Indicador</th><th>Línea base</th><th>Meta</th><th>Real reciente</th><th>Estado</th></tr></thead><tbody></tbody></table></div></div>
   </section>
 
   <section id="servicios">
@@ -775,6 +809,14 @@ const P = /*__DATA__*/;
 const D = P.presupuesto, EN = P.endes, TIT = P.titulares, NOR = P.normas;
 const css = v => getComputedStyle(document.body).getPropertyValue(v).trim();
 const SER=['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'], sc=i=>css(SER[i%8]);
+// Plugin: etiquetas de valor sobre los puntos (para líneas de una serie)
+const valueLabels={id:'valueLabels',afterDatasetsDraw(chart,a,opts){
+  if(!opts||!opts.on)return;const{ctx}=chart;ctx.save();
+  ctx.font='700 11px "Helvetica Neue",Arial';ctx.textAlign='center';ctx.fillStyle=opts.color||css('--ink');
+  chart.data.datasets.forEach((ds,di)=>{const meta=chart.getDatasetMeta(di);if(meta.hidden)return;
+    meta.data.forEach((pt,i)=>{const v=ds.data[i];if(v==null)return;ctx.fillText(opts.fmt?opts.fmt(v):v,pt.x,pt.y-9);});});
+  ctx.restore();}};
+if(window.Chart)Chart.register(valueLabels);
 const M=x=>x/1e6, fmtM=x=>'S/ '+(Math.round(x/1e5)/10).toLocaleString('es-PE')+' M';
 const anios=D.meta.periodo;
 let charts=[];
@@ -910,9 +952,9 @@ function build(){
   }
   const CN=P.cem_num;
   if(CN&&CN.anios&&CN.anios.length){
-    const o=base();o.plugins.legend.display=false;o.scales.y.title.text='N.º de CEM';o.scales.y.ticks.callback=v=>v;o.scales.y.beginAtZero=true;
-    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.y} CEM`;
-    charts.push(new Chart(c_cemn,{type:'line',data:{labels:CN.anios,datasets:[{label:'CEM',data:CN.total,borderColor:sc(0),backgroundColor:'transparent',borderWidth:2.4,pointRadius:3,tension:.2,fill:false}]},options:o}));
+    const o=base();o.plugins.legend.display=false;o.scales.y.title.text='N.º de CEM';o.scales.y.ticks.callback=v=>v;o.scales.y.beginAtZero=true;o.scales.y.suggestedMax=500;
+    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.y} CEM`;o.plugins.valueLabels={on:true,color:sc(0),fmt:v=>v};o.layout={padding:{top:20}};
+    charts.push(new Chart(c_cemn,{type:'line',data:{labels:CN.anios,datasets:[{label:'CEM',data:CN.total,borderColor:sc(0),backgroundColor:'rgba(120,80,220,.14)',fill:true,borderWidth:2.6,pointRadius:3,pointBackgroundColor:sc(0),tension:.2}]},options:o}));
   }
   const L1=P.linea100;
   if(L1&&L1.anios&&L1.anios.length){
@@ -923,9 +965,9 @@ function build(){
   // Niñez
   const EMB=P.embarazo;
   if(EMB&&EMB.periodos&&EMB.periodos.length){
-    const o=base();o.plugins.legend.display=false;o.scales.y.title.text='% adolescentes';o.scales.y.ticks.callback=v=>v+'%';o.scales.y.beginAtZero=true;
-    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.y}%`;
-    charts.push(new Chart(c_emb,{type:'line',data:{labels:EMB.periodos,datasets:[{label:'Embarazo adolescente',data:EMB.total,borderColor:sc(1),backgroundColor:'transparent',borderWidth:2.4,pointRadius:4,tension:.2,spanGaps:true}]},options:o}));
+    const o=base();o.plugins.legend.display=false;o.scales.y.title.text='% adolescentes';o.scales.y.ticks.callback=v=>v+'%';o.scales.y.beginAtZero=true;o.scales.y.suggestedMax=15;
+    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.y}%`;o.plugins.valueLabels={on:true,color:sc(1),fmt:v=>v+'%'};o.layout={padding:{top:20}};
+    charts.push(new Chart(c_emb,{type:'line',data:{labels:EMB.periodos,datasets:[{label:'Embarazo adolescente',data:EMB.total,borderColor:sc(1),backgroundColor:'rgba(235,104,52,.14)',fill:true,borderWidth:2.6,pointRadius:4,pointBackgroundColor:sc(1),tension:.25,spanGaps:true,segment:{borderDash:c=>c.p0DataIndex===1?[5,4]:undefined}}]},options:o}));
   }
   const DM=P.demuna;
   if(DM&&DM.anios&&DM.anios.length){
@@ -960,7 +1002,8 @@ function build(){
       {type:'line',label:'Real (ENDES 12 meses)',data:MV.real,borderColor:css('--crit'),backgroundColor:'transparent',borderWidth:2.8,pointRadius:4,tension:.2,spanGaps:true}]},options:o}));
   }
   const tm=document.querySelector('#t_metas tbody');
-  if(tm)tm.innerHTML=P.metas.map(m=>`<tr><td>${m.instrumento}</td><td>${m.indicador}</td><td>${m.lb!==''?m.lb+' ('+m.lb_anio+')':'—'}</td><td><b>${m.meta}</b> (${m.meta_anio})</td></tr>`).join('');
+  const eTxt={si:'Cumple',parcial:'En camino',no:'No cumple',sd:'s/d'},eCls={si:'e-si',parcial:'e-parc',no:'e-no',sd:'e-sd'};
+  if(tm)tm.innerHTML=P.metas.map(m=>`<tr><td>${m.instrumento}</td><td>${m.indicador}</td><td>${m.lb!==''?m.lb+' ('+m.lb_anio+')':'—'}</td><td><b>${m.meta}</b> (${m.meta_anio})</td><td>${m.real||'—'}</td><td><span class="badge ${eCls[m.estado]||'e-sd'}">${eTxt[m.estado]||'s/d'}</span></td></tr>`).join('');
 }
 build();
 const root=document.documentElement;
