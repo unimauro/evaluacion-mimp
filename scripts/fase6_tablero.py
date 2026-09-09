@@ -23,7 +23,10 @@ GA_ID = "G-2CVE1EQ2L2"
 # X-Client-Token del gateway ai.tunky.net. Vacío = el chat usa solo el respondedor
 # local (datos del tablero). Pega aquí el token de Carlos para activar la IA generativa.
 TUNKY_TOKEN = ""
-data = json.loads((DIR_ANALISIS / "presupuesto_dashboard.json").read_text(encoding="utf-8"))
+_dash = DIR_ANALISIS / "presupuesto_dashboard.json"
+if not _dash.exists():
+    raise SystemExit("Falta 03_analisis/presupuesto_dashboard.json. Corre antes: python scripts/fase3_procesar_presupuesto.py")
+data = json.loads(_dash.read_text(encoding="utf-8"))
 
 
 def leer_csv(patron):
@@ -917,7 +920,8 @@ function stacked(cv,obj){const ds=obj.labels.map((lab,i)=>({label:lab,data:anios
     y:{stacked:true,grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>v.toLocaleString('es-PE')},title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}});
   o.plugins.legend.labels.font.size=10;
   return new Chart(cv,{type:'bar',data:{labels:anios,datasets:ds},options:o});}
-function diasEntre(a,b){if(!a)return null;const d1=new Date(a),d2=b?new Date(b):new Date('2025-08-31');
+function diasEntre(a,b){if(!a)return null;const d1=new Date(a);if(isNaN(d1))return null;
+  let d2=b?new Date(b):null;if(!d2||isNaN(d2))d2=new Date('2025-08-31');  // fin vacío o placeholder = en ejercicio
   return Math.max(1,Math.round((d2-d1)/86400000));}
 
 function build(){
@@ -925,13 +929,15 @@ function build(){
   const S=D.serie_anual,pN=S[S.length-1],p0=S[0];
   const crec=(pN.pia/p0.pia-1)*100,ejecProm=S.reduce((a,b)=>a+b.ejecucion_pct,0)/S.length;
   const enTot=EN.series&&(EN.series['total']||EN.series['Total']);
-  const cae = enTot? (enTot[0]-enTot[enTot.length-1]).toFixed(1):null;
+  const enOk=enTot&&enTot[0]!=null&&enTot[enTot.length-1]!=null;
+  const cae = enOk? (enTot[0]-enTot[enTot.length-1]).toFixed(1):null;
+  const nTit=TIT.filter(t=>!/DISPONIBLE|^\[/i.test(t.nombre)).length;
   document.getElementById('kpis').innerHTML=[
     ['PIA '+pN.anio,fmtM(pN.pia),'inicial de apertura'],
     ['Ejecución '+pN.anio,pN.ejecucion_pct.toFixed(1)+'%','<span class="k-up">no subejecuta</span>'],
     ['Crecim. PIA '+p0.anio.slice(2)+'→'+pN.anio.slice(2),'<span class="k-up">+'+crec.toFixed(0)+'%</span>','nominal'],
-    enTot?['Prevalencia ENDES','<span class="k-dn">−'+cae+' pp</span>',enTot[0]+'% → '+enTot[enTot.length-1]+'%']:['Prevalencia ENDES','—','en proceso'],
-    ['Titulares 2016–25','<span class="k-dn">'+TIT.length+'</span>','rotación alta'],
+    enOk?['Prevalencia ENDES','<span class="k-dn">−'+cae+' pp</span>',enTot[0]+'% → '+enTot[enTot.length-1]+'%']:['Prevalencia ENDES','—','en proceso'],
+    ['Titulares 2016–25','<span class="k-dn">'+nTit+'</span>','rotación alta'],
   ].map(k=>`<div class="kpi"><div class="k-label">${k[0]}</div><div class="k-val">${k[1]}</div><div class="k-note">${k[2]}</div></div>`).join('');
 
   // Tarjetas de evolución "antes → ahora" (datos reales)
@@ -1255,7 +1261,8 @@ $("chatForm").onsubmit=e=>{e.preventDefault();const v=$("chatInput").value;$("ch
 </html>
 """
 
-salida = (HTML.replace("/*__DATA__*/", json.dumps(payload, ensure_ascii=False))
+_json_payload = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")  # evita cerrar el <script>
+salida = (HTML.replace("/*__DATA__*/", _json_payload)
           .replace("__GA__", GA_ID).replace("__TUNKY__", TUNKY_TOKEN))
 # Cada sección arranca oculta salvo "resumen" (navegación por pestañas, sin flash inicial).
 import re as _hre
