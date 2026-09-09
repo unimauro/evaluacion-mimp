@@ -150,6 +150,13 @@ HTML = r"""<!doctype html>
 <meta property="og:description" content="El MIMP casi triplicó su presupuesto (S/ 426M→996M) y lo ejecuta al 99%. La prevalencia de violencia de pareja cayó de 65% a 52%. Evaluación con datos oficiales, 2017-2025.">
 <meta property="og:url" content="https://unimauro.github.io/evaluacion-mimp/">
 <meta property="og:image" content="https://unimauro.github.io/evaluacion-mimp/og.png">
+<meta property="og:image:secure_url" content="https://unimauro.github.io/evaluacion-mimp/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Evaluación del MIMP 2017-2025: presupuesto, prevalencia y feminicidios">
+<meta property="og:site_name" content="Evaluación MIMP">
+<meta property="og:locale" content="es_PE">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="¿El MIMP redujo la violencia, o solo gastó?">
 <meta name="twitter:description" content="Evaluación con datos oficiales del MIMP 2017-2025: presupuesto, servicios, impacto e hipótesis.">
@@ -286,8 +293,25 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
 .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
 @media (prefers-reduced-motion:reduce){.typing i{animation:none}}
-@media (max-width:860px){.layout{grid-template-columns:1fr}aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
-  aside nav{flex-direction:row;flex-wrap:wrap}aside .foot{display:none}main{padding:24px 18px 60px}.story{grid-template-columns:1fr}}
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr;min-height:0}
+  aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:11px 14px}
+  aside:empty{display:none}
+  aside .tag{display:none}
+  aside nav{margin-top:10px;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:7px;padding-bottom:3px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  aside nav::-webkit-scrollbar{display:none}
+  aside nav a{white-space:nowrap;flex-shrink:0;font-size:12.5px;padding:6px 13px;border:1px solid var(--line-2);border-radius:16px}
+  aside nav a.sec{display:none}
+  aside .foot{display:none}
+  main{padding:22px 16px 64px}
+  h1{font-size:31px}
+  .dek{font-size:15.5px}
+  .story{grid-template-columns:1fr}
+  .story .tell,.story .viz{padding:16px 16px}
+  .story .tell .big{font-size:16.5px}
+  .kpi .k-val{font-size:24px}
+  section{margin-top:34px}
+}
 </style>
 </head>
 <body>
