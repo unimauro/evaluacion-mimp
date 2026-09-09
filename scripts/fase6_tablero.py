@@ -415,6 +415,10 @@ h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-
 .vs-hard li::before{content:"▲";color:var(--crit);font-size:11px;top:10px}
 .vs-col li b{color:var(--ink)}
 @media (max-width:720px){.vs-grid{grid-template-columns:1fr}}
+ol.recos{counter-reset:r;list-style:none;padding:0;margin:14px 0 0;display:grid;gap:11px}
+ol.recos li{counter-increment:r;position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 52px;font-size:14px;color:var(--ink-2);line-height:1.5}
+ol.recos li::before{content:counter(r);position:absolute;left:14px;top:13px;width:26px;height:26px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+ol.recos li b{color:var(--ink)}
 .vh-card{border:1px solid var(--line);border-left:5px solid var(--crit);border-radius:14px;padding:18px 22px;background:var(--panel)}
 .vh-card.vh-good{border-left-color:var(--good)}
 .vh-tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--crit);margin-bottom:12px}
@@ -519,6 +523,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       <a class="sec">Conclusión</a>
       <a href="#contraste">Encuesta vs. hechos</a>
       <a href="#hipotesis">Hipótesis H1–H6</a>
+      <a href="#conclusion">Conclusión y recomendaciones</a>
       <a href="#faq">Preguntas frecuentes</a>
     </nav>
     <div class="foot">Datos oficiales: MEF, INEI–ENDES, Portal Warmi Ñan, El Peruano.<br>Descarga 2026-09-08. Reproducible.</div>
@@ -814,6 +819,32 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     </div>
   </section>
 
+  <section id="conclusion">
+    <h2>Conclusión y recomendaciones</h2>
+    <p class="lead">Qué dice la evidencia reunida y qué debería cambiar. Una evaluación no acusa: diagnostica y propone.</p>
+    <div class="verdict-card" style="max-width:none;border-left-color:var(--crit)">
+      <div class="vc-body" style="max-width:80ch">
+        <p><b>Diagnóstico.</b> Entre 2017 y 2025 el MIMP casi triplicó su presupuesto y lo ejecuta al 99%, pero
+          <b>no hay evidencia consistente</b> de que la violencia de género esté cediendo en los hechos: feminicidios
+          estancados, denuncias sexuales al alza y una <b>meta propia incumplida</b>. La gestión es diligente en el gasto,
+          no en resultados: planta precaria (99% CAS), cobertura centralizada en Lima y conducción inestable (~15 titulares
+          en 9 años).</p>
+        <p><b>Matiz honesto.</b> La violencia es multisectorial: no puede atribuirse causalmente el resultado a un solo
+          actor, y sin el MIMP el panorama podría ser peor. Pero la carga de probar que su acción funciona recae en el
+          ministerio —y hoy sus propios indicadores no la sostienen.</p>
+      </div>
+    </div>
+    <h3 style="margin:24px 0 0">Seis recomendaciones</h3>
+    <ol class="recos">
+      <li><b>Medir por hechos, no por encuesta.</b> Anclar las metas de gestión a feminicidios, denuncias y atenciones —indicadores verificables— y no principalmente a la prevalencia autorreportada de la ENDES.</li>
+      <li><b>Cerrar la brecha de cobertura 24h.</b> Solo 5 de 433 CEM operan las 24 horas; ampliarlos y garantizar atención permanente donde ocurre la violencia.</li>
+      <li><b>Descentralizar el gasto.</b> Corregir la concentración en Lima y asignar presupuesto según la incidencia territorial (ver el mapa).</li>
+      <li><b>Estabilizar y profesionalizar la planta.</b> Reducir la dependencia del régimen CAS (99% hoy) y la rotación de titulares, que erosionan la continuidad y la calidad.</li>
+      <li><b>Transparencia comparable.</b> Publicar personal, cobertura y ejecución por región en datos abiertos, con definiciones y fechas de corte, para permitir la evaluación externa.</li>
+      <li><b>Evaluación de impacto real.</b> Encargar evaluaciones con contrafactual de sus programas, no solo reportes de producción de servicios.</li>
+    </ol>
+  </section>
+
   <section id="faq" class="faq">
     <h2>Preguntas frecuentes (metodología crítica)</h2>
     <p class="lead">Por qué algunos datos deben leerse con cuidado — y por qué la "caída" de la violencia no es lo que parece.</p>
@@ -870,6 +901,37 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       sanción el <b>Poder Judicial</b>, y las denuncias las registra la <b>PNP/Mininter</b>. El MIMP previene, atiende y
       articula, pero no controla el resultado penal. Se leen como <b>contribución, no atribución</b>: sirven de contexto,
       no como nota directa de la eficacia del ministerio.</div></details>
+
+    <details><summary>¿No es injusto medir con conteos absolutos en vez de tasas?</summary>
+      <div class="fa-body">Es una crítica válida y la reconocemos. Los conteos (feminicidios, denuncias) no ajustan por
+      crecimiento poblacional ni por el hecho de que la <b>Ley 30364 (2015)</b> y nuevos tipos penales <b>elevan las denuncias
+      mecánicamente</b>. Por eso el argumento no descansa en "subieron X%", sino en que <b>ni siquiera con más registro</b> los
+      feminicidios (el indicador menos sensible al subregistro) descienden, y en que el MIMP <b>no cumple su propia meta</b> —que
+      sí está definida como tasa. La normalización por 100 000 es una mejora pendiente y declarada.</div></details>
+
+    <details><summary>¿Cuánto de esto es efecto de la pandemia (2020)?</summary>
+      <div class="fa-body">Parte. 2020 rompió a la vez la serie ENDES, la prestación de servicios (CEM con aforo reducido)
+      y las denuncias (subregistro y luego rebote). Por eso <b>no atribuimos el estancamiento solo a la gestión</b>: es un factor
+      de confusión real. Aun así, el estancamiento persiste en 2022–2024, ya sin restricciones, y la meta se incumple en el
+      último dato disponible.</div></details>
+
+    <details><summary>¿No aplican doble vara: escépticos con lo bueno, crédulos con lo malo?</summary>
+      <div class="fa-body">Es el riesgo que más cuidamos. Los indicadores "malos" también tienen caveats: las <b>denuncias</b>
+      pueden subir por mayor visibilización (no solo más violencia); los <b>feminicidios</b> del registro del programa pueden diferir
+      de los del Ministerio Público; y todos son <b>contexto multisectorial</b>, no eficacia directa del MIMP. El punto no es que un
+      indicador baje o suba, sino que <b>ninguno de los verificables mejora</b> y que el ministerio <b>incumple su propia meta</b>.</div></details>
+
+    <details><summary>¿Qué haría cambiar este veredicto? (falsabilidad)</summary>
+      <div class="fa-body">Lo cambiaría: que los <b>feminicidios</b> muestren una tendencia descendente sostenida; que el MIMP
+      <b>alcance la trayectoria de su meta</b> PNIG de violencia de pareja; que la cobertura 24h y la descentralización del gasto
+      mejoren de forma verificable; o una <b>evaluación de impacto con contrafactual</b> que atribuya reducción a sus programas.
+      Nada de eso está hoy en los datos públicos.</div></details>
+
+    <details><summary>¿Quién hizo esto y con qué método?</summary>
+      <div class="fa-body">Evaluación independiente a partir de <b>datos abiertos oficiales</b>: MEF (presupuesto), INEI–ENDES
+      (prevalencia), Portal Warmi Ñan/MIMP (servicios y feminicidios), INEI/PNP (denuncias), Portal de Transparencia (personal),
+      El Peruano (normas). Toda cifra lleva fuente + URL + fecha de descarga (2026-09-08), y el pipeline es reproducible desde el
+      repositorio público <code>evaluacion-mimp</code>. No representa a ninguna entidad ni al propio MIMP.</div></details>
 
     <details><summary>¿El presupuesto del MIMP es alto o bajo?</summary>
       <div class="fa-body">En términos absolutos <b>creció mucho</b> (PIA S/ 426 M en 2017 → S/ 996 M en 2025, +134%) y se
