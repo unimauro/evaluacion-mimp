@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>¿El MIMP redujo la violencia?</title>
-<meta name="description" content="Evaluación de la gestión del MIMP (pliego 039) 2017-2025: casi triplicó su presupuesto y lo ejecuta al 99%; la prevalencia de violencia de pareja cayó 13 puntos. ¿Mérito propio o contexto multisectorial?">
+<meta name="description" content="Evaluación de la gestión del MIMP (pliego 039) 2017-2025: triplicó su presupuesto y lo ejecuta al 99%, pero los feminicidios no ceden y las denuncias por violencia sexual casi se duplicaron. ¿Impacto real o solo gasto?">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236d28d9'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%E2%99%80%3C/text%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:title" content="¿El MIMP redujo la violencia, o solo gastó?">
-<meta property="og:description" content="El MIMP casi triplicó su presupuesto (S/ 426M→996M) y lo ejecuta al 99%. La prevalencia de violencia de pareja cayó de 65% a 52%. Evaluación con datos oficiales, 2017-2025.">
+<meta property="og:description" content="Triplicó su presupuesto (S/ 426M→996M) y lo ejecuta al 99%, pero los feminicidios no ceden (130–170/año) y las denuncias por violencia sexual casi se duplicaron. ¿Impacto real o solo gasto?">
 <meta property="og:url" content="https://unimauro.github.io/evaluacion-mimp/">
-<meta property="og:image" content="https://unimauro.github.io/evaluacion-mimp/og.png">
-<meta property="og:image:secure_url" content="https://unimauro.github.io/evaluacion-mimp/og.png">
+<meta property="og:image" content="https://unimauro.github.io/evaluacion-mimp/og.png?v=3">
+<meta property="og:image:secure_url" content="https://unimauro.github.io/evaluacion-mimp/og.png?v=3">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,8 +20,8 @@
 <meta property="og:locale" content="es_PE">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="¿El MIMP redujo la violencia, o solo gastó?">
-<meta name="twitter:description" content="Evaluación con datos oficiales del MIMP 2017-2025: presupuesto, servicios, impacto e hipótesis.">
-<meta name="twitter:image" content="https://unimauro.github.io/evaluacion-mimp/og.png">
+<meta name="twitter:description" content="Triplicó su presupuesto y lo ejecuta al 99%, pero los feminicidios no ceden y las denuncias por violencia sexual casi se duplicaron.">
+<meta name="twitter:image" content="https://unimauro.github.io/evaluacion-mimp/og.png?v=3">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2CVE1EQ2L2"></script>
 <script>
@@ -150,6 +150,21 @@ h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-
 .verdict-card .vc-body b{color:var(--ink)}
 .verdict-card .vc-body .src{font-size:12.5px;color:var(--muted);margin-top:12px}
 .verdict-card .vc-body .src code{background:var(--ground);padding:1px 5px;border-radius:4px}
+.vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.vs-col{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--panel)}
+.vs-soft{border-top:4px solid var(--good)}
+.vs-hard{border-top:4px solid var(--crit)}
+.vs-tag{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px}
+.vs-soft .vs-tag{color:var(--good)} .vs-hard .vs-tag{color:var(--crit)}
+.vs-col h3{margin:0 0 12px;font-size:16px}
+.vs-col ul{margin:0;padding-left:0;list-style:none}
+.vs-col li{position:relative;padding:8px 0 8px 24px;font-size:13.6px;color:var(--ink-2);border-bottom:1px solid var(--line);line-height:1.45}
+.vs-col li:last-child{border-bottom:none}
+.vs-col li::before{position:absolute;left:0;top:8px;font-weight:700}
+.vs-soft li::before{content:"▼";color:var(--good);font-size:11px;top:10px}
+.vs-hard li::before{content:"▲";color:var(--crit);font-size:11px;top:10px}
+.vs-col li b{color:var(--ink)}
+@media (max-width:720px){.vs-grid{grid-template-columns:1fr}}
 .note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
 .note b{color:var(--ink)}
 table.norm{width:100%;border-collapse:collapse;font-size:13px}
@@ -226,6 +241,7 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       <a href="#gestion">Gestión y rotación</a>
       <a href="#normas">Marco normativo</a>
       <a class="sec">Conclusión</a>
+      <a href="#contraste">Encuesta vs. hechos</a>
       <a href="#hipotesis">Hipótesis H1–H6</a>
       <a href="#faq">Preguntas frecuentes</a>
     </nav>
@@ -444,11 +460,63 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     </div>
   </section>
 
+  <section id="contraste">
+    <h2>Cómo se evalúa el ministerio vs. lo que muestran los hechos</h2>
+    <p class="lead">El MIMP y su sector destacan la caída de una <b>encuesta de autorreporte</b> (ENDES). Pero las cifras de
+      <b>hechos registrados</b> —lo que su propia Ley 30364 define como violencia contra la mujer: física, psicológica,
+      sexual y económica— no acompañan. La foto favorable la da la encuesta; los registros cuentan otra historia.</p>
+    <div class="vs-grid">
+      <div class="vs-col vs-soft">
+        <div class="vs-tag">Cómo se autoevalúa · encuesta</div>
+        <h3>La foto favorable (ENDES)</h3>
+        <ul>
+          <li>Prevalencia "alguna vez": <b>65% → 52%</b> (−13 pp)</li>
+          <li>Es <b>autorreporte</b> en una encuesta, no hechos registrados</li>
+          <li><b>Ruptura metodológica</b> en 2020; estancada desde entonces (~52–55%)</li>
+          <li>La <b>meta oficial</b> se define sobre este mismo tipo de encuesta</li>
+        </ul>
+      </div>
+      <div class="vs-col vs-hard">
+        <div class="vs-tag">Los hechos · registros</div>
+        <h3>La foto real (registros)</h3>
+        <ul>
+          <li><b>Feminicidios</b>: 130–170 al año, <b>sin descenso</b></li>
+          <li><b>Denuncias por violencia sexual</b>: <b>+90%</b> (5,7k → 10,8k)</li>
+          <li><b>Atenciones CEM</b>: estables ~165k; la sexual atendida <b>se duplicó</b></li>
+          <li>Meta de violencia reciente (12 meses): real <b>7,5%</b> (2024) vs. meta <b>6,0%</b> — <b>no cumple</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="note" style="margin-top:16px;border-left-color:var(--crit)">
+      <b>La interpretación:</b> el único indicador que "mejora" es una encuesta autorreportada, débil y estancada, que
+      el propio sector usa para medirse —lo que se parece a una <b>autoevaluación complaciente</b>. En los hechos que sus
+      leyes definen como violencia de género, <b>no hay evidencia de mejora</b> pese a triplicar el presupuesto. Con las
+      salvaguardas del caso (la violencia es multisectorial y no se puede atribuir causalidad a un solo actor), lo honesto
+      es decir que <b>no está demostrado que el MIMP haya reducido la violencia de género</b>: ni cumple sus propias metas
+      de hechos, ni los registros retroceden.
+    </div>
+  </section>
+
   <section id="faq" class="faq">
-    <h2>Preguntas frecuentes (metodología)</h2>
+    <h2>Preguntas frecuentes (metodología crítica)</h2>
     <p class="lead">Por qué algunos datos deben leerse con cuidado — y por qué la "caída" de la violencia no es lo que parece.</p>
 
-    <details open><summary>¿Por qué no confiar en que la violencia "cayó 13 puntos"?</summary>
+    <details open><summary>Entonces, ¿el MIMP realmente reduce la violencia de género?</summary>
+      <div class="fa-body"><b>No está demostrado.</b> El presupuesto se triplicó, pero los indicadores de <b>hechos</b>
+      —feminicidios (estancados), denuncias por violencia sexual (+90%), atenciones CEM (sin bajar)— no mejoran. La única
+      "mejora" es una encuesta de autorreporte (ENDES) que además es metodológicamente débil y se estancó desde 2020. Y en
+      la <b>meta de hechos que el propio MIMP se fijó</b> (violencia de pareja en 12 meses: 4,8% al 2026), el resultado real
+      va por encima (7,5% en 2024). Con las salvaguardas del caso (es un problema multisectorial), lo honesto es que <b>no
+      hay evidencia de que su acción esté reduciendo la violencia de género</b>.</div></details>
+
+    <details><summary>¿El ministerio se evalúa con el dato más cómodo?</summary>
+      <div class="fa-body">Es una lectura razonable. El sector destaca la caída de la prevalencia ENDES —una encuesta de
+      autorreporte que da la foto más favorable— mientras los <b>registros de hechos</b> (los que sus propias leyes definen
+      como violencia: física, psicológica, sexual, económica) no acompañan. Medirse con la encuesta y no con los hechos se
+      parece a una <b>autoevaluación complaciente</b>. Un indicador robusto de gestión debería anclarse en hechos y en el
+      cumplimiento de sus metas, no en percepciones autorreportadas.</div></details>
+
+    <details><summary>¿Por qué no confiar en que la violencia "cayó 13 puntos"?</summary>
       <div class="fa-body">Ese número viene de <b>un solo indicador</b>: la prevalencia total de la encuesta INEI–ENDES
       (65,4% en 2017 → 52,0% en 2024). Tiene tres problemas: (1) es <b>autorreporte</b> en una encuesta, no hechos
       registrados; (2) mide violencia sufrida <b>"alguna vez" en la vida</b>, muy sensible a la composición de la muestra;
