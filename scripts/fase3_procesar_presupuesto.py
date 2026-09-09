@@ -35,6 +35,7 @@ I_DEPT = 34
 I_FF = 36
 I_CAT = 42
 I_GEN = 46
+I_SUBGENDET = 50  # SUBGENERICA_DET_NOMBRE — "en qué" se gasta (p.ej. CAS, servicios básicos)
 I_PIA, I_PIM, I_CERT, I_COMP = 55, 56, 57, 58
 I_DEV_MESES = list(range(59, 71))  # ene..dic
 I_DEV_ANUAL, I_GIRADO = 71, 72
@@ -81,7 +82,9 @@ def main() -> None:
     por_ff = defaultdict(nuevo)
     por_cat = defaultdict(nuevo)
     por_dept = defaultdict(nuevo)
+    por_detalle = defaultdict(nuevo)  # "en qué" se gasta (subgenérica det: CAS, servicios, etc.)
     mensual = defaultdict(lambda: [0.0] * 12)  # anio -> devengado por mes
+    planilla_mensual = defaultdict(lambda: [0.0] * 12)  # gasto de personal por mes/año
     fecha_por_anio = {}
 
     for ruta in archivos:
@@ -102,8 +105,15 @@ def main() -> None:
                 acum(por_ff[(anio, fila[I_FF])], fila)
                 acum(por_cat[(anio, fila[I_CAT])], fila)
                 acum(por_dept[(anio, fila[I_DEPT])], fila)
+                acum(por_detalle[(anio, fila[I_SUBGENDET])], fila)
+                gen = fila[I_GEN].upper()
+                es_planilla = ("PERSONAL Y OBLIGACIONES" in gen
+                               or "CONTRATO ADMINISTRATIVO DE SERVICIOS" in fila[I_SUBGENDET].upper())
                 for i, ci in enumerate(I_DEV_MESES):
-                    mensual[anio][i] += f(fila[ci])
+                    v = f(fila[ci])
+                    mensual[anio][i] += v
+                    if es_planilla:
+                        planilla_mensual[anio][i] += v
                 n += 1
         print(f"[{anio}] {n:,} filas procesadas")
 
@@ -134,6 +144,7 @@ def main() -> None:
     escribir("presupuesto_mimp_por_fuente.csv", ["anio", "fuente_financiamiento"], por_ff)
     escribir("presupuesto_mimp_por_categoria.csv", ["anio", "categoria_gasto"], por_cat)
     escribir("presupuesto_mimp_por_departamento.csv", ["anio", "departamento_meta"], por_dept)
+    escribir("presupuesto_mimp_por_detalle_gasto.csv", ["anio", "detalle_gasto"], por_detalle)
 
     # --- JSON compacto para el tablero (03_analisis) ---
     def top_por_categoria(mapa, k=12):
@@ -161,6 +172,7 @@ def main() -> None:
                          "no_ejecutado": round(serie[a]["pim"] - serie[a]["dev"], 2),
                          "ejecucion_pct": ejec_pct(serie[a])} for a in anios],
         "mensual": {a: [round(v, 2) for v in mensual[a]] for a in anios},
+        "planilla_mensual": {a: [round(v, 2) for v in planilla_mensual[a]] for a in anios},
         "meses": MESES,
         "por_ue": top_por_categoria(por_ue),
         "por_programa": top_por_categoria(por_prog),
@@ -168,6 +180,7 @@ def main() -> None:
         "por_fuente": top_por_categoria(por_ff),
         "por_categoria": top_por_categoria(por_cat, k=6),
         "por_departamento": top_por_categoria(por_dept, k=15),
+        "por_detalle_gasto": top_por_categoria(por_detalle, k=12),
     }
     out_json = DIR_ANALISIS / "presupuesto_dashboard.json"
     out_json.write_text(json.dumps(dash, ensure_ascii=False, indent=2), encoding="utf-8")

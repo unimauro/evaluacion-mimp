@@ -1,81 +1,164 @@
-"""Fase 6 — Tablero de indicadores del MIMP (HTML standalone para GitHub Pages).
+"""Fase 6 — Portal/tablero de la evaluación del MIMP (HTML standalone, GitHub Pages).
 
-Lee 03_analisis/presupuesto_dashboard.json (Fase 3) y escribe un HTML autocontenido
-(documento completo) con la data inline y Chart.js (cdnjs). Incluye la sección de
-contraste de hipótesis H1–H6. No inventa: solo grafica lo procesado y marca lo pendiente.
+Integra:
+  - presupuesto (03_analisis/presupuesto_dashboard.json, Fase 3)
+  - prevalencia INEI-ENDES (01_data_cruda/endes_prevalencia_*.csv)
+  - rotación de titulares (01_data_cruda/titulares_mimp_confirmado_*.csv)
+  - marco normativo (01_data_cruda/normas_mimp_*.csv)
+Incluye Google Analytics (gtag), Open Graph, favicon, storytelling inicial y el
+contraste H1-H6. No inventa: grafica lo procesado y marca lo pendiente.
 
-Uso:  python scripts/fase6_tablero.py
-Salida: 04_entregables/tablero_mimp.html  y  docs/index.html (para GitHub Pages).
+Uso:  python scripts/fase6_tablero.py  → 04_entregables/tablero_mimp.html y docs/index.html
 """
 from __future__ import annotations
 
+import csv
+import glob
 import json
+from datetime import date
 
-from config import DIR_ANALISIS, DIR_ENTREGABLES, RAIZ
+from config import DIR_ANALISIS, DIR_ENTREGABLES, DIR_CRUDA, RAIZ
 
+GA_ID = "G-2CVE1EQ2L2"
 data = json.loads((DIR_ANALISIS / "presupuesto_dashboard.json").read_text(encoding="utf-8"))
+
+
+def leer_csv(patron):
+    arch = sorted(glob.glob(str(DIR_CRUDA / patron)))
+    if not arch:
+        return []
+    with open(arch[-1], encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+# --- ENDES: pivote año x tipo (solo cifras reales) ---
+endes_rows = leer_csv("endes_prevalencia_*.csv")
+endes = {"anios": [], "series": {}}
+if endes_rows:
+    tipos, por_anio = [], {}
+    for r in endes_rows:
+        try:
+            val = float(r["prevalencia_pct"])
+        except (ValueError, KeyError):
+            continue  # [NO DISPONIBLE] u otros
+        t = r["tipo_violencia"].strip().lower()
+        a = r["anio"].strip()
+        por_anio.setdefault(a, {})[t] = val
+        if t not in tipos:
+            tipos.append(t)
+    endes["anios"] = sorted(por_anio)
+    orden = [t for t in ["total", "psicologica", "psicológica", "fisica", "física", "sexual"] if t in tipos]
+    orden += [t for t in tipos if t not in orden]
+    endes["series"] = {t: [por_anio[a].get(t) for a in endes["anios"]] for t in orden}
+    endes["fuente"] = endes_rows[0].get("url", "")
+
+# --- Titulares (rotación) ---
+tit_rows = leer_csv("titulares_mimp_confirmado_*.csv")
+titulares = []
+for r in tit_rows:
+    ini, fin = r.get("fecha_inicio", "").strip(), r.get("fecha_fin", "").strip()
+    titulares.append({"nombre": r.get("nombre", "").strip(), "inicio": ini, "fin": fin})
+
+# --- Normas ---
+norm_rows = leer_csv("normas_mimp_*.csv")
+normas = [{"tipo": r.get("tipo", ""), "numero": r.get("numero", ""), "nombre": r.get("nombre", ""),
+           "anio": r.get("anio", ""), "url": r.get("url", "")} for r in norm_rows]
+
+payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas,
+           "generado": date.today().isoformat()}
 
 HTML = r"""<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Evaluación del MIMP 2017-2025</title>
-<meta name="description" content="Evaluación de la gestión del MIMP (pliego 039), 2017-2025: presupuesto, servicios, impacto e hipótesis, con datos oficiales.">
+<title>¿El MIMP redujo la violencia?</title>
+<meta name="description" content="Evaluación de la gestión del MIMP (pliego 039) 2017-2025: casi triplicó su presupuesto y lo ejecuta al 99%; la prevalencia de violencia de pareja cayó 13 puntos. ¿Mérito propio o contexto multisectorial?">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236d28d9'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%E2%99%80%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:title" content="¿El MIMP redujo la violencia, o solo gastó?">
+<meta property="og:description" content="El MIMP casi triplicó su presupuesto (S/ 426M→996M) y lo ejecuta al 99%. La prevalencia de violencia de pareja cayó de 65% a 52%. Evaluación con datos oficiales, 2017-2025.">
+<meta property="og:url" content="https://unimauro.github.io/evaluacion-mimp/">
+<meta property="og:image" content="https://unimauro.github.io/evaluacion-mimp/og.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="¿El MIMP redujo la violencia, o solo gastó?">
+<meta name="twitter:description" content="Evaluación con datos oficiales del MIMP 2017-2025: presupuesto, servicios, impacto e hipótesis.">
+<meta name="twitter:image" content="https://unimauro.github.io/evaluacion-mimp/og.svg">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=__GA__"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '__GA__');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
 :root{
-  --surface:#fcfcfb; --panel:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --muted:#8a8880;
-  --line:#e7e5df; --line-2:#d9d7cf; --accent:#1c5cab; --ground:#f3f1ec;
-  --good:#008300; --warn:#c98500; --crit:#e34948;
-  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#4a3aa7; --s7:#008300; --s8:#e34948;
+  --surface:#faf7fc; --panel:#ffffff; --ink:#1a1420; --ink-2:#5c5364; --muted:#8f869a;
+  --line:#ece5f2; --line-2:#ddd3e6; --accent:#6d28d9; --accent-2:#c0248f; --ground:#f2ecf7;
+  --good:#0a7d43; --warn:#b7791a; --crit:#d13b6a;
+  --s1:#6d28d9; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#c0248f; --s6:#2a78d6; --s7:#0a7d43; --s8:#d13b3b;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --surface:#161615; --panel:#1f1f1d; --ink:#f7f6f2; --ink-2:#c3c2b7; --muted:#8f8d84;
-  --line:#2e2e2b; --line-2:#3a3a36; --accent:#7fb0ee; --ground:#121211;
-  --good:#3faa3f; --warn:#e0a83a; --crit:#e66767;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#9085e9; --s7:#12a012; --s8:#e66767;
+  --surface:#15111b; --panel:#201a29; --ink:#f4f0f8; --ink-2:#c6bdd2; --muted:#948aa3;
+  --line:#2e2739; --line-2:#3c3448; --accent:#a78bfa; --accent-2:#ec7ac6; --ground:#120e18;
+  --good:#42ab68; --warn:#dda63a; --crit:#e56a91;
+  --s1:#a78bfa; --s2:#e8814f; --s3:#199e70; --s4:#c98500; --s5:#e267b3; --s6:#5b9bf0; --s7:#42ab68; --s8:#e46464;
 }}
 :root[data-theme="dark"]{
-  --surface:#161615; --panel:#1f1f1d; --ink:#f7f6f2; --ink-2:#c3c2b7; --muted:#8f8d84;
-  --line:#2e2e2b; --line-2:#3a3a36; --accent:#7fb0ee; --ground:#121211;
-  --good:#3faa3f; --warn:#e0a83a; --crit:#e66767;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#9085e9; --s7:#12a012; --s8:#e66767;
+  --surface:#15111b; --panel:#201a29; --ink:#f4f0f8; --ink-2:#c6bdd2; --muted:#948aa3;
+  --line:#2e2739; --line-2:#3c3448; --accent:#a78bfa; --accent-2:#ec7ac6; --ground:#120e18;
+  --good:#42ab68; --warn:#dda63a; --crit:#e56a91;
+  --s1:#a78bfa; --s2:#e8814f; --s3:#199e70; --s4:#c98500; --s5:#e267b3; --s6:#5b9bf0; --s7:#42ab68; --s8:#e46464;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--surface);color:var(--ink);
-  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
-.wrap{max-width:1180px;margin:0 auto;padding:32px 24px 72px}
-header.top{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+.layout{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  background:var(--panel);border-right:1px solid var(--line);padding:22px 18px}
+aside .brand{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:19px;line-height:1.1;letter-spacing:-.01em}
+aside .brand span{color:var(--accent)}
+aside .tag{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+aside nav{margin-top:22px;display:flex;flex-direction:column;gap:2px}
+aside nav a{font-size:13.5px;color:var(--ink-2);text-decoration:none;padding:8px 10px;border-radius:8px}
+aside nav a:hover{background:var(--ground);color:var(--ink)}
+aside nav a.sec{margin-top:12px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);pointer-events:none;padding-bottom:2px}
+aside .foot{margin-top:24px;font-size:11.5px;color:var(--muted);line-height:1.5}
+main{min-width:0;padding:34px 40px 80px;max-width:1080px}
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
-h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(30px,5vw,48px);
-  line-height:1.04;margin:.22em 0 .15em;text-wrap:balance;letter-spacing:-.01em}
-.sub{color:var(--ink-2);max-width:72ch;font-size:15.5px}
-.src{color:var(--muted);font-size:12.5px;margin-top:10px}
-.src code{background:var(--ground);padding:1px 5px;border-radius:4px;font-size:12px}
-nav.jump{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
-nav.jump a{font-size:12.5px;color:var(--ink-2);text-decoration:none;border:1px solid var(--line-2);
-  padding:5px 11px;border-radius:20px}
-nav.jump a:hover{border-color:var(--accent);color:var(--accent)}
+h1{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:clamp(30px,4.6vw,50px);line-height:1.02;margin:.2em 0 .2em;text-wrap:balance;letter-spacing:-.015em}
+.dek{color:var(--ink-2);max-width:64ch;font-size:17px;line-height:1.5}
+.src{color:var(--muted);font-size:12.5px;margin-top:14px}
+.src code{background:var(--ground);padding:1px 5px;border-radius:4px}
 
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin:26px 0 8px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-.kpi .k-label{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.kpi .k-val{font-family:"Fraunces",Georgia,serif;font-size:29px;font-weight:600;margin-top:6px;
-  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.kpi .k-note{font-size:12.5px;color:var(--ink-2);margin-top:3px}
-.k-up{color:var(--good)} .k-flat{color:var(--warn)}
+.story{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;margin:30px 0 10px;align-items:stretch}
+.story .tell{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+.story .tell h2{margin-top:0}
+.story .tell p{color:var(--ink-2);font-size:14.5px}
+.story .tell .big{font-family:"Fraunces",Georgia,serif;font-size:19px;color:var(--ink);line-height:1.4;font-weight:600;margin:0 0 12px}
+.story .tell .big b.up{color:var(--good)} .story .tell .big b.dn{color:var(--accent-2)}
+.story .viz{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;display:flex;flex-direction:column}
+.story .viz h3{margin:0 0 2px;font-size:14px} .story .viz p.cap{margin:0 0 8px;font-size:12px;color:var(--muted)}
+.story .viz .chart-box{flex:1;min-height:250px}
 
-section{margin-top:44px;scroll-margin-top:20px}
-h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:23px;margin:0 0 4px;letter-spacing:-.01em}
-.lead{color:var(--ink-2);font-size:14px;margin:0 0 18px;max-width:80ch}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:13px;margin:8px 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.kpi .k-label{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi .k-val{font-family:"Fraunces",Georgia,serif;font-size:27px;font-weight:600;margin-top:5px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi .k-note{font-size:12px;color:var(--ink-2);margin-top:2px}
+.k-up{color:var(--good)} .k-dn{color:var(--accent-2)} .k-flat{color:var(--warn)}
+
+section{margin-top:46px;scroll-margin-top:16px}
+h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+.lead{color:var(--ink-2);font-size:14px;margin:0 0 18px;max-width:82ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:17px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:17px 18px 13px}
 .card h3{font-size:14.5px;font-weight:700;margin:0 0 2px}
 .card p.cap{font-size:12.5px;color:var(--muted);margin:0 0 12px}
 .chart-box{position:relative;height:300px}
@@ -84,208 +167,293 @@ h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:23px;margin:0 
 
 .hyp{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
 .hcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 17px;border-left:4px solid var(--muted)}
-.hcard.v-no{border-left-color:var(--good)}
-.hcard.v-si{border-left-color:var(--crit)}
-.hcard.v-parc{border-left-color:var(--warn)}
-.hcard.v-pend{border-left-color:var(--line-2)}
+.hcard.v-no{border-left-color:var(--good)} .hcard.v-si{border-left-color:var(--crit)}
+.hcard.v-parc{border-left-color:var(--warn)} .hcard.v-pend{border-left-color:var(--line-2)}
 .hcard .hid{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
 .hcard h4{margin:4px 0 6px;font-size:15px;font-weight:700;line-height:1.3}
-.verdict{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-  padding:3px 9px;border-radius:20px;margin-bottom:8px}
-.verdict.v-no{background:rgba(0,131,0,.13);color:var(--good)}
-.verdict.v-si{background:rgba(227,73,72,.14);color:var(--crit)}
-.verdict.v-parc{background:rgba(201,133,0,.15);color:var(--warn)}
+.verdict{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:20px;margin-bottom:8px}
+.verdict.v-no{background:rgba(10,125,67,.14);color:var(--good)}
+.verdict.v-si{background:rgba(207,59,57,.14);color:var(--crit)}
+.verdict.v-parc{background:rgba(183,121,26,.16);color:var(--warn)}
 .verdict.v-pend{background:var(--ground);color:var(--muted)}
 .hcard p{margin:0;font-size:13.2px;color:var(--ink-2)}
 
-.note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);
-  border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
+.note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
 .note b{color:var(--ink)}
-footer{margin-top:52px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12.5px}
-.toggle{position:fixed;top:14px;right:14px;background:var(--panel);border:1px solid var(--line-2);
-  color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:5}
-@media (max-width:640px){.wrap{padding:22px 16px 56px}}
+table.norm{width:100%;border-collapse:collapse;font-size:13px}
+table.norm th,table.norm td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+table.norm th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+table.norm a{color:var(--accent);text-decoration:none}
+.tablewrap{overflow-x:auto}
+footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12.5px}
+.toggle{position:fixed;top:12px;right:12px;background:var(--panel);border:1px solid var(--line-2);color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:6}
+@media (max-width:860px){.layout{grid-template-columns:1fr}aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+  aside nav{flex-direction:row;flex-wrap:wrap}aside .foot{display:none}main{padding:24px 18px 60px}.story{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<button class="toggle" id="tgl" aria-label="Cambiar tema">Tema</button>
-<div class="wrap">
-  <header class="top">
-    <div class="eyebrow">Evaluación de la gestión pública · Pliego 039</div>
-    <h1>¿El MIMP redujo la violencia, o solo gastó?</h1>
-    <p class="sub">Evaluación de la gestión del Ministerio de la Mujer y Poblaciones Vulnerables,
-      2017&ndash;2025, con datos abiertos oficiales. Distingue la <b>eficacia presupuestal propia</b>
-      del MIMP de su <b>contribución</b> a un problema multisectorial. Vista previa: la dimensión
-      presupuestal está completa; servicios, impacto, personal y normativa están en recolección.</p>
-    <p class="src">Fuentes: MEF Datos Abiertos (presupuesto, pliego <code>039</code>, descarga <code>2026-09-08</code>);
-      INEI&ndash;ENDES, Portal Warmi Ñan, Observatorio y PTE (en proceso). Soles corrientes.</p>
-    <nav class="jump">
-      <a href="#presupuesto">Presupuesto</a><a href="#gasto">Composición del gasto</a>
-      <a href="#territorio">Territorio</a><a href="#hipotesis">Hipótesis H1&ndash;H6</a>
+<button class="toggle" id="tgl" aria-label="Cambiar tema">◐ Tema</button>
+<div class="layout">
+  <aside>
+    <div class="brand">Evaluación <span>MIMP</span></div>
+    <div class="tag">Pliego 039 · 2017–2025</div>
+    <nav>
+      <a href="#inicio">Resumen</a>
+      <a class="sec">Dimensiones</a>
+      <a href="#presupuesto">Presupuesto y ejecución</a>
+      <a href="#planilla">Personal y planilla</a>
+      <a href="#gasto">¿En qué se gasta?</a>
+      <a href="#territorio">Territorio</a>
+      <a href="#impacto">Impacto (ENDES)</a>
+      <a href="#gestion">Gestión y rotación</a>
+      <a href="#normas">Marco normativo</a>
+      <a class="sec">Conclusión</a>
+      <a href="#hipotesis">Hipótesis H1–H6</a>
     </nav>
-  </header>
+    <div class="foot">Datos oficiales: MEF, INEI–ENDES, Portal Warmi Ñan, El Peruano.<br>Descarga 2026-09-08. Reproducible.</div>
+  </aside>
 
-  <div class="kpis" id="kpis"></div>
+  <main id="inicio">
+    <div class="eyebrow">Evaluación de la gestión pública</div>
+    <h1>¿El MIMP redujo la violencia, o solo gastó?</h1>
+    <p class="dek">Entre 2017 y 2025 el Ministerio de la Mujer <b>casi triplicó su presupuesto</b> y lo ejecuta
+      casi al 100%. En el mismo periodo, la prevalencia de violencia de pareja <b>cayó 13 puntos</b>. La pregunta
+      no es si gastó bien, sino <b>cuánto de esa mejora es mérito propio</b> y cuánto es un problema multisectorial.</p>
+    <p class="src">Fuentes: MEF Datos Abiertos (pliego <code>039</code>), INEI–ENDES, Portal Warmi Ñan, El Peruano · descarga <code>2026-09-08</code> · soles corrientes.</p>
+
+    <div class="story">
+      <div class="tell">
+        <h2>La historia en tres cifras</h2>
+        <p class="big">1 · El presupuesto <b class="up">creció +134%</b> (S/ 426 M → 996 M) y la ejecución fue
+          <b class="up">96–99%</b> todos los años: el MIMP <b>no subejecuta</b>.</p>
+        <p class="big">2 · La prevalencia de violencia de pareja <b class="dn">bajó de 65% a 52%</b> (−13 pp, INEI–ENDES):
+          el problema <b>sí cede</b>, sobre todo la psicológica.</p>
+        <p class="big">3 · Pero hubo <b class="dn">~15 ministras/os en 9 años</b>: la conducción es
+          <b>inestable</b> pese a un marco normativo sólido.</p>
+        <p style="margin-bottom:0"><b>Salvaguarda:</b> la caída de la violencia es multisectorial (contribución, no
+          atribución); los registros administrativos no se comparan con la prevalencia poblacional.</p>
+      </div>
+      <div class="viz">
+        <h3>Gasto que sube, violencia que baja</h3>
+        <p class="cap">Devengado del MIMP (millones S/) vs. prevalencia ENDES (%). Dos escalas, dos historias.</p>
+        <div class="chart-box"><canvas id="c_story"></canvas></div>
+      </div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+  </main>
+</div>
+
+<div class="layout"><aside style="visibility:hidden"></aside><main style="padding-top:0">
 
   <section id="presupuesto">
     <h2>Presupuesto y ejecución</h2>
-    <p class="lead">PIA (inicial), PIM (modificado) y devengado por año, con el % de ejecución (devengado/PIM)
-      y el monto no ejecutado. Nota: el presupuesto salta de S/ 444 M (2018) a S/ 733 M (2019).</p>
+    <p class="lead">PIA (inicial), PIM (modificado) y devengado por año, con el % de ejecución y el monto no ejecutado.
+      El presupuesto salta de S/ 444 M (2018) a S/ 733 M (2019).</p>
     <div class="grid">
-      <div class="card full"><h3>PIA · PIM · Devengado por año</h3>
-        <p class="cap">Millones de soles corrientes</p><div class="chart-box tall"><canvas id="c_serie"></canvas></div></div>
-      <div class="card"><h3>Ejecución presupuestal</h3>
-        <p class="cap">Devengado / PIM (%)</p><div class="chart-box"><canvas id="c_ejec"></canvas></div></div>
-      <div class="card"><h3>Presupuesto no ejecutado</h3>
-        <p class="cap">PIM − Devengado (millones S/)</p><div class="chart-box"><canvas id="c_noejec"></canvas></div></div>
+      <div class="card full"><h3>PIA · PIM · Devengado por año</h3><p class="cap">Millones S/ corrientes</p><div class="chart-box tall"><canvas id="c_serie"></canvas></div></div>
+      <div class="card"><h3>Ejecución presupuestal</h3><p class="cap">Devengado / PIM (%)</p><div class="chart-box"><canvas id="c_ejec"></canvas></div></div>
+      <div class="card"><h3>Presupuesto no ejecutado</h3><p class="cap">PIM − Devengado (millones S/)</p><div class="chart-box"><canvas id="c_noejec"></canvas></div></div>
+    </div>
+  </section>
+
+  <section id="planilla">
+    <h2>Personal y planilla</h2>
+    <p class="lead">Gasto en planilla (personal nombrado + CAS) mes a mes por año. El número de trabajadores por
+      régimen (PTE) está en recolección; aquí se muestra el <b>costo</b> de la planilla, que sí es trazable al MEF.</p>
+    <div class="grid">
+      <div class="card full"><h3>Gasto de planilla mes a mes</h3><p class="cap">Devengado en personal + CAS, millones S/ · línea gruesa = último año</p><div class="chart-box tall"><canvas id="c_planilla"></canvas></div></div>
     </div>
   </section>
 
   <section id="gasto">
-    <h2>¿En qué se ejecuta el gasto?</h2>
-    <p class="lead">Devengado por unidad ejecutora, programa presupuestal, genérica de gasto,
-      fuente de financiamiento y categoría económica.</p>
+    <h2>¿En qué se gasta?</h2>
+    <p class="lead">Devengado por genérica, por rubro de detalle (aquí aparece el CAS y las contrataciones de
+      servicios), por unidad ejecutora, programa y fuente.</p>
     <div class="grid">
-      <div class="card"><h3>Por unidad ejecutora</h3><p class="cap">Devengado, millones S/</p><div class="chart-box tall"><canvas id="c_ue"></canvas></div></div>
-      <div class="card"><h3>Por programa presupuestal</h3><p class="cap">Devengado, millones S/ (top)</p><div class="chart-box tall"><canvas id="c_prog"></canvas></div></div>
-      <div class="card"><h3>Por genérica de gasto</h3><p class="cap">Devengado, millones S/</p><div class="chart-box tall"><canvas id="c_gen"></canvas></div></div>
-      <div class="card"><h3>Por fuente de financiamiento</h3><p class="cap">Devengado, millones S/</p><div class="chart-box tall"><canvas id="c_ff"></canvas></div></div>
-      <div class="card"><h3>Corriente vs. capital</h3><p class="cap">Devengado, millones S/</p><div class="chart-box"><canvas id="c_cat"></canvas></div></div>
-      <div class="card"><h3>Estacionalidad del devengado</h3><p class="cap">Devengado mensual, millones S/</p><div class="chart-box"><canvas id="c_mens"></canvas></div></div>
+      <div class="card"><h3>En qué se gasta (detalle)</h3><p class="cap">Devengado por rubro, millones S/ (top)</p><div class="chart-box tall"><canvas id="c_detalle"></canvas></div></div>
+      <div class="card"><h3>Por genérica de gasto</h3><p class="cap">Millones S/</p><div class="chart-box tall"><canvas id="c_gen"></canvas></div></div>
+      <div class="card"><h3>Por unidad ejecutora</h3><p class="cap">Millones S/</p><div class="chart-box tall"><canvas id="c_ue"></canvas></div></div>
+      <div class="card"><h3>Por programa presupuestal</h3><p class="cap">Millones S/ (top)</p><div class="chart-box tall"><canvas id="c_prog"></canvas></div></div>
+      <div class="card"><h3>Por fuente de financiamiento</h3><p class="cap">Millones S/</p><div class="chart-box tall"><canvas id="c_ff"></canvas></div></div>
+      <div class="card"><h3>Corriente vs. capital</h3><p class="cap">Millones S/</p><div class="chart-box"><canvas id="c_cat"></canvas></div></div>
     </div>
   </section>
 
   <section id="territorio">
     <h2>Distribución territorial del gasto</h2>
-    <p class="lead">Devengado acumulado 2017&ndash;2025 por departamento (departamento de la meta).
-      Insumo para brechas de cobertura frente a la incidencia (H4).</p>
-    <div class="grid"><div class="card full"><h3>Devengado por departamento</h3>
-      <p class="cap">Acumulado del periodo, millones S/ (top 15)</p>
-      <div class="chart-box" style="height:440px"><canvas id="c_dept"></canvas></div></div></div>
+    <p class="lead">Devengado acumulado 2017–2025 por departamento (departamento de la meta). Insumo para brechas
+      de cobertura frente a la incidencia (H4).</p>
+    <div class="grid"><div class="card full"><h3>Devengado por departamento</h3><p class="cap">Acumulado, millones S/ (top 15)</p><div class="chart-box" style="height:440px"><canvas id="c_dept"></canvas></div></div></div>
+  </section>
+
+  <section id="impacto">
+    <h2>Impacto: prevalencia de violencia (ENDES)</h2>
+    <p class="lead">Prevalencia de violencia contra la mujer ejercida alguna vez por la pareja (INEI–ENDES, mujeres
+      15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp.</p>
+    <div class="grid">
+      <div class="card full"><h3>Prevalencia por tipo de violencia</h3><p class="cap">% de mujeres, por año</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
+    </div>
+    <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
+  </section>
+
+  <section id="gestion">
+    <h2>Gestión y rotación de titulares</h2>
+    <p class="lead">Duración de cada gestión ministerial. Barras rojas: gestiones de menos de 90 días. La rotación
+      extrema erosiona la continuidad de política (H6).</p>
+    <div class="grid"><div class="card full"><h3>Días en el cargo por titular</h3><p class="cap">Ministras/os del MIMP, 2016–2025</p><div class="chart-box" style="height:460px"><canvas id="c_titulares"></canvas></div></div></div>
+  </section>
+
+  <section id="normas">
+    <h2>Marco normativo impulsado</h2>
+    <p class="lead">Leyes y políticas clave donde el MIMP es rector o proponente. El marco existe y es sostenido;
+      el contraste está entre esta continuidad normativa y la inestabilidad de gestión.</p>
+    <div class="card full"><div class="tablewrap"><table class="norm" id="t_normas"><thead><tr><th>Tipo</th><th>Número</th><th>Nombre</th><th>Año</th><th>Fuente</th></tr></thead><tbody></tbody></table></div></div>
   </section>
 
   <section id="hipotesis">
-    <h2>Contraste de hipótesis H1&ndash;H6</h2>
-    <p class="lead">Veredicto preliminar por hipótesis. Verde = no se sostiene; rojo = se sostiene;
-      ámbar = parcial; gris = datos en recolección. Solo H3 tiene ya evidencia dura (presupuesto).</p>
+    <h2>Contraste de hipótesis H1–H6</h2>
+    <p class="lead">Verde = no se sostiene · rojo = se sostiene · ámbar = parcial · gris = datos en recolección.</p>
     <div class="hyp">
+      <div class="hcard v-no"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
+        <span class="verdict v-no">No se sostiene (en prevalencia)</span>
+        <p>La prevalencia ENDES <b>cayó 13 pp</b> (65,4%→52,0%, 2017→2024), sobre todo psicológica y física.
+        Pendiente: feminicidios de contexto. La mejora es multisectorial (contribución).</p></div>
       <div class="hcard v-parc"><div class="hid">H3 · Presupuesto</div><h4>El presupuesto es bajo y/o se subejecuta</h4>
         <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p>La <b>subejecución NO se sostiene</b>: la ejecución fue 96,4%&ndash;99,0% en todo el periodo.
-        El PIA <b>creció +134%</b> nominal (2017&rarr;2025). Lo &laquo;bajo&raquo; solo se sostiene como
-        <b>peso en el presupuesto nacional</b> (~0,4%), pendiente de calcular el denominador.</p></div>
-      <div class="hcard v-pend"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
-        <span class="verdict v-pend">Datos en recolección</span>
-        <p>Requiere la serie de prevalencia INEI&ndash;ENDES por tipo (psicológica, física, sexual) y
-        feminicidios de contexto. Recolección en curso. <b>Salvaguarda:</b> contribución, no atribución.</p></div>
+        <p>Subejecución <b>NO</b>: ejecutó 96–99%. PIA <b>+134%</b>. "Bajo" solo como peso del presupuesto
+        nacional (~0,4%), pendiente de cerrar el denominador.</p></div>
+      <div class="hcard v-parc"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
+        <span class="verdict v-parc">Se sostiene parcialmente</span>
+        <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
+        (5 en 17 meses bajo un gobierno): inestabilidad de conducción frente a continuidad normativa.</p></div>
       <div class="hcard v-pend"><div class="hid">H2 · Servicios</div><h4>La producción de servicios está estancada</h4>
         <span class="verdict v-pend">Datos en recolección</span>
-        <p>Requiere la serie de atenciones CEM por tipo de violencia y Línea 100 (Portal Warmi Ñan).
-        Recolección en curso.</p></div>
-      <div class="hcard v-pend"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
-        <span class="verdict v-pend">Parcial</span>
-        <p>Ya hay gasto por departamento (abajo); falta cruzar con N.º de CEM e incidencia por región.</p></div>
+        <p>Requiere atenciones CEM por tipo y Línea 100 (Portal Warmi Ñan). En curso.</p></div>
+      <div class="hcard v-parc"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
+        <span class="verdict v-parc">Parcial</span>
+        <p>Gasto muy concentrado en Lima (ver territorio); falta cruzar con N.º de CEM e incidencia por región.</p></div>
       <div class="hcard v-pend"><div class="hid">H5 · Calidad</div><h4>Problemas de calidad/idoneidad en la atención</h4>
         <span class="verdict v-pend">Datos en recolección</span>
-        <p>Requiere personal por régimen (PTE) e informes de supervisión de CEM (Defensoría N.º 255/179).</p></div>
-      <div class="hcard v-pend"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
-        <span class="verdict v-pend">Datos en recolección</span>
-        <p>Insumos: rotación de titulares (~13 en ~6 años, a confirmar con RS) y marco normativo impulsado
-        (Ley 30364 y modif.). Recolección en curso.</p></div>
-    </div>
-    <div class="note" style="margin-top:16px">
-      <b>Contribución, no atribución.</b> Los feminicidios, violaciones y desapariciones son contexto
-      multisectorial (investiga el Ministerio Público, sanciona el Poder Judicial, conduce Mininter/PNP);
-      no se atribuyen al MIMP. Los registros administrativos (atenciones) no son comparables con la
-      prevalencia poblacional (INEI&ndash;ENDES). Cifras en soles corrientes.
+        <p>Requiere personal por régimen (PTE) e informes de supervisión de CEM (Defensoría 255/179). En curso.</p></div>
     </div>
   </section>
 
   <footer>
-    Repositorio <b>evaluacion-mimp</b> · vista previa desplegada en GitHub Pages. Toda cifra es trazable a su
-    fuente oficial con fecha de descarga. Regla del proyecto: ninguna cifra sin fuente + URL + fecha.
-    Dimensión presupuestal: MEF Datos Abiertos, pliego 039, 2017&ndash;2025.
+    Repositorio <b>evaluacion-mimp</b> · desplegado en GitHub Pages. Toda cifra es trazable a su fuente oficial con
+    fecha de descarga 2026-09-08. Ninguna cifra sin fuente + URL + fecha. Analítica: Google Analytics.
   </footer>
-</div>
+</main></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const DASH = /*__DATA__*/;
+const P = /*__DATA__*/;
+const D = P.presupuesto, EN = P.endes, TIT = P.titulares, NOR = P.normas;
 const css = v => getComputedStyle(document.body).getPropertyValue(v).trim();
-const SER = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
-const M = x => x/1e6;
-const fmtM = x => 'S/ ' + (Math.round(x/1e5)/10).toLocaleString('es-PE') + ' M';
-const anios = DASH.meta.periodo;
-let charts = [];
-function baseOpts(extra){
-  const ink=css('--ink'), ink2=css('--ink-2'), line=css('--line');
-  return Object.assign({responsive:true,maintainAspectRatio:false,
-    interaction:{mode:'index',intersect:false},
-    plugins:{legend:{labels:{color:ink2,boxWidth:12,boxHeight:12,usePointStyle:true,font:{family:'Public Sans',size:12}}},
+const SER=['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'], sc=i=>css(SER[i%8]);
+const M=x=>x/1e6, fmtM=x=>'S/ '+(Math.round(x/1e5)/10).toLocaleString('es-PE')+' M';
+const anios=D.meta.periodo;
+let charts=[];
+function base(extra){const ink=css('--ink'),ink2=css('--ink-2'),line=css('--line');
+  return Object.assign({responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{labels:{color:ink2,boxWidth:12,boxHeight:12,usePointStyle:true,font:{family:'Public Sans',size:11}}},
       tooltip:{backgroundColor:css('--panel'),titleColor:ink,bodyColor:ink2,borderColor:line,borderWidth:1,padding:10,usePointStyle:true,
         callbacks:{label:c=>` ${c.dataset.label}: ${fmtM((c.parsed.y!=null?c.parsed.y:c.parsed.x)*1e6)}`}}},
     scales:{x:{grid:{display:false},ticks:{color:ink2,font:{size:12}}},
-      y:{grid:{color:line},ticks:{color:ink2,font:{size:12},callback:v=>v.toLocaleString('es-PE')},
-         title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}}, extra||{});
+      y:{grid:{color:line},ticks:{color:ink2,font:{size:12},callback:v=>v.toLocaleString('es-PE')},title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}},extra||{});
 }
-const sc = i => css(SER[i%8]);
+function stacked(cv,obj){const ds=obj.labels.map((lab,i)=>({label:lab,data:anios.map(a=>M((obj.por_anio[a]||{})[lab]||0)),
+  backgroundColor:sc(i),borderRadius:2,borderWidth:1,borderColor:css('--panel')}));
+  const o=base({scales:{x:{stacked:true,grid:{display:false},ticks:{color:css('--ink-2')}},
+    y:{stacked:true,grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>v.toLocaleString('es-PE')},title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}});
+  o.plugins.legend.labels.font.size=10;
+  return new Chart(cv,{type:'bar',data:{labels:anios,datasets:ds},options:o});}
+function diasEntre(a,b){if(!a)return null;const d1=new Date(a),d2=b?new Date(b):new Date('2025-08-31');
+  return Math.max(1,Math.round((d2-d1)/86400000));}
+
 function build(){
-  charts.forEach(c=>c.destroy()); charts=[];
-  const S=DASH.serie_anual, pN=S[S.length-1], p0=S[0];
-  const crecPIA=(pN.pia/p0.pia-1)*100, ejecProm=S.reduce((a,b)=>a+b.ejecucion_pct,0)/S.length;
+  charts.forEach(c=>c.destroy());charts=[];
+  const S=D.serie_anual,pN=S[S.length-1],p0=S[0];
+  const crec=(pN.pia/p0.pia-1)*100,ejecProm=S.reduce((a,b)=>a+b.ejecucion_pct,0)/S.length;
+  const enTot=EN.series&&(EN.series['total']||EN.series['Total']);
+  const cae = enTot? (enTot[0]-enTot[enTot.length-1]).toFixed(1):null;
   document.getElementById('kpis').innerHTML=[
     ['PIA '+pN.anio,fmtM(pN.pia),'inicial de apertura'],
-    ['PIM '+pN.anio,fmtM(pN.pim),'presupuesto modificado'],
-    ['Ejecución '+pN.anio,pN.ejecucion_pct.toFixed(1)+'%','<span class="k-up">devengado/PIM</span>'],
-    ['Crecim. PIA '+p0.anio.slice(2)+'→'+pN.anio.slice(2),'<span class="k-up">+'+crecPIA.toFixed(0)+'%</span>','nominal, soles corrientes'],
-    ['Ejecución promedio',ejecProm.toFixed(1)+'%','<span class="k-flat">alta y estable</span>'],
+    ['Ejecución '+pN.anio,pN.ejecucion_pct.toFixed(1)+'%','<span class="k-up">no subejecuta</span>'],
+    ['Crecim. PIA '+p0.anio.slice(2)+'→'+pN.anio.slice(2),'<span class="k-up">+'+crec.toFixed(0)+'%</span>','nominal'],
+    enTot?['Prevalencia ENDES','<span class="k-dn">−'+cae+' pp</span>',enTot[0]+'% → '+enTot[enTot.length-1]+'%']:['Prevalencia ENDES','—','en proceso'],
+    ['Titulares 2016–25','<span class="k-dn">'+TIT.length+'</span>','rotación alta'],
   ].map(k=>`<div class="kpi"><div class="k-label">${k[0]}</div><div class="k-val">${k[1]}</div><div class="k-note">${k[2]}</div></div>`).join('');
+
+  // Story: dual axis (excepción consciente: dos historias, gasto vs prevalencia)
+  if(enTot){
+    const o=base();o.plugins.legend.display=true;o.interaction.mode='index';
+    o.scales.y.title.text='Devengado (M S/)';
+    o.scales.y1={position:'right',grid:{drawOnChartArea:false},ticks:{color:css('--accent-2'),callback:v=>v+'%'},
+      title:{display:true,text:'Prevalencia (%)',color:css('--accent-2'),font:{size:11}},suggestedMin:40,suggestedMax:70};
+    o.plugins.tooltip.callbacks.label=c=>c.dataset.yAxisID==='y1'?` ${c.dataset.label}: ${c.parsed.y}%`:` ${c.dataset.label}: ${fmtM(c.parsed.y*1e6)}`;
+    charts.push(new Chart(c_story,{data:{labels:anios,datasets:[
+      {type:'bar',label:'Devengado',data:S.map(r=>M(r.devengado)),backgroundColor:sc(0),borderRadius:3,order:2},
+      {type:'line',label:'Prevalencia ENDES',yAxisID:'y1',data:anios.map(a=>{const i=EN.anios.indexOf(a);return i>=0?enTot[i]:null;}),
+        borderColor:css('--accent-2'),backgroundColor:'transparent',borderWidth:2.4,pointRadius:3,tension:.25,spanGaps:true,order:1}]},options:o}));
+  }
 
   charts.push(new Chart(c_serie,{type:'bar',data:{labels:anios,datasets:[
     {label:'PIA',data:S.map(r=>M(r.pia)),backgroundColor:sc(0),borderRadius:3},
     {label:'PIM',data:S.map(r=>M(r.pim)),backgroundColor:sc(1),borderRadius:3},
-    {label:'Devengado',data:S.map(r=>M(r.devengado)),backgroundColor:sc(2),borderRadius:3}]},options:baseOpts()}));
+    {label:'Devengado',data:S.map(r=>M(r.devengado)),backgroundColor:sc(2),borderRadius:3}]},options:base()}));
+  charts.push(new Chart(c_ejec,{type:'line',data:{labels:anios,datasets:[{label:'Ejecución %',data:S.map(r=>r.ejecucion_pct),borderColor:sc(2),borderWidth:2,pointRadius:4,pointBackgroundColor:sc(2),tension:.25}]},
+    options:(()=>{const o=base();o.plugins.legend.display=false;o.plugins.tooltip.callbacks.label=c=>` Ejecución: ${c.parsed.y.toFixed(1)}%`;o.scales.y.title.text='%';o.scales.y.suggestedMin=90;o.scales.y.suggestedMax=100;o.scales.y.ticks.callback=v=>v+'%';return o;})()}));
+  charts.push(new Chart(c_noejec,{type:'bar',data:{labels:anios,datasets:[{label:'No ejecutado',data:S.map(r=>M(r.no_ejecutado)),backgroundColor:sc(7),borderRadius:3}]},
+    options:(()=>{const o=base();o.plugins.legend.display=false;return o;})()}));
 
-  charts.push(new Chart(c_ejec,{type:'line',data:{labels:anios,datasets:[
-    {label:'Ejecución %',data:S.map(r=>r.ejecucion_pct),borderColor:sc(2),borderWidth:2,pointRadius:4,pointBackgroundColor:sc(2),tension:.25}]},
-    options:(()=>{const o=baseOpts();o.plugins.legend.display=false;o.plugins.tooltip.callbacks.label=c=>` Ejecución: ${c.parsed.y.toFixed(1)}%`;
-    o.scales.y.title.text='%';o.scales.y.suggestedMin=90;o.scales.y.suggestedMax=100;o.scales.y.ticks.callback=v=>v+'%';return o;})()}));
+  // Planilla mensual
+  charts.push(new Chart(c_planilla,{type:'line',data:{labels:D.meses,datasets:anios.map((a,i)=>({label:a,data:(D.planilla_mensual[a]||[]).map(M),
+    borderColor:sc(i),borderWidth:a===anios[anios.length-1]?2.6:1.2,pointRadius:0,tension:.3}))},
+    options:(()=>{const o=base();o.plugins.legend.labels.font.size=10;o.interaction.mode='nearest';o.scales.y.title.text='Millones S/ / mes';return o;})()}));
 
-  charts.push(new Chart(c_noejec,{type:'bar',data:{labels:anios,datasets:[
-    {label:'No ejecutado',data:S.map(r=>M(r.no_ejecutado)),backgroundColor:sc(7),borderRadius:3}]},
-    options:(()=>{const o=baseOpts();o.plugins.legend.display=false;return o;})()}));
+  charts.push(stacked(c_detalle,D.por_detalle_gasto));
+  charts.push(stacked(c_gen,D.por_generica));
+  charts.push(stacked(c_ue,D.por_ue));
+  charts.push(stacked(c_prog,D.por_programa));
+  charts.push(stacked(c_ff,D.por_fuente));
+  charts.push(stacked(c_cat,D.por_categoria));
 
-  function stacked(canvas,obj){
-    const ds=obj.labels.map((lab,i)=>({label:lab,data:anios.map(a=>M((obj.por_anio[a]||{})[lab]||0)),
-      backgroundColor:sc(i),borderRadius:2,borderWidth:1,borderColor:css('--panel')}));
-    const o=baseOpts({scales:{x:{stacked:true,grid:{display:false},ticks:{color:css('--ink-2')}},
-      y:{stacked:true,grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>v.toLocaleString('es-PE')},
-         title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}});
-    o.plugins.legend.labels.font.size=11;
-    return new Chart(canvas,{type:'bar',data:{labels:anios,datasets:ds},options:o});
-  }
-  charts.push(stacked(c_ue,DASH.por_ue));
-  charts.push(stacked(c_prog,DASH.por_programa));
-  charts.push(stacked(c_gen,DASH.por_generica));
-  charts.push(stacked(c_ff,DASH.por_fuente));
-  charts.push(stacked(c_cat,DASH.por_categoria));
-
-  charts.push(new Chart(c_mens,{type:'line',data:{labels:DASH.meses,datasets:anios.map((a,i)=>({
-    label:a,data:DASH.mensual[a].map(M),borderColor:sc(i),borderWidth:a===anios[anios.length-1]?2.4:1.2,
-    pointRadius:0,tension:.35}))},options:(()=>{const o=baseOpts();o.plugins.legend.labels.font.size=10;o.interaction.mode='nearest';return o;})()}));
-
-  const dep=DASH.por_departamento, acc=dep.labels.map(l=>anios.reduce((s,a)=>s+((dep.por_anio[a]||{})[l]||0),0));
-  charts.push(new Chart(c_dept,{type:'bar',data:{labels:dep.labels,datasets:[
-    {label:'Devengado 2017–2025',data:acc.map(M),backgroundColor:sc(0),borderRadius:3}]},
-    options:(()=>{const o=baseOpts({indexAxis:'y'});o.plugins.legend.display=false;
+  const dep=D.por_departamento,acc=dep.labels.map(l=>anios.reduce((s,a)=>s+((dep.por_anio[a]||{})[l]||0),0));
+  charts.push(new Chart(c_dept,{type:'bar',data:{labels:dep.labels,datasets:[{label:'Devengado 2017–2025',data:acc.map(M),backgroundColor:sc(0),borderRadius:3}]},
+    options:(()=>{const o=base({indexAxis:'y'});o.plugins.legend.display=false;
       o.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>v.toLocaleString('es-PE')},title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}};
-      o.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:11}}};
-      o.plugins.tooltip.callbacks.label=c=>` ${fmtM(c.parsed.x*1e6)}`;return o;})()}));
+      o.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:11}}};o.plugins.tooltip.callbacks.label=c=>` ${fmtM(c.parsed.x*1e6)}`;return o;})()}));
+
+  // ENDES por tipo
+  if(EN.anios&&EN.anios.length){
+    const nombres={total:'Total',psicologica:'Psicológica','psicológica':'Psicológica',fisica:'Física','física':'Física',sexual:'Sexual'};
+    const ds=Object.keys(EN.series).map((t,i)=>({label:nombres[t]||t,data:EN.series[t],borderColor:sc(i),backgroundColor:'transparent',
+      borderWidth:t==='total'?2.6:1.8,pointRadius:3,tension:.25,spanGaps:true}));
+    const o=base();o.scales.y.title.text='% de mujeres';o.scales.y.suggestedMin=0;o.scales.y.ticks.callback=v=>v+'%';
+    o.plugins.tooltip.callbacks.label=c=>` ${c.dataset.label}: ${c.parsed.y}%`;
+    charts.push(new Chart(c_endes,{type:'line',data:{labels:EN.anios,datasets:ds},options:o}));
+  }
+
+  // Titulares: días en el cargo
+  if(TIT.length){
+    const rows=TIT.map(t=>({n:t.nombre.split(' ').slice(0,2).join(' '),d:diasEntre(t.inicio,t.fin)})).filter(r=>r.d);
+    const o=base({indexAxis:'y'});o.plugins.legend.display=false;
+    o.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2')},title:{display:true,text:'Días en el cargo',color:css('--muted'),font:{size:11}}};
+    o.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:10.5}}};
+    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.x} días`;
+    charts.push(new Chart(c_titulares,{type:'bar',data:{labels:rows.map(r=>r.n),datasets:[{data:rows.map(r=>r.d),
+      backgroundColor:rows.map(r=>r.d<90?css('--crit'):sc(0)),borderRadius:3}]},options:o}));
+  }
+
+  // Normas tabla
+  const tb=document.querySelector('#t_normas tbody');
+  tb.innerHTML=NOR.map(n=>{const u=(n.url||'').startsWith('http');
+    return `<tr><td>${n.tipo}</td><td>${n.numero}</td><td>${n.nombre}</td><td>${n.anio}</td><td>${u?`<a href="${n.url}" target="_blank" rel="noopener">El Peruano ↗</a>`:'<span style="color:var(--muted)">pendiente</span>'}</td></tr>`;}).join('');
 }
 build();
 const root=document.documentElement;
-document.getElementById('tgl').onclick=()=>{
-  const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+document.getElementById('tgl').onclick=()=>{const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   root.setAttribute('data-theme',cur==='dark'?'light':'dark');setTimeout(build,30);};
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!root.getAttribute('data-theme'))build();});
 </script>
@@ -293,10 +461,23 @@ matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!roo
 </html>
 """
 
-salida = HTML.replace("/*__DATA__*/", json.dumps(data, ensure_ascii=False))
+salida = HTML.replace("/*__DATA__*/", json.dumps(payload, ensure_ascii=False)).replace("__GA__", GA_ID)
 (DIR_ENTREGABLES / "tablero_mimp.html").write_text(salida, encoding="utf-8")
 docs = RAIZ / "docs"
 docs.mkdir(exist_ok=True)
 (docs / "index.html").write_text(salida, encoding="utf-8")
+
+# Banner OG (SVG) para redes
+og = '''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="#6d28d9"/>
+<rect y="470" width="1200" height="160" fill="#4c1d95"/>
+<text x="70" y="150" font-family="Georgia,serif" font-size="34" fill="#d8c8f5">EVALUACIÓN DE LA GESTIÓN · MIMP · PLIEGO 039</text>
+<text x="70" y="270" font-family="Georgia,serif" font-size="80" font-weight="700" fill="#ffffff">¿Redujo la violencia,</text>
+<text x="70" y="360" font-family="Georgia,serif" font-size="80" font-weight="700" fill="#ffffff">o solo gastó?</text>
+<text x="70" y="440" font-family="Arial,sans-serif" font-size="30" fill="#e4d5f7">Presupuesto +134% · Ejecución 99% · Prevalencia −13 pp · 2017–2025</text>
+<text x="70" y="560" font-family="Arial,sans-serif" font-size="26" fill="#b79ae6">Datos oficiales MEF · INEI–ENDES · unimauro.github.io/evaluacion-mimp</text>
+</svg>'''
+(docs / "og.svg").write_text(og, encoding="utf-8")
 print("→ 04_entregables/tablero_mimp.html")
-print("→ docs/index.html (GitHub Pages)")
+print("→ docs/index.html + docs/og.svg (GitHub Pages)")
+print(f"ENDES años: {endes['anios']} | titulares: {len(titulares)} | normas: {len(normas)}")

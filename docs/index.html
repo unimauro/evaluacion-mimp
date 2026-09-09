@@ -3,62 +3,93 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Evaluación del MIMP 2017-2025</title>
-<meta name="description" content="Evaluación de la gestión del MIMP (pliego 039), 2017-2025: presupuesto, servicios, impacto e hipótesis, con datos oficiales.">
+<title>¿El MIMP redujo la violencia?</title>
+<meta name="description" content="Evaluación de la gestión del MIMP (pliego 039) 2017-2025: casi triplicó su presupuesto y lo ejecuta al 99%; la prevalencia de violencia de pareja cayó 13 puntos. ¿Mérito propio o contexto multisectorial?">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236d28d9'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%E2%99%80%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:title" content="¿El MIMP redujo la violencia, o solo gastó?">
+<meta property="og:description" content="El MIMP casi triplicó su presupuesto (S/ 426M→996M) y lo ejecuta al 99%. La prevalencia de violencia de pareja cayó de 65% a 52%. Evaluación con datos oficiales, 2017-2025.">
+<meta property="og:url" content="https://unimauro.github.io/evaluacion-mimp/">
+<meta property="og:image" content="https://unimauro.github.io/evaluacion-mimp/og.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="¿El MIMP redujo la violencia, o solo gastó?">
+<meta name="twitter:description" content="Evaluación con datos oficiales del MIMP 2017-2025: presupuesto, servicios, impacto e hipótesis.">
+<meta name="twitter:image" content="https://unimauro.github.io/evaluacion-mimp/og.svg">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2CVE1EQ2L2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2CVE1EQ2L2');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
 :root{
-  --surface:#fcfcfb; --panel:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --muted:#8a8880;
-  --line:#e7e5df; --line-2:#d9d7cf; --accent:#1c5cab; --ground:#f3f1ec;
-  --good:#008300; --warn:#c98500; --crit:#e34948;
-  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#4a3aa7; --s7:#008300; --s8:#e34948;
+  --surface:#faf7fc; --panel:#ffffff; --ink:#1a1420; --ink-2:#5c5364; --muted:#8f869a;
+  --line:#ece5f2; --line-2:#ddd3e6; --accent:#6d28d9; --accent-2:#c0248f; --ground:#f2ecf7;
+  --good:#0a7d43; --warn:#b7791a; --crit:#d13b6a;
+  --s1:#6d28d9; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#c0248f; --s6:#2a78d6; --s7:#0a7d43; --s8:#d13b3b;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --surface:#161615; --panel:#1f1f1d; --ink:#f7f6f2; --ink-2:#c3c2b7; --muted:#8f8d84;
-  --line:#2e2e2b; --line-2:#3a3a36; --accent:#7fb0ee; --ground:#121211;
-  --good:#3faa3f; --warn:#e0a83a; --crit:#e66767;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#9085e9; --s7:#12a012; --s8:#e66767;
+  --surface:#15111b; --panel:#201a29; --ink:#f4f0f8; --ink-2:#c6bdd2; --muted:#948aa3;
+  --line:#2e2739; --line-2:#3c3448; --accent:#a78bfa; --accent-2:#ec7ac6; --ground:#120e18;
+  --good:#42ab68; --warn:#dda63a; --crit:#e56a91;
+  --s1:#a78bfa; --s2:#e8814f; --s3:#199e70; --s4:#c98500; --s5:#e267b3; --s6:#5b9bf0; --s7:#42ab68; --s8:#e46464;
 }}
 :root[data-theme="dark"]{
-  --surface:#161615; --panel:#1f1f1d; --ink:#f7f6f2; --ink-2:#c3c2b7; --muted:#8f8d84;
-  --line:#2e2e2b; --line-2:#3a3a36; --accent:#7fb0ee; --ground:#121211;
-  --good:#3faa3f; --warn:#e0a83a; --crit:#e66767;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#9085e9; --s7:#12a012; --s8:#e66767;
+  --surface:#15111b; --panel:#201a29; --ink:#f4f0f8; --ink-2:#c6bdd2; --muted:#948aa3;
+  --line:#2e2739; --line-2:#3c3448; --accent:#a78bfa; --accent-2:#ec7ac6; --ground:#120e18;
+  --good:#42ab68; --warn:#dda63a; --crit:#e56a91;
+  --s1:#a78bfa; --s2:#e8814f; --s3:#199e70; --s4:#c98500; --s5:#e267b3; --s6:#5b9bf0; --s7:#42ab68; --s8:#e46464;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--surface);color:var(--ink);
-  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
-.wrap{max-width:1180px;margin:0 auto;padding:32px 24px 72px}
-header.top{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+.layout{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  background:var(--panel);border-right:1px solid var(--line);padding:22px 18px}
+aside .brand{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:19px;line-height:1.1;letter-spacing:-.01em}
+aside .brand span{color:var(--accent)}
+aside .tag{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+aside nav{margin-top:22px;display:flex;flex-direction:column;gap:2px}
+aside nav a{font-size:13.5px;color:var(--ink-2);text-decoration:none;padding:8px 10px;border-radius:8px}
+aside nav a:hover{background:var(--ground);color:var(--ink)}
+aside nav a.sec{margin-top:12px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);pointer-events:none;padding-bottom:2px}
+aside .foot{margin-top:24px;font-size:11.5px;color:var(--muted);line-height:1.5}
+main{min-width:0;padding:34px 40px 80px;max-width:1080px}
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
-h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(30px,5vw,48px);
-  line-height:1.04;margin:.22em 0 .15em;text-wrap:balance;letter-spacing:-.01em}
-.sub{color:var(--ink-2);max-width:72ch;font-size:15.5px}
-.src{color:var(--muted);font-size:12.5px;margin-top:10px}
-.src code{background:var(--ground);padding:1px 5px;border-radius:4px;font-size:12px}
-nav.jump{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
-nav.jump a{font-size:12.5px;color:var(--ink-2);text-decoration:none;border:1px solid var(--line-2);
-  padding:5px 11px;border-radius:20px}
-nav.jump a:hover{border-color:var(--accent);color:var(--accent)}
+h1{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:clamp(30px,4.6vw,50px);line-height:1.02;margin:.2em 0 .2em;text-wrap:balance;letter-spacing:-.015em}
+.dek{color:var(--ink-2);max-width:64ch;font-size:17px;line-height:1.5}
+.src{color:var(--muted);font-size:12.5px;margin-top:14px}
+.src code{background:var(--ground);padding:1px 5px;border-radius:4px}
 
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin:26px 0 8px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-.kpi .k-label{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.kpi .k-val{font-family:"Fraunces",Georgia,serif;font-size:29px;font-weight:600;margin-top:6px;
-  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.kpi .k-note{font-size:12.5px;color:var(--ink-2);margin-top:3px}
-.k-up{color:var(--good)} .k-flat{color:var(--warn)}
+.story{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;margin:30px 0 10px;align-items:stretch}
+.story .tell{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+.story .tell h2{margin-top:0}
+.story .tell p{color:var(--ink-2);font-size:14.5px}
+.story .tell .big{font-family:"Fraunces",Georgia,serif;font-size:19px;color:var(--ink);line-height:1.4;font-weight:600;margin:0 0 12px}
+.story .tell .big b.up{color:var(--good)} .story .tell .big b.dn{color:var(--accent-2)}
+.story .viz{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;display:flex;flex-direction:column}
+.story .viz h3{margin:0 0 2px;font-size:14px} .story .viz p.cap{margin:0 0 8px;font-size:12px;color:var(--muted)}
+.story .viz .chart-box{flex:1;min-height:250px}
 
-section{margin-top:44px;scroll-margin-top:20px}
-h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:23px;margin:0 0 4px;letter-spacing:-.01em}
-.lead{color:var(--ink-2);font-size:14px;margin:0 0 18px;max-width:80ch}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:13px;margin:8px 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.kpi .k-label{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi .k-val{font-family:"Fraunces",Georgia,serif;font-size:27px;font-weight:600;margin-top:5px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi .k-note{font-size:12px;color:var(--ink-2);margin-top:2px}
+.k-up{color:var(--good)} .k-dn{color:var(--accent-2)} .k-flat{color:var(--warn)}
+
+section{margin-top:46px;scroll-margin-top:16px}
+h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+.lead{color:var(--ink-2);font-size:14px;margin:0 0 18px;max-width:82ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:17px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:17px 18px 13px}
 .card h3{font-size:14.5px;font-weight:700;margin:0 0 2px}
 .card p.cap{font-size:12.5px;color:var(--muted);margin:0 0 12px}
 .chart-box{position:relative;height:300px}
@@ -67,208 +98,293 @@ h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:23px;margin:0 
 
 .hyp{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
 .hcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 17px;border-left:4px solid var(--muted)}
-.hcard.v-no{border-left-color:var(--good)}
-.hcard.v-si{border-left-color:var(--crit)}
-.hcard.v-parc{border-left-color:var(--warn)}
-.hcard.v-pend{border-left-color:var(--line-2)}
+.hcard.v-no{border-left-color:var(--good)} .hcard.v-si{border-left-color:var(--crit)}
+.hcard.v-parc{border-left-color:var(--warn)} .hcard.v-pend{border-left-color:var(--line-2)}
 .hcard .hid{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
 .hcard h4{margin:4px 0 6px;font-size:15px;font-weight:700;line-height:1.3}
-.verdict{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-  padding:3px 9px;border-radius:20px;margin-bottom:8px}
-.verdict.v-no{background:rgba(0,131,0,.13);color:var(--good)}
-.verdict.v-si{background:rgba(227,73,72,.14);color:var(--crit)}
-.verdict.v-parc{background:rgba(201,133,0,.15);color:var(--warn)}
+.verdict{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:20px;margin-bottom:8px}
+.verdict.v-no{background:rgba(10,125,67,.14);color:var(--good)}
+.verdict.v-si{background:rgba(207,59,57,.14);color:var(--crit)}
+.verdict.v-parc{background:rgba(183,121,26,.16);color:var(--warn)}
 .verdict.v-pend{background:var(--ground);color:var(--muted)}
 .hcard p{margin:0;font-size:13.2px;color:var(--ink-2)}
 
-.note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);
-  border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
+.note{background:var(--ground);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
 .note b{color:var(--ink)}
-footer{margin-top:52px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12.5px}
-.toggle{position:fixed;top:14px;right:14px;background:var(--panel);border:1px solid var(--line-2);
-  color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:5}
-@media (max-width:640px){.wrap{padding:22px 16px 56px}}
+table.norm{width:100%;border-collapse:collapse;font-size:13px}
+table.norm th,table.norm td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+table.norm th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+table.norm a{color:var(--accent);text-decoration:none}
+.tablewrap{overflow-x:auto}
+footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12.5px}
+.toggle{position:fixed;top:12px;right:12px;background:var(--panel);border:1px solid var(--line-2);color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:6}
+@media (max-width:860px){.layout{grid-template-columns:1fr}aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+  aside nav{flex-direction:row;flex-wrap:wrap}aside .foot{display:none}main{padding:24px 18px 60px}.story{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<button class="toggle" id="tgl" aria-label="Cambiar tema">Tema</button>
-<div class="wrap">
-  <header class="top">
-    <div class="eyebrow">Evaluación de la gestión pública · Pliego 039</div>
-    <h1>¿El MIMP redujo la violencia, o solo gastó?</h1>
-    <p class="sub">Evaluación de la gestión del Ministerio de la Mujer y Poblaciones Vulnerables,
-      2017&ndash;2025, con datos abiertos oficiales. Distingue la <b>eficacia presupuestal propia</b>
-      del MIMP de su <b>contribución</b> a un problema multisectorial. Vista previa: la dimensión
-      presupuestal está completa; servicios, impacto, personal y normativa están en recolección.</p>
-    <p class="src">Fuentes: MEF Datos Abiertos (presupuesto, pliego <code>039</code>, descarga <code>2026-09-08</code>);
-      INEI&ndash;ENDES, Portal Warmi Ñan, Observatorio y PTE (en proceso). Soles corrientes.</p>
-    <nav class="jump">
-      <a href="#presupuesto">Presupuesto</a><a href="#gasto">Composición del gasto</a>
-      <a href="#territorio">Territorio</a><a href="#hipotesis">Hipótesis H1&ndash;H6</a>
+<button class="toggle" id="tgl" aria-label="Cambiar tema">◐ Tema</button>
+<div class="layout">
+  <aside>
+    <div class="brand">Evaluación <span>MIMP</span></div>
+    <div class="tag">Pliego 039 · 2017–2025</div>
+    <nav>
+      <a href="#inicio">Resumen</a>
+      <a class="sec">Dimensiones</a>
+      <a href="#presupuesto">Presupuesto y ejecución</a>
+      <a href="#planilla">Personal y planilla</a>
+      <a href="#gasto">¿En qué se gasta?</a>
+      <a href="#territorio">Territorio</a>
+      <a href="#impacto">Impacto (ENDES)</a>
+      <a href="#gestion">Gestión y rotación</a>
+      <a href="#normas">Marco normativo</a>
+      <a class="sec">Conclusión</a>
+      <a href="#hipotesis">Hipótesis H1–H6</a>
     </nav>
-  </header>
+    <div class="foot">Datos oficiales: MEF, INEI–ENDES, Portal Warmi Ñan, El Peruano.<br>Descarga 2026-09-08. Reproducible.</div>
+  </aside>
 
-  <div class="kpis" id="kpis"></div>
+  <main id="inicio">
+    <div class="eyebrow">Evaluación de la gestión pública</div>
+    <h1>¿El MIMP redujo la violencia, o solo gastó?</h1>
+    <p class="dek">Entre 2017 y 2025 el Ministerio de la Mujer <b>casi triplicó su presupuesto</b> y lo ejecuta
+      casi al 100%. En el mismo periodo, la prevalencia de violencia de pareja <b>cayó 13 puntos</b>. La pregunta
+      no es si gastó bien, sino <b>cuánto de esa mejora es mérito propio</b> y cuánto es un problema multisectorial.</p>
+    <p class="src">Fuentes: MEF Datos Abiertos (pliego <code>039</code>), INEI–ENDES, Portal Warmi Ñan, El Peruano · descarga <code>2026-09-08</code> · soles corrientes.</p>
+
+    <div class="story">
+      <div class="tell">
+        <h2>La historia en tres cifras</h2>
+        <p class="big">1 · El presupuesto <b class="up">creció +134%</b> (S/ 426 M → 996 M) y la ejecución fue
+          <b class="up">96–99%</b> todos los años: el MIMP <b>no subejecuta</b>.</p>
+        <p class="big">2 · La prevalencia de violencia de pareja <b class="dn">bajó de 65% a 52%</b> (−13 pp, INEI–ENDES):
+          el problema <b>sí cede</b>, sobre todo la psicológica.</p>
+        <p class="big">3 · Pero hubo <b class="dn">~15 ministras/os en 9 años</b>: la conducción es
+          <b>inestable</b> pese a un marco normativo sólido.</p>
+        <p style="margin-bottom:0"><b>Salvaguarda:</b> la caída de la violencia es multisectorial (contribución, no
+          atribución); los registros administrativos no se comparan con la prevalencia poblacional.</p>
+      </div>
+      <div class="viz">
+        <h3>Gasto que sube, violencia que baja</h3>
+        <p class="cap">Devengado del MIMP (millones S/) vs. prevalencia ENDES (%). Dos escalas, dos historias.</p>
+        <div class="chart-box"><canvas id="c_story"></canvas></div>
+      </div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+  </main>
+</div>
+
+<div class="layout"><aside style="visibility:hidden"></aside><main style="padding-top:0">
 
   <section id="presupuesto">
     <h2>Presupuesto y ejecución</h2>
-    <p class="lead">PIA (inicial), PIM (modificado) y devengado por año, con el % de ejecución (devengado/PIM)
-      y el monto no ejecutado. Nota: el presupuesto salta de S/ 444 M (2018) a S/ 733 M (2019).</p>
+    <p class="lead">PIA (inicial), PIM (modificado) y devengado por año, con el % de ejecución y el monto no ejecutado.
+      El presupuesto salta de S/ 444 M (2018) a S/ 733 M (2019).</p>
     <div class="grid">
-      <div class="card full"><h3>PIA · PIM · Devengado por año</h3>
-        <p class="cap">Millones de soles corrientes</p><div class="chart-box tall"><canvas id="c_serie"></canvas></div></div>
-      <div class="card"><h3>Ejecución presupuestal</h3>
-        <p class="cap">Devengado / PIM (%)</p><div class="chart-box"><canvas id="c_ejec"></canvas></div></div>
-      <div class="card"><h3>Presupuesto no ejecutado</h3>
-        <p class="cap">PIM − Devengado (millones S/)</p><div class="chart-box"><canvas id="c_noejec"></canvas></div></div>
+      <div class="card full"><h3>PIA · PIM · Devengado por año</h3><p class="cap">Millones S/ corrientes</p><div class="chart-box tall"><canvas id="c_serie"></canvas></div></div>
+      <div class="card"><h3>Ejecución presupuestal</h3><p class="cap">Devengado / PIM (%)</p><div class="chart-box"><canvas id="c_ejec"></canvas></div></div>
+      <div class="card"><h3>Presupuesto no ejecutado</h3><p class="cap">PIM − Devengado (millones S/)</p><div class="chart-box"><canvas id="c_noejec"></canvas></div></div>
+    </div>
+  </section>
+
+  <section id="planilla">
+    <h2>Personal y planilla</h2>
+    <p class="lead">Gasto en planilla (personal nombrado + CAS) mes a mes por año. El número de trabajadores por
+      régimen (PTE) está en recolección; aquí se muestra el <b>costo</b> de la planilla, que sí es trazable al MEF.</p>
+    <div class="grid">
+      <div class="card full"><h3>Gasto de planilla mes a mes</h3><p class="cap">Devengado en personal + CAS, millones S/ · línea gruesa = último año</p><div class="chart-box tall"><canvas id="c_planilla"></canvas></div></div>
     </div>
   </section>
 
   <section id="gasto">
-    <h2>¿En qué se ejecuta el gasto?</h2>
-    <p class="lead">Devengado por unidad ejecutora, programa presupuestal, genérica de gasto,
-      fuente de financiamiento y categoría económica.</p>
+    <h2>¿En qué se gasta?</h2>
+    <p class="lead">Devengado por genérica, por rubro de detalle (aquí aparece el CAS y las contrataciones de
+      servicios), por unidad ejecutora, programa y fuente.</p>
     <div class="grid">
-      <div class="card"><h3>Por unidad ejecutora</h3><p class="cap">Devengado, millones S/</p><div class="chart-box tall"><canvas id="c_ue"></canvas></div></div>
-      <div class="card"><h3>Por programa presupuestal</h3><p class="cap">Devengado, millones S/ (top)</p><div class="chart-box tall"><canvas id="c_prog"></canvas></div></div>
-      <div class="card"><h3>Por genérica de gasto</h3><p class="cap">Devengado, millones S/</p><div class="chart-box tall"><canvas id="c_gen"></canvas></div></div>
-      <div class="card"><h3>Por fuente de financiamiento</h3><p class="cap">Devengado, millones S/</p><div class="chart-box tall"><canvas id="c_ff"></canvas></div></div>
-      <div class="card"><h3>Corriente vs. capital</h3><p class="cap">Devengado, millones S/</p><div class="chart-box"><canvas id="c_cat"></canvas></div></div>
-      <div class="card"><h3>Estacionalidad del devengado</h3><p class="cap">Devengado mensual, millones S/</p><div class="chart-box"><canvas id="c_mens"></canvas></div></div>
+      <div class="card"><h3>En qué se gasta (detalle)</h3><p class="cap">Devengado por rubro, millones S/ (top)</p><div class="chart-box tall"><canvas id="c_detalle"></canvas></div></div>
+      <div class="card"><h3>Por genérica de gasto</h3><p class="cap">Millones S/</p><div class="chart-box tall"><canvas id="c_gen"></canvas></div></div>
+      <div class="card"><h3>Por unidad ejecutora</h3><p class="cap">Millones S/</p><div class="chart-box tall"><canvas id="c_ue"></canvas></div></div>
+      <div class="card"><h3>Por programa presupuestal</h3><p class="cap">Millones S/ (top)</p><div class="chart-box tall"><canvas id="c_prog"></canvas></div></div>
+      <div class="card"><h3>Por fuente de financiamiento</h3><p class="cap">Millones S/</p><div class="chart-box tall"><canvas id="c_ff"></canvas></div></div>
+      <div class="card"><h3>Corriente vs. capital</h3><p class="cap">Millones S/</p><div class="chart-box"><canvas id="c_cat"></canvas></div></div>
     </div>
   </section>
 
   <section id="territorio">
     <h2>Distribución territorial del gasto</h2>
-    <p class="lead">Devengado acumulado 2017&ndash;2025 por departamento (departamento de la meta).
-      Insumo para brechas de cobertura frente a la incidencia (H4).</p>
-    <div class="grid"><div class="card full"><h3>Devengado por departamento</h3>
-      <p class="cap">Acumulado del periodo, millones S/ (top 15)</p>
-      <div class="chart-box" style="height:440px"><canvas id="c_dept"></canvas></div></div></div>
+    <p class="lead">Devengado acumulado 2017–2025 por departamento (departamento de la meta). Insumo para brechas
+      de cobertura frente a la incidencia (H4).</p>
+    <div class="grid"><div class="card full"><h3>Devengado por departamento</h3><p class="cap">Acumulado, millones S/ (top 15)</p><div class="chart-box" style="height:440px"><canvas id="c_dept"></canvas></div></div></div>
+  </section>
+
+  <section id="impacto">
+    <h2>Impacto: prevalencia de violencia (ENDES)</h2>
+    <p class="lead">Prevalencia de violencia contra la mujer ejercida alguna vez por la pareja (INEI–ENDES, mujeres
+      15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp.</p>
+    <div class="grid">
+      <div class="card full"><h3>Prevalencia por tipo de violencia</h3><p class="cap">% de mujeres, por año</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
+    </div>
+    <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
+  </section>
+
+  <section id="gestion">
+    <h2>Gestión y rotación de titulares</h2>
+    <p class="lead">Duración de cada gestión ministerial. Barras rojas: gestiones de menos de 90 días. La rotación
+      extrema erosiona la continuidad de política (H6).</p>
+    <div class="grid"><div class="card full"><h3>Días en el cargo por titular</h3><p class="cap">Ministras/os del MIMP, 2016–2025</p><div class="chart-box" style="height:460px"><canvas id="c_titulares"></canvas></div></div></div>
+  </section>
+
+  <section id="normas">
+    <h2>Marco normativo impulsado</h2>
+    <p class="lead">Leyes y políticas clave donde el MIMP es rector o proponente. El marco existe y es sostenido;
+      el contraste está entre esta continuidad normativa y la inestabilidad de gestión.</p>
+    <div class="card full"><div class="tablewrap"><table class="norm" id="t_normas"><thead><tr><th>Tipo</th><th>Número</th><th>Nombre</th><th>Año</th><th>Fuente</th></tr></thead><tbody></tbody></table></div></div>
   </section>
 
   <section id="hipotesis">
-    <h2>Contraste de hipótesis H1&ndash;H6</h2>
-    <p class="lead">Veredicto preliminar por hipótesis. Verde = no se sostiene; rojo = se sostiene;
-      ámbar = parcial; gris = datos en recolección. Solo H3 tiene ya evidencia dura (presupuesto).</p>
+    <h2>Contraste de hipótesis H1–H6</h2>
+    <p class="lead">Verde = no se sostiene · rojo = se sostiene · ámbar = parcial · gris = datos en recolección.</p>
     <div class="hyp">
+      <div class="hcard v-no"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
+        <span class="verdict v-no">No se sostiene (en prevalencia)</span>
+        <p>La prevalencia ENDES <b>cayó 13 pp</b> (65,4%→52,0%, 2017→2024), sobre todo psicológica y física.
+        Pendiente: feminicidios de contexto. La mejora es multisectorial (contribución).</p></div>
       <div class="hcard v-parc"><div class="hid">H3 · Presupuesto</div><h4>El presupuesto es bajo y/o se subejecuta</h4>
         <span class="verdict v-parc">Se sostiene parcialmente</span>
-        <p>La <b>subejecución NO se sostiene</b>: la ejecución fue 96,4%&ndash;99,0% en todo el periodo.
-        El PIA <b>creció +134%</b> nominal (2017&rarr;2025). Lo &laquo;bajo&raquo; solo se sostiene como
-        <b>peso en el presupuesto nacional</b> (~0,4%), pendiente de calcular el denominador.</p></div>
-      <div class="hcard v-pend"><div class="hid">H1 · Impacto</div><h4>La violencia no disminuyó pese al gasto</h4>
-        <span class="verdict v-pend">Datos en recolección</span>
-        <p>Requiere la serie de prevalencia INEI&ndash;ENDES por tipo (psicológica, física, sexual) y
-        feminicidios de contexto. Recolección en curso. <b>Salvaguarda:</b> contribución, no atribución.</p></div>
+        <p>Subejecución <b>NO</b>: ejecutó 96–99%. PIA <b>+134%</b>. "Bajo" solo como peso del presupuesto
+        nacional (~0,4%), pendiente de cerrar el denominador.</p></div>
+      <div class="hcard v-parc"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
+        <span class="verdict v-parc">Se sostiene parcialmente</span>
+        <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
+        (5 en 17 meses bajo un gobierno): inestabilidad de conducción frente a continuidad normativa.</p></div>
       <div class="hcard v-pend"><div class="hid">H2 · Servicios</div><h4>La producción de servicios está estancada</h4>
         <span class="verdict v-pend">Datos en recolección</span>
-        <p>Requiere la serie de atenciones CEM por tipo de violencia y Línea 100 (Portal Warmi Ñan).
-        Recolección en curso.</p></div>
-      <div class="hcard v-pend"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
-        <span class="verdict v-pend">Parcial</span>
-        <p>Ya hay gasto por departamento (abajo); falta cruzar con N.º de CEM e incidencia por región.</p></div>
+        <p>Requiere atenciones CEM por tipo y Línea 100 (Portal Warmi Ñan). En curso.</p></div>
+      <div class="hcard v-parc"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
+        <span class="verdict v-parc">Parcial</span>
+        <p>Gasto muy concentrado en Lima (ver territorio); falta cruzar con N.º de CEM e incidencia por región.</p></div>
       <div class="hcard v-pend"><div class="hid">H5 · Calidad</div><h4>Problemas de calidad/idoneidad en la atención</h4>
         <span class="verdict v-pend">Datos en recolección</span>
-        <p>Requiere personal por régimen (PTE) e informes de supervisión de CEM (Defensoría N.º 255/179).</p></div>
-      <div class="hcard v-pend"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
-        <span class="verdict v-pend">Datos en recolección</span>
-        <p>Insumos: rotación de titulares (~13 en ~6 años, a confirmar con RS) y marco normativo impulsado
-        (Ley 30364 y modif.). Recolección en curso.</p></div>
-    </div>
-    <div class="note" style="margin-top:16px">
-      <b>Contribución, no atribución.</b> Los feminicidios, violaciones y desapariciones son contexto
-      multisectorial (investiga el Ministerio Público, sanciona el Poder Judicial, conduce Mininter/PNP);
-      no se atribuyen al MIMP. Los registros administrativos (atenciones) no son comparables con la
-      prevalencia poblacional (INEI&ndash;ENDES). Cifras en soles corrientes.
+        <p>Requiere personal por régimen (PTE) e informes de supervisión de CEM (Defensoría 255/179). En curso.</p></div>
     </div>
   </section>
 
   <footer>
-    Repositorio <b>evaluacion-mimp</b> · vista previa desplegada en GitHub Pages. Toda cifra es trazable a su
-    fuente oficial con fecha de descarga. Regla del proyecto: ninguna cifra sin fuente + URL + fecha.
-    Dimensión presupuestal: MEF Datos Abiertos, pliego 039, 2017&ndash;2025.
+    Repositorio <b>evaluacion-mimp</b> · desplegado en GitHub Pages. Toda cifra es trazable a su fuente oficial con
+    fecha de descarga 2026-09-08. Ninguna cifra sin fuente + URL + fecha. Analítica: Google Analytics.
   </footer>
-</div>
+</main></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const DASH = {"meta": {"fuente": "MEF Datos Abiertos – Presupuesto y Ejecución de Gasto (Devengado)", "url_base": "https://fs.datosabiertos.mef.gob.pe/datastorefiles", "pliego": "039 - MIMP", "fecha_descarga": {"2017": "2026-09-08", "2018": "2026-09-08", "2019": "2026-09-08", "2020": "2026-09-08", "2021": "2026-09-08", "2022": "2026-09-08", "2023": "2026-09-08", "2024": "2026-09-08", "2025": "2026-09-08"}, "periodo": ["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]}, "serie_anual": [{"anio": "2017", "pia": 425841070.0, "pim": 402934080.0, "certificado": 396684744.49, "comprometido": 395372786.96, "devengado": 394938684.12, "girado": 393938563.85, "no_ejecutado": 7995395.88, "ejecucion_pct": 98.02}, {"anio": "2018", "pia": 443826951.0, "pim": 444428583.0, "certificado": 436698178.41, "comprometido": 434825354.08, "devengado": 434125767.77, "girado": 432470100.1, "no_ejecutado": 10302815.23, "ejecucion_pct": 97.68}, {"anio": "2019", "pia": 732645644.0, "pim": 585187492.0, "certificado": 570316359.68, "comprometido": 566238492.08, "devengado": 564286126.49, "girado": 562159072.32, "no_ejecutado": 20901365.51, "ejecucion_pct": 96.43}, {"anio": "2020", "pia": 732363274.0, "pim": 576452620.0, "certificado": 558762632.85, "comprometido": 556790535.54, "devengado": 556645270.4, "girado": 555460563.54, "no_ejecutado": 19807349.6, "ejecucion_pct": 96.56}, {"anio": "2021", "pia": 697351455.0, "pim": 630896257.0, "certificado": 614487225.34, "comprometido": 612749128.95, "devengado": 612745264.83, "girado": 612301505.2, "no_ejecutado": 18150992.17, "ejecucion_pct": 97.12}, {"anio": "2022", "pia": 713410049.0, "pim": 741276191.0, "certificado": 727568958.2, "comprometido": 724890606.31, "devengado": 724843186.54, "girado": 724075869.71, "no_ejecutado": 16433004.46, "ejecucion_pct": 97.78}, {"anio": "2023", "pia": 789544666.0, "pim": 861060692.0, "certificado": 848122359.15, "comprometido": 846333746.26, "devengado": 846144092.27, "girado": 845416260.22, "no_ejecutado": 14916599.73, "ejecucion_pct": 98.27}, {"anio": "2024", "pia": 969611508.0, "pim": 932617113.0, "certificado": 924647695.85, "comprometido": 922136919.49, "devengado": 922073379.93, "girado": 920920290.38, "no_ejecutado": 10543733.07, "ejecucion_pct": 98.87}, {"anio": "2025", "pia": 996297133.0, "pim": 1005357090.0, "certificado": 1000714184.46, "comprometido": 999229435.55, "devengado": 995592697.35, "girado": 992982792.44, "no_ejecutado": 9764392.65, "ejecucion_pct": 99.03}], "mensual": {"2017": [20096420.7, 24087181.76, 30360526.13, 28424009.4, 30381413.44, 31647966.46, 36317338.39, 34795844.09, 36520814.41, 34599931.11, 35549763.73, 52157474.5], "2018": [24005953.62, 27581501.58, 29492835.28, 35246114.02, 33027306.88, 31523275.61, 37441209.04, 34872281.93, 34863301.48, 39251643.54, 39904578.33, 66915766.46], "2019": [27589051.23, 33199858.04, 38097210.11, 44116308.76, 42454605.82, 45039213.6, 49495801.55, 49859342.45, 46939826.41, 50383240.21, 55007066.08, 82104602.23], "2020": [35195800.47, 47906108.48, 38585302.86, 40752235.33, 41907725.79, 41860771.81, 50575679.72, 44587718.88, 45851103.54, 44897187.38, 49738983.95, 74786652.19], "2021": [36465903.68, 43064514.91, 46349954.4, 45627127.88, 52901840.41, 49268538.87, 53712370.03, 47948449.71, 48275845.67, 53112583.74, 54014522.78, 82003612.75], "2022": [40054203.21, 54320696.73, 49067102.34, 57030949.68, 52092340.42, 56739542.44, 57624872.76, 61704595.54, 57935805.66, 66301177.43, 59269306.94, 112702593.39], "2023": [42490619.8, 70704487.59, 61966148.27, 72028305.21, 56842859.43, 80490912.45, 61075785.57, 80220431.33, 61524114.55, 76939955.57, 70835350.05, 111025122.45], "2024": [41757421.93, 79844854.84, 60375001.01, 87824221.36, 57656831.66, 86306614.84, 63849330.9, 92982252.81, 57329349.51, 96368354.37, 68945404.84, 128833741.86], "2025": [47367210.59, 93772467.88, 62421124.56, 99146554.6, 61605716.17, 101568847.23, 64795775.31, 98454272.2, 62410226.33, 101188077.49, 65497906.96, 137364518.03]}, "meses": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"], "por_ue": {"labels": ["PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)", "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF", "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL"], "por_anio": {"2017": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 138781700.77, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 132321185.86, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 123835797.49}, "2018": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 177408966.13, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 151748845.3, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 104967956.34}, "2019": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 272819226.72, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 182366039.12, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 109100860.65}, "2020": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 253673697.41, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 184897815.31, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 118073757.68}, "2021": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 286475190.82, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 209069086.22, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 117200987.79}, "2022": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 317859868.05, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 269462748.29, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 137520570.2}, "2023": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 338842015.26, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 352689418.58, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 154612658.43}, "2024": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 331605011.1, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 417260516.99, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 173207851.84}, "2025": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 361855725.71, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 433791813.43, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 199945158.21}}}, "por_programa": {"labels": ["ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO", "LUCHA CONTRA LA VIOLENCIA FAMILIAR", "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS", "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER", "ACCIONES CENTRALES", "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS", "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES", "PREVENCION Y TRATAMIENTO DEL CONSUMO DE DROGAS"], "por_anio": {"2017": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 126017761.23, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 132742074.21, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 60855469.25, "ACCIONES CENTRALES": 48466828.29, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 12068708.55, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 14587861.97, "PREVENCION Y TRATAMIENTO DEL CONSUMO DE DROGAS": 199980.62}, "2018": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 141064641.14, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 177208974.88, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 48312262.06, "ACCIONES CENTRALES": 53209931.18, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 10582487.75, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 3547479.51, "PREVENCION Y TRATAMIENTO DEL CONSUMO DE DROGAS": 199991.25}, "2019": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 173376871.33, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 275592216.74, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 37625497.76, "ACCIONES CENTRALES": 54936116.57, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 13218023.74, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 9537400.35}, "2020": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 157375791.96, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 251843399.34, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 69049716.87, "ACCIONES CENTRALES": 60637801.87, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 16036115.43, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 1702444.93}, "2021": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 171631403.14, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 258589954.95, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 80371119.47, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 26354571.07, "ACCIONES CENTRALES": 54907054.33, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 20195869.62, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 695292.25}, "2022": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 187806721.98, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 274733784.23, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 125304426.11, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 37898363.42, "ACCIONES CENTRALES": 66463220.59, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 28846265.61, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 3790404.6}, "2023": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 201681232.12, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 242797361.69, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 249895649.52, "ACCIONES CENTRALES": 116792110.14, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 30858926.47, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 4118812.33}, "2024": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 210696727.51, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 309468734.81, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 241429470.22, "ACCIONES CENTRALES": 121994729.63, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 34058008.07, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 4425709.69}, "2025": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 215542634.29, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 347711414.66, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 255764474.49, "ACCIONES CENTRALES": 135990451.99, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 36019078.9, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 4564643.02}}}, "por_generica": {"labels": ["BIENES Y SERVICIOS", "PERSONAL Y OBLIGACIONES SOCIALES", "OTROS GASTOS", "PENSIONES Y OTRAS PRESTACIONES SOCIALES", "ADQUISICION DE ACTIVOS NO FINANCIEROS", "DONACIONES Y TRANSFERENCIAS"], "por_anio": {"2017": {"BIENES Y SERVICIOS": 281889122.81, "PERSONAL Y OBLIGACIONES SOCIALES": 39487445.89, "OTROS GASTOS": 8447483.83, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 49537279.56, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 9378971.78, "DONACIONES Y TRANSFERENCIAS": 6198380.25}, "2018": {"BIENES Y SERVICIOS": 330140657.56, "PERSONAL Y OBLIGACIONES SOCIALES": 39607924.21, "OTROS GASTOS": 4200219.57, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 42815003.5, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 11042329.36, "DONACIONES Y TRANSFERENCIAS": 6319633.57}, "2019": {"BIENES Y SERVICIOS": 446174421.87, "PERSONAL Y OBLIGACIONES SOCIALES": 42544284.27, "OTROS GASTOS": 5617417.17, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 40790731.32, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 26755591.57, "DONACIONES Y TRANSFERENCIAS": 2403680.29}, "2020": {"BIENES Y SERVICIOS": 453705729.73, "PERSONAL Y OBLIGACIONES SOCIALES": 45187332.66, "OTROS GASTOS": 4297894.42, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 26196931.76, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 26525268.67, "DONACIONES Y TRANSFERENCIAS": 732113.16}, "2021": {"BIENES Y SERVICIOS": 505355409.24, "PERSONAL Y OBLIGACIONES SOCIALES": 44113477.41, "OTROS GASTOS": 23488777.61, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 26623092.83, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 12772118.74, "DONACIONES Y TRANSFERENCIAS": 392389.0}, "2022": {"BIENES Y SERVICIOS": 559579885.39, "PERSONAL Y OBLIGACIONES SOCIALES": 43487509.72, "OTROS GASTOS": 64709289.46, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 34112367.97, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 22137613.72, "DONACIONES Y TRANSFERENCIAS": 816520.28}, "2023": {"BIENES Y SERVICIOS": 606331863.22, "PERSONAL Y OBLIGACIONES SOCIALES": 42691312.96, "OTROS GASTOS": 132054896.76, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 36185902.67, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 28128178.63, "DONACIONES Y TRANSFERENCIAS": 751938.03}, "2024": {"BIENES Y SERVICIOS": 188332238.09, "PERSONAL Y OBLIGACIONES SOCIALES": 463708066.1, "OTROS GASTOS": 202896798.0, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 36120810.43, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 30544690.81, "DONACIONES Y TRANSFERENCIAS": 470776.5}, "2025": {"BIENES Y SERVICIOS": 186351995.36, "PERSONAL Y OBLIGACIONES SOCIALES": 507484986.34, "OTROS GASTOS": 251285946.44, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 33595810.81, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 16239590.4, "DONACIONES Y TRANSFERENCIAS": 634368.0}}}, "por_fuente": {"labels": ["RECURSOS ORDINARIOS", "RECURSOS POR OPERACIONES OFICIALES DE CREDITO", "DONACIONES Y TRANSFERENCIAS", "RECURSOS DIRECTAMENTE RECAUDADOS"], "por_anio": {"2017": {"RECURSOS ORDINARIOS": 393314513.22, "DONACIONES Y TRANSFERENCIAS": 725950.74, "RECURSOS DIRECTAMENTE RECAUDADOS": 898220.16}, "2018": {"RECURSOS ORDINARIOS": 433213259.91, "RECURSOS DIRECTAMENTE RECAUDADOS": 912507.86}, "2019": {"RECURSOS ORDINARIOS": 563860988.16, "RECURSOS DIRECTAMENTE RECAUDADOS": 425138.33}, "2020": {"RECURSOS ORDINARIOS": 546963141.24, "RECURSOS POR OPERACIONES OFICIALES DE CREDITO": 6055415.08, "DONACIONES Y TRANSFERENCIAS": 3447766.18, "RECURSOS DIRECTAMENTE RECAUDADOS": 178947.9}, "2021": {"RECURSOS ORDINARIOS": 603523938.47, "RECURSOS POR OPERACIONES OFICIALES DE CREDITO": 8161123.55, "DONACIONES Y TRANSFERENCIAS": 834202.81, "RECURSOS DIRECTAMENTE RECAUDADOS": 226000.0}, "2022": {"RECURSOS ORDINARIOS": 722751821.5, "DONACIONES Y TRANSFERENCIAS": 1373410.72, "RECURSOS DIRECTAMENTE RECAUDADOS": 717954.32}, "2023": {"RECURSOS ORDINARIOS": 843711743.57, "DONACIONES Y TRANSFERENCIAS": 2432348.7}, "2024": {"RECURSOS ORDINARIOS": 919500395.79, "DONACIONES Y TRANSFERENCIAS": 2572984.14}, "2025": {"RECURSOS ORDINARIOS": 994747829.11, "DONACIONES Y TRANSFERENCIAS": 844868.24}}}, "por_categoria": {"labels": ["GASTOS CORRIENTES", "GASTOS DE CAPITAL"], "por_anio": {"2017": {"GASTOS CORRIENTES": 385559712.34, "GASTOS DE CAPITAL": 9378971.78}, "2018": {"GASTOS CORRIENTES": 423083438.41, "GASTOS DE CAPITAL": 11042329.36}, "2019": {"GASTOS CORRIENTES": 537530534.92, "GASTOS DE CAPITAL": 26755591.57}, "2020": {"GASTOS CORRIENTES": 530120001.73, "GASTOS DE CAPITAL": 26525268.67}, "2021": {"GASTOS CORRIENTES": 599853705.09, "GASTOS DE CAPITAL": 12891559.74}, "2022": {"GASTOS CORRIENTES": 701901577.82, "GASTOS DE CAPITAL": 22941608.72}, "2023": {"GASTOS CORRIENTES": 818015913.64, "GASTOS DE CAPITAL": 28128178.63}, "2024": {"GASTOS CORRIENTES": 891417814.62, "GASTOS DE CAPITAL": 30655565.31}, "2025": {"GASTOS CORRIENTES": 979353106.95, "GASTOS DE CAPITAL": 16239590.4}}}, "por_departamento": {"labels": ["LIMA", "AREQUIPA", "CUSCO", "PROVINCIA CONSTITUCIONAL DEL CALLAO", "PUNO", "LA LIBERTAD", "ANCASH", "ICA", "JUNIN", "LAMBAYEQUE", "LORETO", "PIURA", "HUANUCO", "TACNA", "AYACUCHO"], "por_anio": {"2017": {"LIMA": 330163797.68, "AREQUIPA": 5018288.92, "CUSCO": 10143090.07, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 7103596.25, "PUNO": 4229495.58, "LA LIBERTAD": 3603589.69, "ANCASH": 2275596.97, "ICA": 5188038.52, "JUNIN": 3866265.63, "LAMBAYEQUE": 3304294.23, "LORETO": 4204664.51, "PIURA": 3166873.38, "HUANUCO": 2358701.74, "TACNA": 2759193.32, "AYACUCHO": 1727734.0}, "2018": {"LIMA": 328533364.16, "AREQUIPA": 19157872.69, "CUSCO": 6098044.79, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 7727307.27, "PUNO": 7239146.6, "LA LIBERTAD": 4476437.91, "ANCASH": 3723659.61, "ICA": 5376243.67, "JUNIN": 5314923.81, "LAMBAYEQUE": 5291783.76, "LORETO": 5646757.13, "PIURA": 3761924.91, "HUANUCO": 4674006.33, "TACNA": 5025232.08, "AYACUCHO": 3932093.33}, "2019": {"LIMA": 370740859.43, "AREQUIPA": 15856672.43, "CUSCO": 14139540.94, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 15897895.85, "PUNO": 12440461.42, "LA LIBERTAD": 10280108.11, "ANCASH": 10798980.47, "ICA": 9178633.14, "JUNIN": 11749665.88, "LAMBAYEQUE": 8937373.42, "LORETO": 10001832.2, "PIURA": 7274679.01, "HUANUCO": 8528346.76, "TACNA": 7273051.72, "AYACUCHO": 7035182.78}, "2020": {"LIMA": 361368301.33, "AREQUIPA": 18257055.92, "CUSCO": 14560469.08, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 18639012.98, "PUNO": 12982349.63, "LA LIBERTAD": 12207183.19, "ANCASH": 11381801.28, "ICA": 11684480.0, "JUNIN": 11142847.49, "LAMBAYEQUE": 10029687.15, "LORETO": 7847177.43, "PIURA": 7657138.49, "HUANUCO": 7407057.53, "TACNA": 6972093.88, "AYACUCHO": 6759944.6}, "2021": {"LIMA": 383020638.72, "AREQUIPA": 21754469.48, "CUSCO": 16608278.27, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 17949894.27, "PUNO": 15106924.22, "LA LIBERTAD": 13667694.74, "ANCASH": 13041252.17, "ICA": 14810576.32, "JUNIN": 11955372.97, "LAMBAYEQUE": 11566411.38, "LORETO": 9155620.65, "PIURA": 9823278.42, "HUANUCO": 8683452.76, "TACNA": 8387100.17, "AYACUCHO": 7993512.54}, "2022": {"LIMA": 490067613.53, "AREQUIPA": 23693158.6, "CUSCO": 16351716.2, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 14907528.98, "PUNO": 15044716.81, "LA LIBERTAD": 13716273.83, "ANCASH": 13813601.3, "ICA": 13571459.68, "JUNIN": 11979226.89, "LAMBAYEQUE": 11846589.31, "LORETO": 10572809.31, "PIURA": 9768038.18, "HUANUCO": 8384564.53, "TACNA": 9438791.24, "AYACUCHO": 8500437.92}, "2023": {"LIMA": 601051387.09, "AREQUIPA": 25270142.54, "CUSCO": 15795589.88, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 14655432.4, "PUNO": 15680220.19, "LA LIBERTAD": 15147256.6, "ANCASH": 14374779.62, "ICA": 12960377.66, "JUNIN": 12927724.37, "LAMBAYEQUE": 15525158.56, "LORETO": 10211488.06, "PIURA": 10812972.15, "HUANUCO": 8719418.77, "TACNA": 9423447.83, "AYACUCHO": 8448626.65}, "2024": {"LIMA": 624628737.13, "AREQUIPA": 27146390.24, "CUSCO": 20599297.85, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 17462129.86, "PUNO": 19252126.71, "LA LIBERTAD": 18212055.54, "ANCASH": 16418271.33, "ICA": 14444875.07, "JUNIN": 15582801.66, "LAMBAYEQUE": 15324847.91, "LORETO": 13993624.63, "PIURA": 12495928.35, "HUANUCO": 11763875.71, "TACNA": 10710041.96, "AYACUCHO": 12406903.51}, "2025": {"LIMA": 665145369.51, "AREQUIPA": 30329975.01, "CUSCO": 23326309.03, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 21588199.44, "PUNO": 20155816.05, "LA LIBERTAD": 19421103.4, "ANCASH": 17881639.41, "ICA": 14954034.85, "JUNIN": 16860038.94, "LAMBAYEQUE": 16767670.17, "LORETO": 16262937.56, "PIURA": 13122905.83, "HUANUCO": 12807417.91, "TACNA": 11261740.94, "AYACUCHO": 14270195.99}}}};
+const P = {"presupuesto": {"meta": {"fuente": "MEF Datos Abiertos – Presupuesto y Ejecución de Gasto (Devengado)", "url_base": "https://fs.datosabiertos.mef.gob.pe/datastorefiles", "pliego": "039 - MIMP", "fecha_descarga": {"2017": "2026-09-08", "2018": "2026-09-08", "2019": "2026-09-08", "2020": "2026-09-08", "2021": "2026-09-08", "2022": "2026-09-08", "2023": "2026-09-08", "2024": "2026-09-08", "2025": "2026-09-08"}, "periodo": ["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]}, "serie_anual": [{"anio": "2017", "pia": 425841070.0, "pim": 402934080.0, "certificado": 396684744.49, "comprometido": 395372786.96, "devengado": 394938684.12, "girado": 393938563.85, "no_ejecutado": 7995395.88, "ejecucion_pct": 98.02}, {"anio": "2018", "pia": 443826951.0, "pim": 444428583.0, "certificado": 436698178.41, "comprometido": 434825354.08, "devengado": 434125767.77, "girado": 432470100.1, "no_ejecutado": 10302815.23, "ejecucion_pct": 97.68}, {"anio": "2019", "pia": 732645644.0, "pim": 585187492.0, "certificado": 570316359.68, "comprometido": 566238492.08, "devengado": 564286126.49, "girado": 562159072.32, "no_ejecutado": 20901365.51, "ejecucion_pct": 96.43}, {"anio": "2020", "pia": 732363274.0, "pim": 576452620.0, "certificado": 558762632.85, "comprometido": 556790535.54, "devengado": 556645270.4, "girado": 555460563.54, "no_ejecutado": 19807349.6, "ejecucion_pct": 96.56}, {"anio": "2021", "pia": 697351455.0, "pim": 630896257.0, "certificado": 614487225.34, "comprometido": 612749128.95, "devengado": 612745264.83, "girado": 612301505.2, "no_ejecutado": 18150992.17, "ejecucion_pct": 97.12}, {"anio": "2022", "pia": 713410049.0, "pim": 741276191.0, "certificado": 727568958.2, "comprometido": 724890606.31, "devengado": 724843186.54, "girado": 724075869.71, "no_ejecutado": 16433004.46, "ejecucion_pct": 97.78}, {"anio": "2023", "pia": 789544666.0, "pim": 861060692.0, "certificado": 848122359.15, "comprometido": 846333746.26, "devengado": 846144092.27, "girado": 845416260.22, "no_ejecutado": 14916599.73, "ejecucion_pct": 98.27}, {"anio": "2024", "pia": 969611508.0, "pim": 932617113.0, "certificado": 924647695.85, "comprometido": 922136919.49, "devengado": 922073379.93, "girado": 920920290.38, "no_ejecutado": 10543733.07, "ejecucion_pct": 98.87}, {"anio": "2025", "pia": 996297133.0, "pim": 1005357090.0, "certificado": 1000714184.46, "comprometido": 999229435.55, "devengado": 995592697.35, "girado": 992982792.44, "no_ejecutado": 9764392.65, "ejecucion_pct": 99.03}], "mensual": {"2017": [20096420.7, 24087181.76, 30360526.13, 28424009.4, 30381413.44, 31647966.46, 36317338.39, 34795844.09, 36520814.41, 34599931.11, 35549763.73, 52157474.5], "2018": [24005953.62, 27581501.58, 29492835.28, 35246114.02, 33027306.88, 31523275.61, 37441209.04, 34872281.93, 34863301.48, 39251643.54, 39904578.33, 66915766.46], "2019": [27589051.23, 33199858.04, 38097210.11, 44116308.76, 42454605.82, 45039213.6, 49495801.55, 49859342.45, 46939826.41, 50383240.21, 55007066.08, 82104602.23], "2020": [35195800.47, 47906108.48, 38585302.86, 40752235.33, 41907725.79, 41860771.81, 50575679.72, 44587718.88, 45851103.54, 44897187.38, 49738983.95, 74786652.19], "2021": [36465903.68, 43064514.91, 46349954.4, 45627127.88, 52901840.41, 49268538.87, 53712370.03, 47948449.71, 48275845.67, 53112583.74, 54014522.78, 82003612.75], "2022": [40054203.21, 54320696.73, 49067102.34, 57030949.68, 52092340.42, 56739542.44, 57624872.76, 61704595.54, 57935805.66, 66301177.43, 59269306.94, 112702593.39], "2023": [42490619.8, 70704487.59, 61966148.27, 72028305.21, 56842859.43, 80490912.45, 61075785.57, 80220431.33, 61524114.55, 76939955.57, 70835350.05, 111025122.45], "2024": [41757421.93, 79844854.84, 60375001.01, 87824221.36, 57656831.66, 86306614.84, 63849330.9, 92982252.81, 57329349.51, 96368354.37, 68945404.84, 128833741.86], "2025": [47367210.59, 93772467.88, 62421124.56, 99146554.6, 61605716.17, 101568847.23, 64795775.31, 98454272.2, 62410226.33, 101188077.49, 65497906.96, 137364518.03]}, "planilla_mensual": {"2017": [16251488.03, 16593645.5, 15916206.97, 16007994.22, 17152026.07, 16720570.3, 20093102.78, 18429416.6, 19504427.59, 19432444.06, 21166734.93, 24573400.59], "2018": [19671989.84, 20065026.71, 18901545.55, 19644880.21, 20697191.8, 19894903.26, 23497248.76, 20800319.96, 21198176.21, 22815623.78, 23922841.56, 30134723.81], "2019": [24807171.63, 24251354.37, 24540761.43, 24592256.64, 26103707.53, 25592442.17, 30128804.64, 29350694.88, 29998023.24, 31707445.39, 29871034.68, 36098802.63], "2020": [31382855.58, 29499351.25, 29085320.34, 30156087.77, 28975541.5, 28856988.86, 33581363.73, 29438382.18, 30649549.31, 33081186.71, 32783299.24, 41207837.34], "2021": [33812799.33, 33166127.01, 32581986.63, 32106569.72, 35140425.58, 34085541.78, 38605273.21, 33726124.45, 34038241.21, 34352386.18, 38220045.25, 41246935.0], "2022": [35992056.36, 35846782.88, 35312174.36, 34692815.38, 35623677.6, 34440254.64, 38836752.71, 34554584.12, 34992131.68, 35170336.27, 36013844.02, 47819635.68], "2023": [36744286.47, 37313807.86, 42250328.02, 35569847.92, 36851963.49, 34134792.14, 39269969.7, 33969273.19, 33967836.98, 33893574.93, 41024378.95, 41135697.11], "2024": [36932392.42, 36463571.21, 36604072.4, 38486876.71, 38642010.99, 36471413.3, 42523441.29, 37465704.87, 38010305.07, 37713079.64, 38748474.46, 45646723.74], "2025": [41344888.9, 39611053.08, 39344871.98, 39245576.74, 40720648.06, 40126260.42, 44642675.43, 40259952.73, 41483164.6, 41871452.27, 43777149.56, 55057292.57]}, "meses": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"], "por_ue": {"labels": ["PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)", "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF", "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL"], "por_anio": {"2017": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 138781700.77, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 132321185.86, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 123835797.49}, "2018": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 177408966.13, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 151748845.3, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 104967956.34}, "2019": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 272819226.72, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 182366039.12, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 109100860.65}, "2020": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 253673697.41, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 184897815.31, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 118073757.68}, "2021": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 286475190.82, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 209069086.22, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 117200987.79}, "2022": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 317859868.05, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 269462748.29, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 137520570.2}, "2023": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 338842015.26, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 352689418.58, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 154612658.43}, "2024": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 331605011.1, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 417260516.99, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 173207851.84}, "2025": {"PROGRAMA NACIONAL CONTRA LA VIOLENCIA FAMILIAR Y SEXUAL (PNCVFS)": 361855725.71, "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR- INABIF": 433791813.43, "MINISTERIO DE LA MUJER Y POBLACIONES VULNERABLES- ADM. NIVEL CENTRAL": 199945158.21}}}, "por_programa": {"labels": ["ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO", "LUCHA CONTRA LA VIOLENCIA FAMILIAR", "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS", "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER", "ACCIONES CENTRALES", "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS", "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES", "PREVENCION Y TRATAMIENTO DEL CONSUMO DE DROGAS"], "por_anio": {"2017": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 126017761.23, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 132742074.21, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 60855469.25, "ACCIONES CENTRALES": 48466828.29, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 12068708.55, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 14587861.97, "PREVENCION Y TRATAMIENTO DEL CONSUMO DE DROGAS": 199980.62}, "2018": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 141064641.14, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 177208974.88, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 48312262.06, "ACCIONES CENTRALES": 53209931.18, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 10582487.75, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 3547479.51, "PREVENCION Y TRATAMIENTO DEL CONSUMO DE DROGAS": 199991.25}, "2019": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 173376871.33, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 275592216.74, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 37625497.76, "ACCIONES CENTRALES": 54936116.57, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 13218023.74, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 9537400.35}, "2020": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 157375791.96, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 251843399.34, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 69049716.87, "ACCIONES CENTRALES": 60637801.87, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 16036115.43, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 1702444.93}, "2021": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 171631403.14, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 258589954.95, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 80371119.47, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 26354571.07, "ACCIONES CENTRALES": 54907054.33, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 20195869.62, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 695292.25}, "2022": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 187806721.98, "LUCHA CONTRA LA VIOLENCIA FAMILIAR": 274733784.23, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 125304426.11, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 37898363.42, "ACCIONES CENTRALES": 66463220.59, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 28846265.61, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 3790404.6}, "2023": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 201681232.12, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 242797361.69, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 249895649.52, "ACCIONES CENTRALES": 116792110.14, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 30858926.47, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 4118812.33}, "2024": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 210696727.51, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 309468734.81, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 241429470.22, "ACCIONES CENTRALES": 121994729.63, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 34058008.07, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 4425709.69}, "2025": {"ATENCION OPORTUNA DE NIÑAS, NIÑOS Y ADOLESCENTES EN PRESUNTO ESTADO DE ABANDONO": 215542634.29, "ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS": 347711414.66, "PRODUCTOS ESPECIFICOS PARA REDUCCION DE LA VIOLENCIA CONTRA LA MUJER": 255764474.49, "ACCIONES CENTRALES": 135990451.99, "ACCESO DE PERSONAS ADULTAS MAYORES A SERVICIOS ESPECIALIZADOS": 36019078.9, "REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES": 4564643.02}}}, "por_generica": {"labels": ["BIENES Y SERVICIOS", "PERSONAL Y OBLIGACIONES SOCIALES", "OTROS GASTOS", "PENSIONES Y OTRAS PRESTACIONES SOCIALES", "ADQUISICION DE ACTIVOS NO FINANCIEROS", "DONACIONES Y TRANSFERENCIAS"], "por_anio": {"2017": {"BIENES Y SERVICIOS": 281889122.81, "PERSONAL Y OBLIGACIONES SOCIALES": 39487445.89, "OTROS GASTOS": 8447483.83, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 49537279.56, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 9378971.78, "DONACIONES Y TRANSFERENCIAS": 6198380.25}, "2018": {"BIENES Y SERVICIOS": 330140657.56, "PERSONAL Y OBLIGACIONES SOCIALES": 39607924.21, "OTROS GASTOS": 4200219.57, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 42815003.5, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 11042329.36, "DONACIONES Y TRANSFERENCIAS": 6319633.57}, "2019": {"BIENES Y SERVICIOS": 446174421.87, "PERSONAL Y OBLIGACIONES SOCIALES": 42544284.27, "OTROS GASTOS": 5617417.17, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 40790731.32, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 26755591.57, "DONACIONES Y TRANSFERENCIAS": 2403680.29}, "2020": {"BIENES Y SERVICIOS": 453705729.73, "PERSONAL Y OBLIGACIONES SOCIALES": 45187332.66, "OTROS GASTOS": 4297894.42, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 26196931.76, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 26525268.67, "DONACIONES Y TRANSFERENCIAS": 732113.16}, "2021": {"BIENES Y SERVICIOS": 505355409.24, "PERSONAL Y OBLIGACIONES SOCIALES": 44113477.41, "OTROS GASTOS": 23488777.61, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 26623092.83, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 12772118.74, "DONACIONES Y TRANSFERENCIAS": 392389.0}, "2022": {"BIENES Y SERVICIOS": 559579885.39, "PERSONAL Y OBLIGACIONES SOCIALES": 43487509.72, "OTROS GASTOS": 64709289.46, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 34112367.97, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 22137613.72, "DONACIONES Y TRANSFERENCIAS": 816520.28}, "2023": {"BIENES Y SERVICIOS": 606331863.22, "PERSONAL Y OBLIGACIONES SOCIALES": 42691312.96, "OTROS GASTOS": 132054896.76, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 36185902.67, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 28128178.63, "DONACIONES Y TRANSFERENCIAS": 751938.03}, "2024": {"BIENES Y SERVICIOS": 188332238.09, "PERSONAL Y OBLIGACIONES SOCIALES": 463708066.1, "OTROS GASTOS": 202896798.0, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 36120810.43, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 30544690.81, "DONACIONES Y TRANSFERENCIAS": 470776.5}, "2025": {"BIENES Y SERVICIOS": 186351995.36, "PERSONAL Y OBLIGACIONES SOCIALES": 507484986.34, "OTROS GASTOS": 251285946.44, "PENSIONES Y OTRAS PRESTACIONES SOCIALES": 33595810.81, "ADQUISICION DE ACTIVOS NO FINANCIEROS": 16239590.4, "DONACIONES Y TRANSFERENCIAS": 634368.0}}}, "por_fuente": {"labels": ["RECURSOS ORDINARIOS", "RECURSOS POR OPERACIONES OFICIALES DE CREDITO", "DONACIONES Y TRANSFERENCIAS", "RECURSOS DIRECTAMENTE RECAUDADOS"], "por_anio": {"2017": {"RECURSOS ORDINARIOS": 393314513.22, "DONACIONES Y TRANSFERENCIAS": 725950.74, "RECURSOS DIRECTAMENTE RECAUDADOS": 898220.16}, "2018": {"RECURSOS ORDINARIOS": 433213259.91, "RECURSOS DIRECTAMENTE RECAUDADOS": 912507.86}, "2019": {"RECURSOS ORDINARIOS": 563860988.16, "RECURSOS DIRECTAMENTE RECAUDADOS": 425138.33}, "2020": {"RECURSOS ORDINARIOS": 546963141.24, "RECURSOS POR OPERACIONES OFICIALES DE CREDITO": 6055415.08, "DONACIONES Y TRANSFERENCIAS": 3447766.18, "RECURSOS DIRECTAMENTE RECAUDADOS": 178947.9}, "2021": {"RECURSOS ORDINARIOS": 603523938.47, "RECURSOS POR OPERACIONES OFICIALES DE CREDITO": 8161123.55, "DONACIONES Y TRANSFERENCIAS": 834202.81, "RECURSOS DIRECTAMENTE RECAUDADOS": 226000.0}, "2022": {"RECURSOS ORDINARIOS": 722751821.5, "DONACIONES Y TRANSFERENCIAS": 1373410.72, "RECURSOS DIRECTAMENTE RECAUDADOS": 717954.32}, "2023": {"RECURSOS ORDINARIOS": 843711743.57, "DONACIONES Y TRANSFERENCIAS": 2432348.7}, "2024": {"RECURSOS ORDINARIOS": 919500395.79, "DONACIONES Y TRANSFERENCIAS": 2572984.14}, "2025": {"RECURSOS ORDINARIOS": 994747829.11, "DONACIONES Y TRANSFERENCIAS": 844868.24}}}, "por_categoria": {"labels": ["GASTOS CORRIENTES", "GASTOS DE CAPITAL"], "por_anio": {"2017": {"GASTOS CORRIENTES": 385559712.34, "GASTOS DE CAPITAL": 9378971.78}, "2018": {"GASTOS CORRIENTES": 423083438.41, "GASTOS DE CAPITAL": 11042329.36}, "2019": {"GASTOS CORRIENTES": 537530534.92, "GASTOS DE CAPITAL": 26755591.57}, "2020": {"GASTOS CORRIENTES": 530120001.73, "GASTOS DE CAPITAL": 26525268.67}, "2021": {"GASTOS CORRIENTES": 599853705.09, "GASTOS DE CAPITAL": 12891559.74}, "2022": {"GASTOS CORRIENTES": 701901577.82, "GASTOS DE CAPITAL": 22941608.72}, "2023": {"GASTOS CORRIENTES": 818015913.64, "GASTOS DE CAPITAL": 28128178.63}, "2024": {"GASTOS CORRIENTES": 891417814.62, "GASTOS DE CAPITAL": 30655565.31}, "2025": {"GASTOS CORRIENTES": 979353106.95, "GASTOS DE CAPITAL": 16239590.4}}}, "por_departamento": {"labels": ["LIMA", "AREQUIPA", "CUSCO", "PROVINCIA CONSTITUCIONAL DEL CALLAO", "PUNO", "LA LIBERTAD", "ANCASH", "ICA", "JUNIN", "LAMBAYEQUE", "LORETO", "PIURA", "HUANUCO", "TACNA", "AYACUCHO"], "por_anio": {"2017": {"LIMA": 330163797.68, "AREQUIPA": 5018288.92, "CUSCO": 10143090.07, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 7103596.25, "PUNO": 4229495.58, "LA LIBERTAD": 3603589.69, "ANCASH": 2275596.97, "ICA": 5188038.52, "JUNIN": 3866265.63, "LAMBAYEQUE": 3304294.23, "LORETO": 4204664.51, "PIURA": 3166873.38, "HUANUCO": 2358701.74, "TACNA": 2759193.32, "AYACUCHO": 1727734.0}, "2018": {"LIMA": 328533364.16, "AREQUIPA": 19157872.69, "CUSCO": 6098044.79, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 7727307.27, "PUNO": 7239146.6, "LA LIBERTAD": 4476437.91, "ANCASH": 3723659.61, "ICA": 5376243.67, "JUNIN": 5314923.81, "LAMBAYEQUE": 5291783.76, "LORETO": 5646757.13, "PIURA": 3761924.91, "HUANUCO": 4674006.33, "TACNA": 5025232.08, "AYACUCHO": 3932093.33}, "2019": {"LIMA": 370740859.43, "AREQUIPA": 15856672.43, "CUSCO": 14139540.94, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 15897895.85, "PUNO": 12440461.42, "LA LIBERTAD": 10280108.11, "ANCASH": 10798980.47, "ICA": 9178633.14, "JUNIN": 11749665.88, "LAMBAYEQUE": 8937373.42, "LORETO": 10001832.2, "PIURA": 7274679.01, "HUANUCO": 8528346.76, "TACNA": 7273051.72, "AYACUCHO": 7035182.78}, "2020": {"LIMA": 361368301.33, "AREQUIPA": 18257055.92, "CUSCO": 14560469.08, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 18639012.98, "PUNO": 12982349.63, "LA LIBERTAD": 12207183.19, "ANCASH": 11381801.28, "ICA": 11684480.0, "JUNIN": 11142847.49, "LAMBAYEQUE": 10029687.15, "LORETO": 7847177.43, "PIURA": 7657138.49, "HUANUCO": 7407057.53, "TACNA": 6972093.88, "AYACUCHO": 6759944.6}, "2021": {"LIMA": 383020638.72, "AREQUIPA": 21754469.48, "CUSCO": 16608278.27, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 17949894.27, "PUNO": 15106924.22, "LA LIBERTAD": 13667694.74, "ANCASH": 13041252.17, "ICA": 14810576.32, "JUNIN": 11955372.97, "LAMBAYEQUE": 11566411.38, "LORETO": 9155620.65, "PIURA": 9823278.42, "HUANUCO": 8683452.76, "TACNA": 8387100.17, "AYACUCHO": 7993512.54}, "2022": {"LIMA": 490067613.53, "AREQUIPA": 23693158.6, "CUSCO": 16351716.2, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 14907528.98, "PUNO": 15044716.81, "LA LIBERTAD": 13716273.83, "ANCASH": 13813601.3, "ICA": 13571459.68, "JUNIN": 11979226.89, "LAMBAYEQUE": 11846589.31, "LORETO": 10572809.31, "PIURA": 9768038.18, "HUANUCO": 8384564.53, "TACNA": 9438791.24, "AYACUCHO": 8500437.92}, "2023": {"LIMA": 601051387.09, "AREQUIPA": 25270142.54, "CUSCO": 15795589.88, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 14655432.4, "PUNO": 15680220.19, "LA LIBERTAD": 15147256.6, "ANCASH": 14374779.62, "ICA": 12960377.66, "JUNIN": 12927724.37, "LAMBAYEQUE": 15525158.56, "LORETO": 10211488.06, "PIURA": 10812972.15, "HUANUCO": 8719418.77, "TACNA": 9423447.83, "AYACUCHO": 8448626.65}, "2024": {"LIMA": 624628737.13, "AREQUIPA": 27146390.24, "CUSCO": 20599297.85, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 17462129.86, "PUNO": 19252126.71, "LA LIBERTAD": 18212055.54, "ANCASH": 16418271.33, "ICA": 14444875.07, "JUNIN": 15582801.66, "LAMBAYEQUE": 15324847.91, "LORETO": 13993624.63, "PIURA": 12495928.35, "HUANUCO": 11763875.71, "TACNA": 10710041.96, "AYACUCHO": 12406903.51}, "2025": {"LIMA": 665145369.51, "AREQUIPA": 30329975.01, "CUSCO": 23326309.03, "PROVINCIA CONSTITUCIONAL DEL CALLAO": 21588199.44, "PUNO": 20155816.05, "LA LIBERTAD": 19421103.4, "ANCASH": 17881639.41, "ICA": 14954034.85, "JUNIN": 16860038.94, "LAMBAYEQUE": 16767670.17, "LORETO": 16262937.56, "PIURA": 13122905.83, "HUANUCO": 12807417.91, "TACNA": 11261740.94, "AYACUCHO": 14270195.99}}}, "por_detalle_gasto": {"labels": ["CONTRATO ADMINISTRATIVO DE SERVICIOS", "SUBVENCIONES FINANCIERAS", "SERVICIOS PROFESIONALES Y TECNICOS", "PERSONAL ADMINISTRATIVO", "LOCACIÓN DE SERVICIOS RELACIONADAS AL ROL DE LA ENTIDAD", "ENTREGA DE BIENES Y SERVICIOS", "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA", "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO", "VIAJES", "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION", "PENSIONES", "GASTOS VARIABLES Y OCASIONALES"], "por_anio": {"2017": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 182354011.75, "SUBVENCIONES FINANCIERAS": 4776846.0, "SERVICIOS PROFESIONALES Y TECNICOS": 37782045.11, "PERSONAL ADMINISTRATIVO": 29716508.6, "ENTREGA DE BIENES Y SERVICIOS": 28793905.97, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 11894913.26, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 8294382.99, "VIAJES": 9395911.9, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 11156945.79, "PENSIONES": 20622104.83, "GASTOS VARIABLES Y OCASIONALES": 6304456.11}, "2018": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 221636547.24, "SERVICIOS PROFESIONALES Y TECNICOS": 46747297.7, "PERSONAL ADMINISTRATIVO": 28520485.23, "ENTREGA DE BIENES Y SERVICIOS": 22156554.39, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 11431053.64, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 8267341.73, "VIAJES": 10205579.93, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 7557934.78, "PENSIONES": 20533375.45, "GASTOS VARIABLES Y OCASIONALES": 7033856.04}, "2019": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 294498214.96, "SERVICIOS PROFESIONALES Y TECNICOS": 75822788.49, "PERSONAL ADMINISTRATIVO": 30409863.58, "ENTREGA DE BIENES Y SERVICIOS": 33202535.66, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 12058036.54, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 15266526.59, "VIAJES": 12722382.93, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 10673633.11, "PENSIONES": 7472217.8, "GASTOS VARIABLES Y OCASIONALES": 8174013.8}, "2020": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 333510431.15, "SUBVENCIONES FINANCIERAS": 553500.0, "SERVICIOS PROFESIONALES Y TECNICOS": 69378501.59, "PERSONAL ADMINISTRATIVO": 33746887.66, "ENTREGA DE BIENES Y SERVICIOS": 18653296.83, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 13755378.35, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 9475574.02, "VIAJES": 4232169.13, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 6557766.17, "PENSIONES": 7435723.12, "GASTOS VARIABLES Y OCASIONALES": 7766063.71}, "2021": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 376968977.94, "SUBVENCIONES FINANCIERAS": 20906260.0, "SERVICIOS PROFESIONALES Y TECNICOS": 17961479.86, "PERSONAL ADMINISTRATIVO": 32782122.79, "LOCACIÓN DE SERVICIOS RELACIONADAS AL ROL DE LA ENTIDAD": 56986676.99, "ENTREGA DE BIENES Y SERVICIOS": 19122979.16, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 13205226.94, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 6257690.52, "VIAJES": 5957906.31, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 9998154.52, "PENSIONES": 7393727.73, "GASTOS VARIABLES Y OCASIONALES": 7854184.59}, "2022": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 395807535.98, "SUBVENCIONES FINANCIERAS": 62250088.11, "SERVICIOS PROFESIONALES Y TECNICOS": 19474527.29, "PERSONAL ADMINISTRATIVO": 31527582.55, "LOCACIÓN DE SERVICIOS RELACIONADAS AL ROL DE LA ENTIDAD": 71116072.98, "ENTREGA DE BIENES Y SERVICIOS": 23110695.21, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 15672944.24, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 15968728.54, "VIAJES": 12062763.71, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 10578804.5, "PENSIONES": 7628720.03, "GASTOS VARIABLES Y OCASIONALES": 7554579.91}, "2023": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 403434443.8, "SUBVENCIONES FINANCIERAS": 128092155.21, "SERVICIOS PROFESIONALES Y TECNICOS": 20597395.87, "PERSONAL ADMINISTRATIVO": 30437909.32, "LOCACIÓN DE SERVICIOS RELACIONADAS AL ROL DE LA ENTIDAD": 91937859.32, "ENTREGA DE BIENES Y SERVICIOS": 25461854.45, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 18257735.45, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 18109647.44, "VIAJES": 14105411.34, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 11888238.45, "PENSIONES": 7520772.65, "GASTOS VARIABLES Y OCASIONALES": 8002175.89}, "2024": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 388988723.73, "SUBVENCIONES FINANCIERAS": 202259308.26, "SERVICIOS PROFESIONALES Y TECNICOS": 25222165.97, "PERSONAL ADMINISTRATIVO": 28371583.56, "ENTREGA DE BIENES Y SERVICIOS": 24836416.5, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 18059834.58, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 19999921.03, "VIAJES": 13662352.39, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 12665215.27, "PENSIONES": 7624137.64, "GASTOS VARIABLES Y OCASIONALES": 16159369.34}, "2025": {"CONTRATO ADMINISTRATIVO DE SERVICIOS": 428677156.4, "SUBVENCIONES FINANCIERAS": 250898980.28, "SERVICIOS PROFESIONALES Y TECNICOS": 20558601.23, "PERSONAL ADMINISTRATIVO": 28082143.96, "ENTREGA DE BIENES Y SERVICIOS": 22497787.56, "SERVICIOS DE LIMPIEZA, SEGURIDAD Y VIGILANCIA": 18967850.61, "ADQUISICION DE MAQUINARIAS, EQUIPO Y MOBILIARIO": 6142676.96, "VIAJES": 12792678.32, "SERVICIOS BASICOS, COMUNICACIONES, PUBLICIDAD Y DIFUSION": 13530111.51, "PENSIONES": 7644199.28, "GASTOS VARIABLES Y OCASIONALES": 20456690.86}}}}, "endes": {"anios": ["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"], "series": {"total": [65.4, 63.2, 57.7, 54.8, 54.9, 55.7, 53.8, 52.0], "psicologica": [61.5, 58.9, 52.8, 50.1, 50.8, 51.9, 49.3, 48.4], "fisica": [30.6, 30.7, 29.5, 27.1, 26.7, 27.8, 27.2, 25.5], "sexual": [6.5, 6.8, 7.1, 6.0, 5.9, 6.7, 6.5, 5.6]}, "fuente": "https://proyectos.inei.gob.pe/files/publicaciones/2024/SERIES_ANUALES_1986_2024.pdf"}, "titulares": [{"nombre": "Ana Maria Romero-Lozada Lauezzari", "inicio": "2016-07-28", "fin": "2017-07-27"}, {"nombre": "Ana Maria Choquehuanca de Villanueva", "inicio": "2017-07-27", "fin": "2018-04-02"}, {"nombre": "Ana Maria Mendieta Trefogli", "inicio": "2018-04-02", "fin": "2019-03-11"}, {"nombre": "Gloria Montenegro Figueroa", "inicio": "2019-03-11", "fin": "2020-07-15"}, {"nombre": "Rosario Sasieta Morales", "inicio": "2020-07-15", "fin": "2020-11-10"}, {"nombre": "[NO DISPONIBLE — titular MIMP del gabinete de Manuel Merino / Antero Flores-Araoz (11-15 nov 2020); verificar Resolucion Suprema]", "inicio": "2020-11-11", "fin": "2020-11-15"}, {"nombre": "Silvia Loli Espinoza", "inicio": "2020-11-18", "fin": "2021-07-28"}, {"nombre": "Anahi Durand Guevara", "inicio": "2021-07-29", "fin": "2022-02-08"}, {"nombre": "Diana Miloslavich Tupac", "inicio": "2022-02-08", "fin": "2022-08-24"}, {"nombre": "Claudia Liliana Davila Moscoso", "inicio": "2022-08-24", "fin": "2022-11-26"}, {"nombre": "Heidy Juarez Calle", "inicio": "2022-11-26", "fin": "2022-12-07"}, {"nombre": "Grecia Rojas Ortiz", "inicio": "2022-12-10", "fin": "2023-01-13"}, {"nombre": "Nancy Rosalina Tolentino Gamarra", "inicio": "2023-01-13", "fin": "2024-04-01"}, {"nombre": "Angela Teresa Hernandez Cajo", "inicio": "2024-04-01", "fin": "2025-01-31"}, {"nombre": "Fanny Esther Montellanos Carbajal", "inicio": "2025-01-31", "fin": "2025-08-23"}, {"nombre": "Ana Pena Cardoza", "inicio": "2025-08-23", "fin": "[en ejercicio al cierre del periodo de estudio 2025]"}], "normas": [{"tipo": "Ley", "numero": "30364", "nombre": "Ley para prevenir, sancionar y erradicar la violencia contra las mujeres y los integrantes del grupo familiar", "anio": "2015", "url": "https://busquedas.elperuano.pe/dispositivo/NL/1314999-1"}, {"tipo": "Decreto Supremo", "numero": "009-2016-MIMP", "nombre": "Reglamento de la Ley 30364", "anio": "2016", "url": "[NO DISPONIBLE — https://busquedas.elperuano.pe]"}, {"tipo": "Decreto Legislativo", "numero": "1323", "nombre": "Decreto Legislativo que fortalece la lucha contra el feminicidio, la violencia familiar y la violencia de genero", "anio": "2017", "url": "https://busquedas.elperuano.pe/dispositivo/NL/1471010-2"}, {"tipo": "Ley", "numero": "30819", "nombre": "Ley que modifica el Codigo Penal y el Codigo de los Ninos y Adolescentes (amplia el tipo penal de feminicidio y de lesiones)", "anio": "2018", "url": "https://busquedas.elperuano.pe/dispositivo/NL/1669642-1"}, {"tipo": "Decreto Legislativo", "numero": "1386", "nombre": "Decreto Legislativo que modifica la Ley 30364", "anio": "2018", "url": "[NO DISPONIBLE — https://busquedas.elperuano.pe]"}, {"tipo": "Ley", "numero": "30862", "nombre": "Ley que fortalece diversas normas para prevenir, sancionar y erradicar la violencia contra las mujeres y los integrantes del grupo familiar (modifica la Ley 30364)", "anio": "2018", "url": "[NO DISPONIBLE — https://busquedas.elperuano.pe]"}, {"tipo": "Ley", "numero": "30068", "nombre": "Ley que incorpora el articulo 108-A al Codigo Penal y modifica los articulos 107, 46-B y 46-C del Codigo Penal y el articulo 46 del Codigo de Ejecucion Penal, con la finalidad de prevenir, sancionar y erradicar el feminicidio", "anio": "2013", "url": "https://busquedas.elperuano.pe/normaslegales/ley-que-incorpora-el-articulo-108-a-al-codigo-penal-y-modifi-ley-n-30068-963880-1"}, {"tipo": "Ley", "numero": "28983", "nombre": "Ley de igualdad de oportunidades entre mujeres y hombres", "anio": "2007", "url": "https://www2.congreso.gob.pe/sicr/cendocbib/con4_uibd.nsf/3C27C521D3D530F3052579F90061EF49/$FILE/6_LEY_28983.pdf"}, {"tipo": "Decreto Supremo", "numero": "008-2019-MIMP", "nombre": "Aprueba la Politica Nacional de Igualdad de Genero (PNIG)", "anio": "2019", "url": "https://elperuano.pe/NormasElperuano/2019/04/04/1757065-1/1757065-1.htm"}, {"tipo": "Decreto Supremo", "numero": "004-2020-MIMP", "nombre": "Aprueba el Texto Unico Ordenado (TUO) de la Ley 30364", "anio": "2020", "url": "[NO DISPONIBLE — https://busquedas.elperuano.pe]"}, {"tipo": "Decreto Supremo", "numero": "022-2021-MIMP", "nombre": "Aprueba la Estrategia Nacional de Prevencion de la Violencia de Genero contra las Mujeres 'Mujeres libres de violencia'", "anio": "2021", "url": "https://busquedas.elperuano.pe/normaslegales/decreto-supremo-que-aprueba-la-estrategia-nacional-de-preven-decreto-supremo-n-022-2021-mimp-1976374-3"}], "generado": "2026-09-08"};
+const D = P.presupuesto, EN = P.endes, TIT = P.titulares, NOR = P.normas;
 const css = v => getComputedStyle(document.body).getPropertyValue(v).trim();
-const SER = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
-const M = x => x/1e6;
-const fmtM = x => 'S/ ' + (Math.round(x/1e5)/10).toLocaleString('es-PE') + ' M';
-const anios = DASH.meta.periodo;
-let charts = [];
-function baseOpts(extra){
-  const ink=css('--ink'), ink2=css('--ink-2'), line=css('--line');
-  return Object.assign({responsive:true,maintainAspectRatio:false,
-    interaction:{mode:'index',intersect:false},
-    plugins:{legend:{labels:{color:ink2,boxWidth:12,boxHeight:12,usePointStyle:true,font:{family:'Public Sans',size:12}}},
+const SER=['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'], sc=i=>css(SER[i%8]);
+const M=x=>x/1e6, fmtM=x=>'S/ '+(Math.round(x/1e5)/10).toLocaleString('es-PE')+' M';
+const anios=D.meta.periodo;
+let charts=[];
+function base(extra){const ink=css('--ink'),ink2=css('--ink-2'),line=css('--line');
+  return Object.assign({responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{labels:{color:ink2,boxWidth:12,boxHeight:12,usePointStyle:true,font:{family:'Public Sans',size:11}}},
       tooltip:{backgroundColor:css('--panel'),titleColor:ink,bodyColor:ink2,borderColor:line,borderWidth:1,padding:10,usePointStyle:true,
         callbacks:{label:c=>` ${c.dataset.label}: ${fmtM((c.parsed.y!=null?c.parsed.y:c.parsed.x)*1e6)}`}}},
     scales:{x:{grid:{display:false},ticks:{color:ink2,font:{size:12}}},
-      y:{grid:{color:line},ticks:{color:ink2,font:{size:12},callback:v=>v.toLocaleString('es-PE')},
-         title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}}, extra||{});
+      y:{grid:{color:line},ticks:{color:ink2,font:{size:12},callback:v=>v.toLocaleString('es-PE')},title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}},extra||{});
 }
-const sc = i => css(SER[i%8]);
+function stacked(cv,obj){const ds=obj.labels.map((lab,i)=>({label:lab,data:anios.map(a=>M((obj.por_anio[a]||{})[lab]||0)),
+  backgroundColor:sc(i),borderRadius:2,borderWidth:1,borderColor:css('--panel')}));
+  const o=base({scales:{x:{stacked:true,grid:{display:false},ticks:{color:css('--ink-2')}},
+    y:{stacked:true,grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>v.toLocaleString('es-PE')},title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}});
+  o.plugins.legend.labels.font.size=10;
+  return new Chart(cv,{type:'bar',data:{labels:anios,datasets:ds},options:o});}
+function diasEntre(a,b){if(!a)return null;const d1=new Date(a),d2=b?new Date(b):new Date('2025-08-31');
+  return Math.max(1,Math.round((d2-d1)/86400000));}
+
 function build(){
-  charts.forEach(c=>c.destroy()); charts=[];
-  const S=DASH.serie_anual, pN=S[S.length-1], p0=S[0];
-  const crecPIA=(pN.pia/p0.pia-1)*100, ejecProm=S.reduce((a,b)=>a+b.ejecucion_pct,0)/S.length;
+  charts.forEach(c=>c.destroy());charts=[];
+  const S=D.serie_anual,pN=S[S.length-1],p0=S[0];
+  const crec=(pN.pia/p0.pia-1)*100,ejecProm=S.reduce((a,b)=>a+b.ejecucion_pct,0)/S.length;
+  const enTot=EN.series&&(EN.series['total']||EN.series['Total']);
+  const cae = enTot? (enTot[0]-enTot[enTot.length-1]).toFixed(1):null;
   document.getElementById('kpis').innerHTML=[
     ['PIA '+pN.anio,fmtM(pN.pia),'inicial de apertura'],
-    ['PIM '+pN.anio,fmtM(pN.pim),'presupuesto modificado'],
-    ['Ejecución '+pN.anio,pN.ejecucion_pct.toFixed(1)+'%','<span class="k-up">devengado/PIM</span>'],
-    ['Crecim. PIA '+p0.anio.slice(2)+'→'+pN.anio.slice(2),'<span class="k-up">+'+crecPIA.toFixed(0)+'%</span>','nominal, soles corrientes'],
-    ['Ejecución promedio',ejecProm.toFixed(1)+'%','<span class="k-flat">alta y estable</span>'],
+    ['Ejecución '+pN.anio,pN.ejecucion_pct.toFixed(1)+'%','<span class="k-up">no subejecuta</span>'],
+    ['Crecim. PIA '+p0.anio.slice(2)+'→'+pN.anio.slice(2),'<span class="k-up">+'+crec.toFixed(0)+'%</span>','nominal'],
+    enTot?['Prevalencia ENDES','<span class="k-dn">−'+cae+' pp</span>',enTot[0]+'% → '+enTot[enTot.length-1]+'%']:['Prevalencia ENDES','—','en proceso'],
+    ['Titulares 2016–25','<span class="k-dn">'+TIT.length+'</span>','rotación alta'],
   ].map(k=>`<div class="kpi"><div class="k-label">${k[0]}</div><div class="k-val">${k[1]}</div><div class="k-note">${k[2]}</div></div>`).join('');
+
+  // Story: dual axis (excepción consciente: dos historias, gasto vs prevalencia)
+  if(enTot){
+    const o=base();o.plugins.legend.display=true;o.interaction.mode='index';
+    o.scales.y.title.text='Devengado (M S/)';
+    o.scales.y1={position:'right',grid:{drawOnChartArea:false},ticks:{color:css('--accent-2'),callback:v=>v+'%'},
+      title:{display:true,text:'Prevalencia (%)',color:css('--accent-2'),font:{size:11}},suggestedMin:40,suggestedMax:70};
+    o.plugins.tooltip.callbacks.label=c=>c.dataset.yAxisID==='y1'?` ${c.dataset.label}: ${c.parsed.y}%`:` ${c.dataset.label}: ${fmtM(c.parsed.y*1e6)}`;
+    charts.push(new Chart(c_story,{data:{labels:anios,datasets:[
+      {type:'bar',label:'Devengado',data:S.map(r=>M(r.devengado)),backgroundColor:sc(0),borderRadius:3,order:2},
+      {type:'line',label:'Prevalencia ENDES',yAxisID:'y1',data:anios.map(a=>{const i=EN.anios.indexOf(a);return i>=0?enTot[i]:null;}),
+        borderColor:css('--accent-2'),backgroundColor:'transparent',borderWidth:2.4,pointRadius:3,tension:.25,spanGaps:true,order:1}]},options:o}));
+  }
 
   charts.push(new Chart(c_serie,{type:'bar',data:{labels:anios,datasets:[
     {label:'PIA',data:S.map(r=>M(r.pia)),backgroundColor:sc(0),borderRadius:3},
     {label:'PIM',data:S.map(r=>M(r.pim)),backgroundColor:sc(1),borderRadius:3},
-    {label:'Devengado',data:S.map(r=>M(r.devengado)),backgroundColor:sc(2),borderRadius:3}]},options:baseOpts()}));
+    {label:'Devengado',data:S.map(r=>M(r.devengado)),backgroundColor:sc(2),borderRadius:3}]},options:base()}));
+  charts.push(new Chart(c_ejec,{type:'line',data:{labels:anios,datasets:[{label:'Ejecución %',data:S.map(r=>r.ejecucion_pct),borderColor:sc(2),borderWidth:2,pointRadius:4,pointBackgroundColor:sc(2),tension:.25}]},
+    options:(()=>{const o=base();o.plugins.legend.display=false;o.plugins.tooltip.callbacks.label=c=>` Ejecución: ${c.parsed.y.toFixed(1)}%`;o.scales.y.title.text='%';o.scales.y.suggestedMin=90;o.scales.y.suggestedMax=100;o.scales.y.ticks.callback=v=>v+'%';return o;})()}));
+  charts.push(new Chart(c_noejec,{type:'bar',data:{labels:anios,datasets:[{label:'No ejecutado',data:S.map(r=>M(r.no_ejecutado)),backgroundColor:sc(7),borderRadius:3}]},
+    options:(()=>{const o=base();o.plugins.legend.display=false;return o;})()}));
 
-  charts.push(new Chart(c_ejec,{type:'line',data:{labels:anios,datasets:[
-    {label:'Ejecución %',data:S.map(r=>r.ejecucion_pct),borderColor:sc(2),borderWidth:2,pointRadius:4,pointBackgroundColor:sc(2),tension:.25}]},
-    options:(()=>{const o=baseOpts();o.plugins.legend.display=false;o.plugins.tooltip.callbacks.label=c=>` Ejecución: ${c.parsed.y.toFixed(1)}%`;
-    o.scales.y.title.text='%';o.scales.y.suggestedMin=90;o.scales.y.suggestedMax=100;o.scales.y.ticks.callback=v=>v+'%';return o;})()}));
+  // Planilla mensual
+  charts.push(new Chart(c_planilla,{type:'line',data:{labels:D.meses,datasets:anios.map((a,i)=>({label:a,data:(D.planilla_mensual[a]||[]).map(M),
+    borderColor:sc(i),borderWidth:a===anios[anios.length-1]?2.6:1.2,pointRadius:0,tension:.3}))},
+    options:(()=>{const o=base();o.plugins.legend.labels.font.size=10;o.interaction.mode='nearest';o.scales.y.title.text='Millones S/ / mes';return o;})()}));
 
-  charts.push(new Chart(c_noejec,{type:'bar',data:{labels:anios,datasets:[
-    {label:'No ejecutado',data:S.map(r=>M(r.no_ejecutado)),backgroundColor:sc(7),borderRadius:3}]},
-    options:(()=>{const o=baseOpts();o.plugins.legend.display=false;return o;})()}));
+  charts.push(stacked(c_detalle,D.por_detalle_gasto));
+  charts.push(stacked(c_gen,D.por_generica));
+  charts.push(stacked(c_ue,D.por_ue));
+  charts.push(stacked(c_prog,D.por_programa));
+  charts.push(stacked(c_ff,D.por_fuente));
+  charts.push(stacked(c_cat,D.por_categoria));
 
-  function stacked(canvas,obj){
-    const ds=obj.labels.map((lab,i)=>({label:lab,data:anios.map(a=>M((obj.por_anio[a]||{})[lab]||0)),
-      backgroundColor:sc(i),borderRadius:2,borderWidth:1,borderColor:css('--panel')}));
-    const o=baseOpts({scales:{x:{stacked:true,grid:{display:false},ticks:{color:css('--ink-2')}},
-      y:{stacked:true,grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>v.toLocaleString('es-PE')},
-         title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}}}});
-    o.plugins.legend.labels.font.size=11;
-    return new Chart(canvas,{type:'bar',data:{labels:anios,datasets:ds},options:o});
-  }
-  charts.push(stacked(c_ue,DASH.por_ue));
-  charts.push(stacked(c_prog,DASH.por_programa));
-  charts.push(stacked(c_gen,DASH.por_generica));
-  charts.push(stacked(c_ff,DASH.por_fuente));
-  charts.push(stacked(c_cat,DASH.por_categoria));
-
-  charts.push(new Chart(c_mens,{type:'line',data:{labels:DASH.meses,datasets:anios.map((a,i)=>({
-    label:a,data:DASH.mensual[a].map(M),borderColor:sc(i),borderWidth:a===anios[anios.length-1]?2.4:1.2,
-    pointRadius:0,tension:.35}))},options:(()=>{const o=baseOpts();o.plugins.legend.labels.font.size=10;o.interaction.mode='nearest';return o;})()}));
-
-  const dep=DASH.por_departamento, acc=dep.labels.map(l=>anios.reduce((s,a)=>s+((dep.por_anio[a]||{})[l]||0),0));
-  charts.push(new Chart(c_dept,{type:'bar',data:{labels:dep.labels,datasets:[
-    {label:'Devengado 2017–2025',data:acc.map(M),backgroundColor:sc(0),borderRadius:3}]},
-    options:(()=>{const o=baseOpts({indexAxis:'y'});o.plugins.legend.display=false;
+  const dep=D.por_departamento,acc=dep.labels.map(l=>anios.reduce((s,a)=>s+((dep.por_anio[a]||{})[l]||0),0));
+  charts.push(new Chart(c_dept,{type:'bar',data:{labels:dep.labels,datasets:[{label:'Devengado 2017–2025',data:acc.map(M),backgroundColor:sc(0),borderRadius:3}]},
+    options:(()=>{const o=base({indexAxis:'y'});o.plugins.legend.display=false;
       o.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>v.toLocaleString('es-PE')},title:{display:true,text:'Millones S/',color:css('--muted'),font:{size:11}}};
-      o.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:11}}};
-      o.plugins.tooltip.callbacks.label=c=>` ${fmtM(c.parsed.x*1e6)}`;return o;})()}));
+      o.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:11}}};o.plugins.tooltip.callbacks.label=c=>` ${fmtM(c.parsed.x*1e6)}`;return o;})()}));
+
+  // ENDES por tipo
+  if(EN.anios&&EN.anios.length){
+    const nombres={total:'Total',psicologica:'Psicológica','psicológica':'Psicológica',fisica:'Física','física':'Física',sexual:'Sexual'};
+    const ds=Object.keys(EN.series).map((t,i)=>({label:nombres[t]||t,data:EN.series[t],borderColor:sc(i),backgroundColor:'transparent',
+      borderWidth:t==='total'?2.6:1.8,pointRadius:3,tension:.25,spanGaps:true}));
+    const o=base();o.scales.y.title.text='% de mujeres';o.scales.y.suggestedMin=0;o.scales.y.ticks.callback=v=>v+'%';
+    o.plugins.tooltip.callbacks.label=c=>` ${c.dataset.label}: ${c.parsed.y}%`;
+    charts.push(new Chart(c_endes,{type:'line',data:{labels:EN.anios,datasets:ds},options:o}));
+  }
+
+  // Titulares: días en el cargo
+  if(TIT.length){
+    const rows=TIT.map(t=>({n:t.nombre.split(' ').slice(0,2).join(' '),d:diasEntre(t.inicio,t.fin)})).filter(r=>r.d);
+    const o=base({indexAxis:'y'});o.plugins.legend.display=false;
+    o.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2')},title:{display:true,text:'Días en el cargo',color:css('--muted'),font:{size:11}}};
+    o.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:10.5}}};
+    o.plugins.tooltip.callbacks.label=c=>` ${c.parsed.x} días`;
+    charts.push(new Chart(c_titulares,{type:'bar',data:{labels:rows.map(r=>r.n),datasets:[{data:rows.map(r=>r.d),
+      backgroundColor:rows.map(r=>r.d<90?css('--crit'):sc(0)),borderRadius:3}]},options:o}));
+  }
+
+  // Normas tabla
+  const tb=document.querySelector('#t_normas tbody');
+  tb.innerHTML=NOR.map(n=>{const u=(n.url||'').startsWith('http');
+    return `<tr><td>${n.tipo}</td><td>${n.numero}</td><td>${n.nombre}</td><td>${n.anio}</td><td>${u?`<a href="${n.url}" target="_blank" rel="noopener">El Peruano ↗</a>`:'<span style="color:var(--muted)">pendiente</span>'}</td></tr>`;}).join('');
 }
 build();
 const root=document.documentElement;
-document.getElementById('tgl').onclick=()=>{
-  const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+document.getElementById('tgl').onclick=()=>{const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   root.setAttribute('data-theme',cur==='dark'?'light':'dark');setTimeout(build,30);};
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!root.getAttribute('data-theme'))build();});
 </script>
