@@ -191,10 +191,14 @@ for r in pers_rows:
     except (ValueError, KeyError):
         continue
     u = r["unidad"]; reg = r["regimen"]
-    a = _agg.setdefault(u, {"n": 0, "med": 0, "maxn": -1})
+    a = _agg.setdefault(u, {"n": 0, "med": 0, "maxn": -1, "min": 0, "max": 0})
     a["n"] += n
     if n > a["maxn"]:
         a["maxn"] = n; a["med"] = med
+        try:
+            a["min"] = float(r.get("sueldo_min", 0)); a["max"] = float(r.get("sueldo_maximo", 0))
+        except (ValueError, TypeError):
+            pass
     personal["por_regimen"][reg] = personal["por_regimen"].get(reg, 0) + n
     personal["total"] += n
     if "Ley Servir" in reg:
@@ -202,7 +206,8 @@ for r in pers_rows:
     if "Warmi" in u:
         personal["atiende_med"] = med
 for u, a in _agg.items():
-    personal["unidades"].append({"unidad": u, "n": a["n"], "mediana": a["med"]})
+    personal["unidades"].append({"unidad": u, "n": a["n"], "mediana": a["med"],
+                                 "min": a.get("min", 0), "max": a.get("max", 0)})
 personal["unidades"].sort(key=lambda x: -x["n"])
 
 payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas, "personal": personal,
@@ -640,13 +645,14 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       (contrato temporal) y hay una <b>fuerte brecha salarial</b> entre la cúpula y quienes atienden la violencia.</p>
     <div class="grid">
       <div class="card"><h3>Trabajadores por unidad</h3><p class="cap">N.º de personas · Portal de Transparencia (snapshot 2026)</p><div class="chart-box tall"><canvas id="c_personal"></canvas></div></div>
-      <div class="card"><h3>Sueldo mediana por unidad</h3><p class="cap">Soles/mes · régimen mayoritario (CAS)</p><div class="chart-box tall"><canvas id="c_sueldos"></canvas></div></div>
+      <div class="card"><h3>Rango salarial por unidad</h3><p class="cap">Soles/mes · de más bajo (p25) a más alto · marca = mediana</p><div class="chart-box tall"><canvas id="c_sueldos"></canvas></div></div>
       <div class="card full"><h3>Gasto de planilla mes a mes</h3><p class="cap">Devengado en personal + CAS, millones S/ · línea gruesa = último año</p><div class="chart-box tall"><canvas id="c_planilla"></canvas></div></div>
     </div>
     <div class="note" style="margin-top:14px"><b>Precariedad y brecha:</b> el <b>~99% del personal es CAS</b> (contrato
       temporal, sin estabilidad), incluido el programa que atiende la violencia (Warmi Ñan, ~5 500 personas con mediana
-      S/ 4 364). En paralelo, <b>7 altos funcionarios</b> (Ley Servir) tienen mediana <b>S/ 30 000</b> —unas 7 veces más.
-      Fuente: Portal de Transparencia Estándar, vía repositorio <i>peru-transparente</i>.</div>
+      S/ 4 364). En paralelo, <b>7 altos funcionarios</b> (Ley Servir) tienen mediana <b>S/ 30 000</b> —unas 7 veces más—
+      y los máximos llegan a <b>S/ 57 400</b> frente a mínimos de <b>~S/ 1 764</b> (INABIF). Fuente: Portal de Transparencia
+      Estándar, vía <a href="https://unimauro.github.io/peru-transparente/" target="_blank" rel="noopener" style="color:var(--accent)">Perú Transparente ↗</a>.</div>
   </section>
 
   <section id="gasto">
@@ -945,10 +951,12 @@ function build(){
     oP.plugins.tooltip.callbacks.label=c=>` ${c.parsed.x.toLocaleString('es-PE')} trabajadores`;
     charts.push(new Chart(c_personal,{type:'bar',data:{labels:nombresU,datasets:[{data:PR.unidades.map(u=>u.n),backgroundColor:sc(0),borderRadius:3}]},options:oP}));
     const oS=base({indexAxis:'y'});oS.plugins.legend.display=false;
-    oS.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>'S/ '+(v/1000)+'k'},title:{display:true,text:'Sueldo mediana (S/)',color:css('--muted'),font:{size:11}}};
+    oS.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>'S/ '+(v/1000)+'k'},title:{display:true,text:'Sueldo mín → máx (S/)',color:css('--muted'),font:{size:11}},beginAtZero:true};
     oS.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:11}}};
-    oS.plugins.tooltip.callbacks.label=c=>` S/ ${c.parsed.x.toLocaleString('es-PE')} /mes`;
-    charts.push(new Chart(c_sueldos,{type:'bar',data:{labels:nombresU,datasets:[{data:PR.unidades.map(u=>u.mediana),backgroundColor:sc(4),borderRadius:3}]},options:oS}));
+    oS.plugins.tooltip.callbacks.label=c=>{const u=PR.unidades[c.dataIndex];return ` mín S/ ${u.min.toLocaleString('es-PE')} · mediana S/ ${u.mediana.toLocaleString('es-PE')} · máx S/ ${u.max.toLocaleString('es-PE')}`;};
+    charts.push(new Chart(c_sueldos,{data:{labels:nombresU,datasets:[
+      {type:'bar',label:'Rango (p25–máx)',data:PR.unidades.map(u=>[u.min,u.max]),backgroundColor:'rgba(120,80,220,.30)',borderColor:sc(0),borderWidth:1,borderRadius:3,borderSkipped:false},
+      {type:'scatter',label:'Mediana',data:PR.unidades.map((u,i)=>({x:u.mediana,y:i})),backgroundColor:sc(4),pointRadius:5,pointStyle:'rectRot'}]},options:oS}));
   }
   charts.push(stacked(c_detalle,D.por_detalle_gasto));
   charts.push(stacked(c_gen,D.por_generica));
