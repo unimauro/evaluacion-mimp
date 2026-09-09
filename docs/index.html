@@ -310,20 +310,29 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     </section>
 
   <section id="impacto" hidden>
-    <h2>Impacto: prevalencia de violencia (ENDES)</h2>
-    <p class="lead">Prevalencia de violencia contra la mujer ejercida alguna vez por la pareja (INEI–ENDES, mujeres
-      15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp entre 2017 y 2024, pero el grueso del descenso fue <b>2017–2019</b>; desde 2020 se estancó (~52–55%). Fuente: INEI–ENDES, Series Anuales 1986–2024, Cuadro 11.1.</p>
-    <div class="grid">
-      <div class="card full"><h3>Prevalencia por tipo de violencia (ENDES)</h3><p class="cap">% de mujeres · <b>autorreporte</b> de "alguna vez" · ⚠ ruptura metodológica en 2020 (INEI cambió de promedios bienales a años simples)</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
-      <div class="card full"><h3>Feminicidios y tentativas (contexto)</h3><p class="cap">Casos registrados por año · registro Warmi Ñan · <b>contexto multisectorial</b></p><div class="chart-box"><canvas id="c_femi"></canvas></div></div>
-      <div class="card full"><h3>Denuncias por violencia sexual (contexto)</h3><p class="cap">Registro PNP/MININTER (INEI) · total y víctimas menores de edad</p><div class="chart-box"><canvas id="c_viol"></canvas></div></div>
-    </div>
-    <div class="note" style="margin-top:14px"><b>La otra cara del registro:</b> las denuncias por violencia sexual
-      <b>casi se duplicaron</b> (5,7k en 2016 → 10,8k en 2024), y más de la mitad son contra <b>menores de edad</b>.
-      <b>Paradoja de registros:</b> más denuncias puede reflejar más violencia <i>o</i> más disposición a denunciar
-      (mayor visibilización) — no se puede concluir una sola cosa. Es contexto (PNP/MP), no eficacia directa del MIMP.</div>
-    <div class="note" style="margin-top:14px"><b>El dato que incomoda:</b> mientras la prevalencia poblacional bajó 13 pp, los <b>feminicidios no descienden</b> (oscilan 130–170 al año). La magnitud del problema cede, pero su expresión más extrema se mantiene. Feminicidios = contexto (investiga el Ministerio Público), no eficacia directa del MIMP.</div>
-    <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
+    <h2>Impacto: ¿bajó la violencia de género?</h2>
+    <p class="lead">Depende de qué se mire, y por eso <b>no basta con el ENDES</b>. La <b>encuesta</b> (autorreporte)
+      sugiere una caída del total, pero es discutible y se estancó desde 2020. Los <b>hechos registrados</b> dicen otra
+      cosa: los <b>feminicidios no ceden</b> y las <b>denuncias por violencia sexual casi se duplicaron</b>. Aquí, las
+      tres miradas juntas —para no quedarse con el dato más cómodo.</p>
+
+    <div class="grid"><div class="card full"><h3>1 · Prevalencia por tipo de violencia (ENDES)</h3><p class="cap">% de mujeres · <b>autorreporte</b> de "alguna vez" · ⚠ ruptura metodológica en 2020 (INEI cambió de promedios bienales a años simples)</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div></div>
+    <div class="note" style="margin-top:12px"><b>Contribución, no atribución.</b> La encuesta cae 13 pp (65%→52%) entre 2017 y 2024,
+      pero el grueso fue <b>2017–2019</b> y desde 2020 se estancó (~52–55%). La caída es multisectorial (MP, PJ, Mininter, salud,
+      educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a
+      ENARES); <b>pero sí se registra en las atenciones de los CEM</b>: unos <b>620–735 casos al año</b> (ver <i>Producción de
+      servicios</i>) — el cruce muestra que existe, aunque poco captada. Fuente: INEI–ENDES, Series Anuales 1986–2024, Cuadro 11.1.</div>
+
+    <div class="grid" style="margin-top:18px"><div class="card full"><h3>2 · Feminicidios y tentativas (contexto)</h3><p class="cap">Casos registrados por año · registro Warmi Ñan · <b>contexto multisectorial</b></p><div class="chart-box"><canvas id="c_femi"></canvas></div></div></div>
+    <div class="note" style="margin-top:12px"><b>El dato que incomoda:</b> mientras la prevalencia poblacional bajó, los <b>feminicidios no descienden</b>
+      (oscilan 130–170 al año). La magnitud del problema cede en la encuesta, pero su expresión más extrema se mantiene. Feminicidios =
+      contexto (investiga el Ministerio Público, sanciona el Poder Judicial), no eficacia directa del MIMP.</div>
+
+    <div class="grid" style="margin-top:18px"><div class="card full"><h3>3 · Denuncias por violencia sexual (contexto)</h3><p class="cap">Registro PNP/MININTER (INEI) · total y víctimas menores de edad</p><div class="chart-box"><canvas id="c_viol"></canvas></div></div></div>
+    <div class="note" style="margin-top:12px"><b>La otra cara del registro:</b> las denuncias por violencia sexual <b>casi se duplicaron</b>
+      (5,7k en 2016 → 10,8k en 2024), y más de la mitad son contra <b>menores de edad</b>. <b>Paradoja de registros:</b> más denuncias
+      puede reflejar más violencia <i>o</i> más disposición a denunciar (mayor visibilización) — no se puede concluir una sola cosa.
+      Es contexto (PNP/MP), no eficacia directa del MIMP.</div>
   </section>
 
   <section id="metas" hidden>
