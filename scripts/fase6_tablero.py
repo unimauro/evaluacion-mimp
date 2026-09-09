@@ -95,11 +95,11 @@ HTML = r"""<!doctype html>
 <meta property="og:title" content="¿El MIMP redujo la violencia, o solo gastó?">
 <meta property="og:description" content="El MIMP casi triplicó su presupuesto (S/ 426M→996M) y lo ejecuta al 99%. La prevalencia de violencia de pareja cayó de 65% a 52%. Evaluación con datos oficiales, 2017-2025.">
 <meta property="og:url" content="https://unimauro.github.io/evaluacion-mimp/">
-<meta property="og:image" content="https://unimauro.github.io/evaluacion-mimp/og.svg">
+<meta property="og:image" content="https://unimauro.github.io/evaluacion-mimp/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="¿El MIMP redujo la violencia, o solo gastó?">
 <meta name="twitter:description" content="Evaluación con datos oficiales del MIMP 2017-2025: presupuesto, servicios, impacto e hipótesis.">
-<meta name="twitter:image" content="https://unimauro.github.io/evaluacion-mimp/og.svg">
+<meta name="twitter:image" content="https://unimauro.github.io/evaluacion-mimp/og.png">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=__GA__"></script>
 <script>
@@ -108,9 +108,6 @@ HTML = r"""<!doctype html>
   gtag('js', new Date());
   gtag('config', '__GA__');
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
 :root{
   --surface:#faf7fc; --panel:#ffffff; --ink:#1a1420; --ink-2:#5c5364; --muted:#8f869a;
@@ -133,12 +130,12 @@ HTML = r"""<!doctype html>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--surface);color:var(--ink);
-  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
 .layout{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
 aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
   background:var(--panel);border-right:1px solid var(--line);padding:22px 18px}
-aside .brand{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:19px;line-height:1.1;letter-spacing:-.01em}
+aside .brand{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:700;font-size:19px;line-height:1.1;letter-spacing:-.01em}
 aside .brand span{color:var(--accent)}
 aside .tag{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
 aside nav{margin-top:22px;display:flex;flex-direction:column;gap:2px}
@@ -148,7 +145,7 @@ aside nav a.sec{margin-top:12px;font-size:11px;text-transform:uppercase;letter-s
 aside .foot{margin-top:24px;font-size:11.5px;color:var(--muted);line-height:1.5}
 main{min-width:0;padding:34px 40px 80px;max-width:1080px}
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
-h1{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:clamp(30px,4.6vw,50px);line-height:1.02;margin:.2em 0 .2em;text-wrap:balance;letter-spacing:-.015em}
+h1{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:700;font-size:clamp(30px,4.6vw,50px);line-height:1.02;margin:.2em 0 .2em;text-wrap:balance;letter-spacing:-.015em}
 .dek{color:var(--ink-2);max-width:64ch;font-size:17px;line-height:1.5}
 .src{color:var(--muted);font-size:12.5px;margin-top:14px}
 .src code{background:var(--ground);padding:1px 5px;border-radius:4px}
@@ -157,7 +154,7 @@ h1{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:clamp(30px,4.6
 .story .tell{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
 .story .tell h2{margin-top:0}
 .story .tell p{color:var(--ink-2);font-size:14.5px}
-.story .tell .big{font-family:"Fraunces",Georgia,serif;font-size:19px;color:var(--ink);line-height:1.4;font-weight:600;margin:0 0 12px}
+.story .tell .big{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;color:var(--ink);line-height:1.4;font-weight:600;margin:0 0 12px}
 .story .tell .big b.up{color:var(--good)} .story .tell .big b.dn{color:var(--accent-2)}
 .story .viz{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;display:flex;flex-direction:column}
 .story .viz h3{margin:0 0 2px;font-size:14px} .story .viz p.cap{margin:0 0 8px;font-size:12px;color:var(--muted)}
@@ -166,12 +163,12 @@ h1{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:clamp(30px,4.6
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:13px;margin:8px 0}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
 .kpi .k-label{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.kpi .k-val{font-family:"Fraunces",Georgia,serif;font-size:27px;font-weight:600;margin-top:5px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi .k-val{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:27px;font-weight:600;margin-top:5px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .kpi .k-note{font-size:12px;color:var(--ink-2);margin-top:2px}
 .k-up{color:var(--good)} .k-dn{color:var(--accent-2)} .k-flat{color:var(--warn)}
 
 section{margin-top:46px;scroll-margin-top:16px}
-h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
 .lead{color:var(--ink-2);font-size:14px;margin:0 0 18px;max-width:82ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:17px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:17px 18px 13px}
@@ -205,7 +202,8 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
 .toggle{position:fixed;top:12px;right:12px;background:var(--panel);border:1px solid var(--line-2);color:var(--ink-2);border-radius:20px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;z-index:6}
 .chat-fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;box-shadow:0 6px 22px rgba(109,40,217,.42);z-index:20;display:flex;align-items:center;justify-content:center}
 .chat-fab.hide{display:none}
-.chat-panel{position:fixed;bottom:20px;right:20px;width:min(380px,calc(100vw - 28px));height:min(560px,calc(100vh - 40px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 44px rgba(30,15,45,.28);z-index:21;display:flex;flex-direction:column;overflow:hidden}
+.chat-panel{position:fixed;bottom:20px;right:20px;width:min(380px,calc(100vw - 28px));height:min(560px,calc(100vh - 40px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 44px rgba(30,15,45,.28);z-index:21;display:none;flex-direction:column;overflow:hidden}
+.chat-panel:not([hidden]){display:flex}
 .chat-top{display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--accent);color:#fff}
 .chat-top b{font-size:13.5px;display:block}.chat-top span{font-size:11px;opacity:.85}
 .chat-dot{width:8px;height:8px;border-radius:50%;background:#7cfca0;box-shadow:0 0 0 3px rgba(124,252,160,.3)}
@@ -236,11 +234,11 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <nav>
       <a href="#inicio">Resumen</a>
       <a class="sec">Dimensiones</a>
+      <a href="#impacto">Impacto: ¿bajó la violencia?</a>
       <a href="#presupuesto">Presupuesto y ejecución</a>
       <a href="#planilla">Personal y planilla</a>
       <a href="#gasto">¿En qué se gasta?</a>
       <a href="#territorio">Territorio</a>
-      <a href="#impacto">Impacto (ENDES)</a>
       <a href="#gestion">Gestión y rotación</a>
       <a href="#normas">Marco normativo</a>
       <a class="sec">Conclusión</a>
@@ -281,6 +279,18 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
 </div>
 
 <div class="layout"><aside style="visibility:hidden"></aside><main style="padding-top:0">
+
+  <section id="impacto">
+    <h2>Impacto: prevalencia de violencia (ENDES)</h2>
+    <p class="lead">Prevalencia de violencia contra la mujer ejercida alguna vez por la pareja (INEI–ENDES, mujeres
+      15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp.</p>
+    <div class="grid">
+      <div class="card full"><h3>Prevalencia por tipo de violencia</h3><p class="cap">% de mujeres, por año</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
+      <div class="card full"><h3>Feminicidios y tentativas (contexto)</h3><p class="cap">Casos registrados por año · registro Warmi Ñan · <b>contexto multisectorial</b></p><div class="chart-box"><canvas id="c_femi"></canvas></div></div>
+    </div>
+    <div class="note" style="margin-top:14px"><b>El dato que incomoda:</b> mientras la prevalencia poblacional bajó 13 pp, los <b>feminicidios no descienden</b> (oscilan 130–170 al año). La magnitud del problema cede, pero su expresión más extrema se mantiene. Feminicidios = contexto (investiga el Ministerio Público), no eficacia directa del MIMP.</div>
+    <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
+  </section>
 
   <section id="presupuesto">
     <h2>Presupuesto y ejecución</h2>
@@ -323,17 +333,6 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
     <div class="grid"><div class="card full"><h3>Devengado por departamento</h3><p class="cap">Acumulado, millones S/ (top 15)</p><div class="chart-box" style="height:440px"><canvas id="c_dept"></canvas></div></div></div>
   </section>
 
-  <section id="impacto">
-    <h2>Impacto: prevalencia de violencia (ENDES)</h2>
-    <p class="lead">Prevalencia de violencia contra la mujer ejercida alguna vez por la pareja (INEI–ENDES, mujeres
-      15–49 alguna vez unidas). <b>Magnitud del problema</b>, no registro de atenciones. El total cae 13 pp.</p>
-    <div class="grid">
-      <div class="card full"><h3>Prevalencia por tipo de violencia</h3><p class="cap">% de mujeres, por año</p><div class="chart-box tall"><canvas id="c_endes"></canvas></div></div>
-      <div class="card full"><h3>Feminicidios y tentativas (contexto)</h3><p class="cap">Casos registrados por año · registro Warmi Ñan · <b>contexto multisectorial</b></p><div class="chart-box"><canvas id="c_femi"></canvas></div></div>
-    </div>
-    <div class="note" style="margin-top:14px"><b>El dato que incomoda:</b> mientras la prevalencia poblacional bajó 13 pp, los <b>feminicidios no descienden</b> (oscilan 130–170 al año). La magnitud del problema cede, pero su expresión más extrema se mantiene. Feminicidios = contexto (investiga el Ministerio Público), no eficacia directa del MIMP.</div>
-    <div class="note" style="margin-top:14px"><b>Contribución, no atribución.</b> La caída es multisectorial (MP, PJ, Mininter, salud, educación, sociedad civil), no atribuible solo al MIMP. La violencia <b>económica</b> no la mide la ENDES (corresponde a ENARES): <code>[NO DISPONIBLE]</code>.</div>
-  </section>
 
   <section id="gestion">
     <h2>Gestión y rotación de titulares</h2>
@@ -409,7 +408,7 @@ const anios=D.meta.periodo;
 let charts=[];
 function base(extra){const ink=css('--ink'),ink2=css('--ink-2'),line=css('--line');
   return Object.assign({responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-    plugins:{legend:{labels:{color:ink2,boxWidth:12,boxHeight:12,usePointStyle:true,font:{family:'Public Sans',size:11}}},
+    plugins:{legend:{labels:{color:ink2,boxWidth:12,boxHeight:12,usePointStyle:true,font:{family:'Helvetica Neue',size:11}}},
       tooltip:{backgroundColor:css('--panel'),titleColor:ink,bodyColor:ink2,borderColor:line,borderWidth:1,padding:10,usePointStyle:true,
         callbacks:{label:c=>` ${c.dataset.label}: ${fmtM((c.parsed.y!=null?c.parsed.y:c.parsed.x)*1e6)}`}}},
     scales:{x:{grid:{display:false},ticks:{color:ink2,font:{size:12}}},
