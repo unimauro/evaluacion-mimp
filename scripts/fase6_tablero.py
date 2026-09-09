@@ -181,7 +181,31 @@ norm_rows = leer_csv("normas_mimp_*.csv")
 normas = [{"tipo": r.get("tipo", ""), "numero": r.get("numero", ""), "nombre": r.get("nombre", ""),
            "anio": r.get("anio", ""), "url": r.get("url", "")} for r in norm_rows]
 
-payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas,
+# --- Personal (Portal de Transparencia vía repo peru-transparente) ---
+pers_rows = leer_csv("personal_mimp_pte_*.csv")
+_agg = {}
+personal = {"unidades": [], "por_regimen": {}, "total": 0, "servir_med": None, "atiende_med": None}
+for r in pers_rows:
+    try:
+        n = int(r["n_trabajadores"]); med = float(r["sueldo_mediana"])
+    except (ValueError, KeyError):
+        continue
+    u = r["unidad"]; reg = r["regimen"]
+    a = _agg.setdefault(u, {"n": 0, "med": 0, "maxn": -1})
+    a["n"] += n
+    if n > a["maxn"]:
+        a["maxn"] = n; a["med"] = med
+    personal["por_regimen"][reg] = personal["por_regimen"].get(reg, 0) + n
+    personal["total"] += n
+    if "Ley Servir" in reg:
+        personal["servir_med"] = med
+    if "Warmi" in u:
+        personal["atiende_med"] = med
+for u, a in _agg.items():
+    personal["unidades"].append({"unidad": u, "n": a["n"], "mediana": a["med"]})
+personal["unidades"].sort(key=lambda x: -x["n"])
+
+payload = {"presupuesto": data, "endes": endes, "titulares": titulares, "normas": normas, "personal": personal,
            "feminicidios": femi, "cem": cem, "linea100": linea100, "cem_num": cem_num,
            "embarazo": embarazo, "demuna": demuna, "violaciones": violaciones,
            "metaviol": metaviol, "metas": metas, "generado": date.today().isoformat()}
@@ -609,11 +633,18 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
 
   <section id="planilla">
     <h2>Personal y planilla</h2>
-    <p class="lead">Gasto en planilla (personal nombrado + CAS) mes a mes por año. El número de trabajadores por
-      régimen (PTE) está en recolección; aquí se muestra el <b>costo</b> de la planilla, que sí es trazable al MEF.</p>
+    <p class="lead">Cuánta gente trabaja en el sector Mujer, con qué contrato y con qué sueldo (Portal de
+      Transparencia), más el costo de la planilla mes a mes (MEF). Dos hallazgos: <b>casi todo el personal es CAS</b>
+      (contrato temporal) y hay una <b>fuerte brecha salarial</b> entre la cúpula y quienes atienden la violencia.</p>
     <div class="grid">
+      <div class="card"><h3>Trabajadores por unidad</h3><p class="cap">N.º de personas · Portal de Transparencia (snapshot 2026)</p><div class="chart-box tall"><canvas id="c_personal"></canvas></div></div>
+      <div class="card"><h3>Sueldo mediana por unidad</h3><p class="cap">Soles/mes · régimen mayoritario (CAS)</p><div class="chart-box tall"><canvas id="c_sueldos"></canvas></div></div>
       <div class="card full"><h3>Gasto de planilla mes a mes</h3><p class="cap">Devengado en personal + CAS, millones S/ · línea gruesa = último año</p><div class="chart-box tall"><canvas id="c_planilla"></canvas></div></div>
     </div>
+    <div class="note" style="margin-top:14px"><b>Precariedad y brecha:</b> el <b>~99% del personal es CAS</b> (contrato
+      temporal, sin estabilidad), incluido el programa que atiende la violencia (Warmi Ñan, ~5 500 personas con mediana
+      S/ 4 364). En paralelo, <b>7 altos funcionarios</b> (Ley Servir) tienen mediana <b>S/ 30 000</b> —unas 7 veces más.
+      Fuente: Portal de Transparencia Estándar, vía repositorio <i>peru-transparente</i>.</div>
   </section>
 
   <section id="gasto">
@@ -672,10 +703,11 @@ footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;color:v
       <div class="hcard v-parc"><div class="hid">H4 · Cobertura</div><h4>Brechas de cobertura territorial vs. incidencia</h4>
         <span class="verdict v-parc">Parcial</span>
         <p>Gasto muy concentrado en Lima (ver territorio); falta cruzar con N.º de CEM e incidencia por región.</p></div>
-      <div class="hcard v-pend"><div class="hid">H5 · Calidad</div><h4>Problemas de calidad/idoneidad en la atención</h4>
-        <span class="verdict v-pend">Sin datos accesibles</span>
-        <p>El número de personal por régimen no está publicado de forma abierta y el Portal de Transparencia no lo
-        expone descargable: requiere <b>solicitud de acceso a la información (Ley 27806)</b> al MIMP. Queda documentado como gap.</p></div>
+      <div class="hcard v-parc"><div class="hid">H5 · Calidad</div><h4>Problemas de calidad/idoneidad en la atención</h4>
+        <span class="verdict v-parc">Indicios preocupantes</span>
+        <p>El <b>~99% del personal es CAS</b> (contrato temporal, alta rotación), incluido el programa que atiende la
+        violencia. Con planta inestable y <b>fuerte brecha salarial</b> frente a la cúpula, la idoneidad sostenida es difícil.
+        Falta aún la serie de personal por año. Fuente: Portal de Transparencia.</p></div>
       <div class="hcard v-parc"><div class="hid">H6 · Gestión</div><h4>Predomina la gestión de imagen sobre resultados</h4>
         <span class="verdict v-parc">Se sostiene parcialmente</span>
         <p>Marco normativo sólido (Ley 30364, PNIG, Estrategia). Pero <b>~15 titulares en 9 años</b>
@@ -898,6 +930,21 @@ function build(){
     borderColor:sc(i),borderWidth:a===anios[anios.length-1]?2.6:1.2,pointRadius:0,tension:.3}))},
     options:(()=>{const o=base();o.plugins.legend.labels.font.size=10;o.interaction.mode='nearest';o.scales.y.title.text='Millones S/ / mes';return o;})()}));
 
+  // Personal (Portal de Transparencia)
+  const PR=P.personal;
+  if(PR&&PR.unidades&&PR.unidades.length){
+    const nombresU=PR.unidades.map(u=>u.unidad.replace(/\s*\(.*\)/,'').replace('Programa ','').trim());
+    const oP=base({indexAxis:'y'});oP.plugins.legend.display=false;
+    oP.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2')},title:{display:true,text:'N.º de trabajadores',color:css('--muted'),font:{size:11}}};
+    oP.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:11}}};
+    oP.plugins.tooltip.callbacks.label=c=>` ${c.parsed.x.toLocaleString('es-PE')} trabajadores`;
+    charts.push(new Chart(c_personal,{type:'bar',data:{labels:nombresU,datasets:[{data:PR.unidades.map(u=>u.n),backgroundColor:sc(0),borderRadius:3}]},options:oP}));
+    const oS=base({indexAxis:'y'});oS.plugins.legend.display=false;
+    oS.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2'),callback:v=>'S/ '+(v/1000)+'k'},title:{display:true,text:'Sueldo mediana (S/)',color:css('--muted'),font:{size:11}}};
+    oS.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:11}}};
+    oS.plugins.tooltip.callbacks.label=c=>` S/ ${c.parsed.x.toLocaleString('es-PE')} /mes`;
+    charts.push(new Chart(c_sueldos,{type:'bar',data:{labels:nombresU,datasets:[{data:PR.unidades.map(u=>u.mediana),backgroundColor:sc(4),borderRadius:3}]},options:oS}));
+  }
   charts.push(stacked(c_detalle,D.por_detalle_gasto));
   charts.push(stacked(c_gen,D.por_generica));
   charts.push(stacked(c_ue,D.por_ue));
@@ -978,7 +1025,7 @@ function build(){
 
   // Titulares: días en el cargo
   if(TIT.length){
-    const rows=TIT.map(t=>({n:t.nombre.split(' ').slice(0,2).join(' '),d:diasEntre(t.inicio,t.fin)})).filter(r=>r.d);
+    const rows=TIT.filter(t=>!/DISPONIBLE|^\[/i.test(t.nombre)).map(t=>({n:t.nombre.split(' ').slice(0,2).join(' '),d:diasEntre(t.inicio,t.fin)})).filter(r=>r.d);
     const o=base({indexAxis:'y'});o.plugins.legend.display=false;
     o.scales.x={grid:{color:css('--line')},ticks:{color:css('--ink-2')},title:{display:true,text:'Días en el cargo',color:css('--muted'),font:{size:11}}};
     o.scales.y={grid:{display:false},ticks:{color:css('--ink-2'),font:{size:10.5}}};
